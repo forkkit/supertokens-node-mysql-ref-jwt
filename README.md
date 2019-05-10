@@ -1,1 +1,1 @@
-# node-mysql
+# auth-node-mysql
