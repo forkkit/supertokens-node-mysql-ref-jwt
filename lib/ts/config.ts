@@ -1,11 +1,11 @@
 /**
  * @class
  */
-export default class Config {
+export class Config {
     private static instance: undefined | Config;
     private config: TypeConfig;
 
-    constructor (config: TypeInputConfig) {
+    private constructor (config: TypeInputConfig) {
         this.config = sanitize(config);
     }
 
@@ -148,7 +148,7 @@ type TypeLoggingConfig = {
     error: TypeErrorLoggingFunction | undefined
 }
 
-type TypeInputConfig = {
+export type TypeInputConfig = {
     mysql: {
         host: string | undefined,
         port: number | undefined,

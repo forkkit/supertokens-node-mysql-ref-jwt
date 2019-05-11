@@ -1,9 +1,12 @@
-import Config from "./config";
+import { 
+    Config,
+    TypeInputConfig
+} from "./config";
 
 class Auth {
     constructor () {}
 
-    static init (config: any) {
+    static init (config: TypeInputConfig) {
         Config.set(config);
     }
 }
