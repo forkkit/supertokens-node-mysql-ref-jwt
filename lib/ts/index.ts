@@ -4,7 +4,7 @@ import {
 } from "./config";
 import {
     Mysql
-} from "./mysql";
+} from "./db/mysql";
 
 class Auth {
     constructor () {}

@@ -46,11 +46,16 @@ export async function getConnection(): Promise<Connection> {
         const mysqlConnection = await Mysql.getConnection();
         return new Connection(mysqlConnection); 
     } catch (err) {
+        /**
+         * @todo
+         */
         throw Error(err);
     }
 }
 
-class Connection {
+export class Connection {
+    private isClosed = false;
+    private destroyConnnection = false;
     private connection: mysql.PoolConnection;
 
     constructor (connection: mysql.PoolConnection) {
@@ -80,55 +85,75 @@ class Connection {
         })
     }
 
-    executeTransactions = (queries: {
-        query: string,
-        params: any[]
-    }[]) => {
-        const connection = this.connection;
-        return new Promise<any>(async (resolve, reject) => {
-            try {
-                await new Promise<any>((resolve2, reject2) => {
-                    connection.beginTransaction(async (err) => {
-                        if (err) {
-                            reject2(err);
-                            return;
-                        }
-                        for (let i = 0; i < queries.length; i++) {
-                            await new Promise<any>((resolve3, reject3) => {
-                                connection.query(queries[i].query, queries[i].params, async (err2, results, fields) => {
-                                    if (err2) {
-                                        connection.rollback(() => {
-                                            reject3(err2);
-                                            return;
-                                        });
-                                    }
-                                    resolve3();
-                                });
-                            });
-                        }
-                        connection.commit(err2 => {
-                            if (err2) {
-                                connection.rollback(() => {
-                                    reject2(err2);
-                                    return;
-                                });
-                            }
-                            resolve2();
-                        });
-                    });
-                });
-                resolve();
-            } catch (err) {
-                /**
-                 * @todo
-                 */
-                reject(err);
-            }
-        })
+    // executeTransactions = (queries: {
+    //     query: string,
+    //     params: any[]
+    // }[]) => {
+    //     const connection = this.connection;
+    //     return new Promise<any>(async (resolve, reject) => {
+    //         try {
+    //             await new Promise<any>((resolve2, reject2) => {
+    //                 connection.beginTransaction(async (err) => {
+    //                     if (err) {
+    //                         reject2(err);
+    //                         return;
+    //                     }
+    //                     for (let i = 0; i < queries.length; i++) {
+    //                         await new Promise<any>((resolve3, reject3) => {
+    //                             connection.query(queries[i].query, queries[i].params, async (err2, results, fields) => {
+    //                                 if (err2) {
+    //                                     connection.rollback(() => {
+    //                                         reject3(err2);
+    //                                         return;
+    //                                     });
+    //                                 }
+    //                                 resolve3();
+    //                             });
+    //                         });
+    //                     }
+    //                     connection.commit(err2 => {
+    //                         if (err2) {
+    //                             connection.rollback(() => {
+    //                                 reject2(err2);
+    //                                 return;
+    //                             });
+    //                         }
+    //                         resolve2();
+    //                     });
+    //                 });
+    //             });
+    //             resolve();
+    //         } catch (err) {
+    //             /**
+    //              * @todo
+    //              */
+    //             reject(err);
+    //         }
+    //     })
+    // }
+
+    setDestroyConnection = () => {
+        this.destroyConnnection = true;
     }
 
     closeConnection = () => {
-        this.connection.release();
+        if (this.isClosed) {
+            return;
+        }
+        if (this.connection === undefined) {
+            throw Error("no connect to MySQL server.");
+        }
+        try {
+            if (this.destroyConnnection) {
+                this.connection.destroy();
+            } else {
+                this.connection.release();
+            }
+        } catch (err) {
+            /**
+             * @todo
+             */
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import { TypeMysqlConfig } from "./mysql";
+import { TypeMysqlConfig } from "./db/mysql";
 /**
  * @class
  */
