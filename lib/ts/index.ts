@@ -2,12 +2,16 @@ import {
     Config,
     TypeInputConfig
 } from "./config";
+import {
+    Mysql
+} from "./mysql";
 
 class Auth {
     constructor () {}
 
-    static init (config: TypeInputConfig) {
+    static async init (config: TypeInputConfig) {
         Config.set(config);
+        await Mysql.init();
     }
 }
 

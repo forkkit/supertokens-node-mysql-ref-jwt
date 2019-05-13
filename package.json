@@ -1,0 +1,28 @@
+{
+  "name": "auth-node-mysql-jwt",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vrai-labs/auth-node-mysql.git"
+  },
+  "author": "bhumilsarvaiya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vrai-labs/auth-node-mysql/issues"
+  },
+  "homepage": "https://github.com/vrai-labs/auth-node-mysql#readme",
+  "dependencies": {
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "@types/mysql": "^2.15.6"
+  }
+}

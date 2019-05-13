@@ -1,3 +1,4 @@
+import { TypeMysqlConfig } from "./mysql";
 /**
  * @class
  */
@@ -185,18 +186,7 @@ export type TypeInputConfig = {
 };
 
 type TypeConfig = {
-    mysql: {
-        host: string,
-        port: number,
-        user: string,
-        password: string,
-        connectionLimit: number,
-        db: string,
-        tables: {
-            signingKey: string,
-            refreshTokens: string
-        }
-    },
+    mysql: TypeMysqlConfig,
     tokens: {
         accessTokens: {
             signingKey: {
