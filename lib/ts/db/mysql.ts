@@ -1,6 +1,9 @@
 import * as mysql from "mysql";
 import { Config } from "../config";
 
+/**
+ * @todo read about what happens when connection is released, does the isolation level stays for that connection?
+ */
 export class Mysql {
     private static instance: undefined | Mysql;
     private pool: mysql.Pool;
@@ -166,8 +169,8 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
         const signKeyTableQuery = `
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
                 key VARCHAR(128) PRIMARY KEY,
-                value VARCHAR(128) NOT NULL,
-                time_created INT UNSIGNED
+                value VARCHAR(128) PRIMARY KEY,
+                created_at INT UNSIGNED
             );
         `;
         const refreshTokensTableQuery = `
@@ -175,7 +178,7 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
                 token VARCHAR(128) PRIMARY KEY,
                 user_id VARCHAR(128) NOT NULL,
                 meta_info VARCHAR(255) NOT NULL,
-                time_created INT UNSIGNED
+                created_at INT UNSIGNED
             );
         `;
         const signKeyTableQueryPromise = mysqlConnection.executeQuery(signKeyTableQuery, []);

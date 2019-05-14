@@ -1,4 +1,5 @@
 import { TypeMysqlConfig } from "./db/mysql";
+import { TypeAccessTokenConfig, TypeGetSigningKeyFunction } from "./tokens/accessToken";
 /**
  * @class
  */
@@ -51,18 +52,21 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
                 signingKey: {
                     length: defaultConfig.tokens.accessTokens.signingKey.length.default,
                     dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default
+                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                    get: undefined
                 },
                 validity: defaultConfig.tokens.accessTokens.validity.default
             } : {
                 signingKey: config.tokens.accessTokens.signingKey === undefined ? {
                     length: defaultConfig.tokens.accessTokens.signingKey.length.default,
                     dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default
+                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                    get: undefined
                 } : {
                     length: config.tokens.accessTokens.signingKey.length || defaultConfig.tokens.accessTokens.signingKey.length.default,
                     dynamic: config.tokens.accessTokens.signingKey.dynamic || defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: config.tokens.accessTokens.signingKey.updateInterval || defaultConfig.tokens.accessTokens.signingKey.updateInterval.default
+                    updateInterval: config.tokens.accessTokens.signingKey.updateInterval || defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                    get: config.tokens.accessTokens.signingKey.get
                 },
                 validity: config.tokens.accessTokens.validity || defaultConfig.tokens.accessTokens.validity.default
             },
@@ -167,7 +171,8 @@ export type TypeInputConfig = {
             signingKey: {
                 length: number | undefined,
                 dynamic: boolean | undefined,
-                updateInterval: number | undefined
+                updateInterval: number | undefined,
+                get: TypeGetSigningKeyFunction | undefined
             } | undefined,
             validity: number | undefined
         } | undefined,
@@ -188,14 +193,7 @@ export type TypeInputConfig = {
 type TypeConfig = {
     mysql: TypeMysqlConfig,
     tokens: {
-        accessTokens: {
-            signingKey: {
-                length: number,
-                dynamic: boolean,
-                updateInterval: number
-            },
-            validity: number
-        },
+        accessTokens: TypeAccessTokenConfig,
         refreshToken: {
             length: number,
             validity: number,
