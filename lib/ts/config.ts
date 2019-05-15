@@ -1,5 +1,7 @@
-import { TypeMysqlConfig } from "./db/mysql";
-import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from "./tokens/accessToken";
+import { TypeMysqlConfig } from './db/mysql';
+import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from './tokens/accessToken';
+
+// TODO: have all types in one file ideally.. easier to navigate and maintain. call this file types. This is done so that the other files do not get bogged down with types.. and have just the logic.
 /**
  * @class
  */
@@ -7,18 +9,18 @@ export class Config {
     private static instance: undefined | Config;
     private config: TypeConfig;
 
-    private constructor (config: TypeInputConfig) {
+    private constructor(config: TypeInputConfig) {
         this.config = sanitize(config);
     }
 
-    static set (config: any) {
+    static set(config: any) {
         validate(config);
         if (Config.instance === undefined) {
             Config.instance = new Config(config);
         }
     }
 
-    static get (): TypeConfig {
+    static get(): TypeConfig {
         if (Config.instance === undefined) {
             throw Error("no config set, please use init function at the start");
         }
@@ -28,14 +30,15 @@ export class Config {
 
 const validate = (config: any): TypeInputConfig => {
     /**
-     * @todo do validation
+     * @todo do validation - for this you can use my frontend library to validate if you want.
      */
     return config;
 }
 
 const sanitize = (config: TypeInputConfig): TypeConfig => {
+    // TODO: do not do this style.. check for explicit undefined... what is something is number | undefined and that person gives 0 as a number.. then its as good as false. Or an empty string???
     return {
-        mysql : {
+        mysql: {
             host: config.mysql.host || defaultConfig.mysql.host,
             port: config.mysql.port || defaultConfig.mysql.port,
             user: config.mysql.user,
@@ -57,19 +60,19 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
                 },
                 validity: defaultConfig.tokens.accessTokens.validity.default
             } : {
-                signingKey: config.tokens.accessTokens.signingKey === undefined ? {
-                    length: defaultConfig.tokens.accessTokens.signingKey.length.default,
-                    dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
-                    get: undefined
-                } : {
-                    length: config.tokens.accessTokens.signingKey.length || defaultConfig.tokens.accessTokens.signingKey.length.default,
-                    dynamic: config.tokens.accessTokens.signingKey.dynamic || defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: config.tokens.accessTokens.signingKey.updateInterval || defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
-                    get: config.tokens.accessTokens.signingKey.get
+                    signingKey: config.tokens.accessTokens.signingKey === undefined ? {
+                        length: defaultConfig.tokens.accessTokens.signingKey.length.default,
+                        dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
+                        updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                        get: undefined
+                    } : {
+                            length: config.tokens.accessTokens.signingKey.length || defaultConfig.tokens.accessTokens.signingKey.length.default,
+                            dynamic: config.tokens.accessTokens.signingKey.dynamic || defaultConfig.tokens.accessTokens.signingKey.dynamic,
+                            updateInterval: config.tokens.accessTokens.signingKey.updateInterval || defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                            get: config.tokens.accessTokens.signingKey.get
+                        },
+                    validity: config.tokens.accessTokens.validity || defaultConfig.tokens.accessTokens.validity.default
                 },
-                validity: config.tokens.accessTokens.validity || defaultConfig.tokens.accessTokens.validity.default
-            },
             refreshToken: {
                 length: config.tokens.refreshToken.length || defaultConfig.tokens.refreshToken.length.default,
                 validity: config.tokens.refreshToken.validity || defaultConfig.tokens.refreshToken.validity.default,
@@ -98,7 +101,7 @@ const defaultConfig = {
         host: "localhost",
         port: 3306,
         connectionLimit: 50,
-        db: "qually-auth",
+        db: "qually-auth",  // TODO: just make it auth
         tables: {
             signingKey: "signing-key",
             refreshTokens: "refresh-token"
@@ -107,34 +110,34 @@ const defaultConfig = {
     tokens: {
         accessTokens: {
             signingKey: {
-                length: {
+                length: {   // TODO: do not need length.
                     max: 128,
                     min: 32,
                     default: 64
                 },
                 dynamic: false,
-                updateInterval: {
+                updateInterval: {   // in hours.
                     min: 1,
                     max: 720,
                     default: 24
                 }
             },
-            validity: {
+            validity: { // in seconds
                 min: 60,
-                max: 86400000,
+                max: 1000 * 24 * 3600,
                 default: 3600
             }
         },
         refreshToken: {
-            length:  {
+            length: { // TODO: do not need length.
                 min: 32,
                 max: 128,
                 default: 64
             },
-            validity: {
+            validity: { // in hours.
                 min: 1,
-                max: 8760,
-                default: 2400
+                max: 365 * 24,
+                default: 100 * 24
             }
         }
     },
@@ -148,9 +151,11 @@ const defaultConfig = {
 
 type TypeInfoLoggingFunction = (info: any) => void
 type TypeErrorLoggingFunction = (err: any) => void
+
+// TODO: also have refresh token in this function? So that user can invalidate just that particular session.. and not logout user from all their devices.
 type TypeSecurityOnTheftDetectionFunction = (userId: string, reason: any) => void
 
-type TypeSecurityConfig =  {
+type TypeSecurityConfig = {
     onTheftDetection: TypeSecurityOnTheftDetectionFunction | undefined
 }
 
@@ -185,7 +190,7 @@ export type TypeInputConfig = {
         refreshToken: {
             length: number | undefined,
             validity: number | undefined,
-            renewTokenURL: string
+            renewTokenURL: string   // TODO: this is just the path right? If so, please specify this.
         }
     },
     logging: TypeLoggingConfig,
