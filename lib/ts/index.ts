@@ -17,7 +17,7 @@ import {
     SigningKey as refreshTokenSigningKey
 } from "./tokens/refreshToken";
 import { Request, Response } from "express";
-import { SessionErrors, serializeMetaInfo } from "./utils";
+import { SessionErrors, serializeMetaInfo, generate32CharactersRandomString } from "./utils";
 import { TypeInputAccessTokenJWTPayload } from "./jwt";
 import { setCookie } from "./cookie";
 
@@ -134,10 +134,10 @@ async function newSession (request: Request, response: Response, userId: string,
             rTHash: refreshToken,
             exp: accessTokenExpiry
         }
-        const idRefreshToken = "" // @todo: random string
+        const idRefreshToken = generate32CharactersRandomString();
         await updateAccessTokenInHeaders(jwtPayload, response, connection);
         await updateRefershTokenInHeaders(refreshToken, response);
-        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, config.cookie.secure, false, config.tokens.refreshToken.validity, null);
+        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
         return new Session(userId, metaInfo, accessTokenExpiry, refreshToken);
     } catch (err) {
         connection.setDestroyConnection();

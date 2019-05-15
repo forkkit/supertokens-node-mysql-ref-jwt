@@ -5,11 +5,11 @@ import {
     newSigningKeyForRefreshToken,
     updateMetaInfoForRefreshToken
 } from "../db/tokens";
-import { getConnection, Connection } from "../db/mysql";
+import { Connection } from "../db/mysql";
 import { setCookie, getCookieValue } from "../cookie";
 import { Config } from "../config";
 import { Request, Response } from "express";
-import { serializeMetaInfoToString } from "../utils";
+import { serializeMetaInfoToString, generate40CharactersRandomString } from "../utils";
 
 export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
 export class SigningKey {
@@ -31,7 +31,7 @@ export class SigningKey {
         if (SigningKey.instance.key === undefined) {
             let key = await getSigningKeyForRefreshToken(connection);
             if (key === null) {
-                key = '' // @todo
+                key = generate40CharactersRandomString();
                 await newSigningKeyForRefreshToken(connection, key, Date.now());
             }
             SigningKey.instance.key = key;
