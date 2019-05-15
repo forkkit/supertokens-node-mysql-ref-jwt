@@ -1,5 +1,5 @@
-import * as validator from "validator";
-import { createHash } from "crypto";
+import { createHash } from 'crypto';
+import * as validator from 'validator';
 
 export const SessionErrors = {
     noAccessTokenInHeaders: ""
@@ -16,7 +16,7 @@ export const JWTErrors = {
 export function checkIfStringIsJSONObj(stringText: string): boolean {
     try {
         let result = JSON.parse(stringText);
-        return result !== null && typeof(result) === "object";
+        return result !== null && typeof (result) === "object";
     } catch (err) {
         return false;
     }
@@ -91,8 +91,9 @@ export function serializeMetaInfoToString(metaInfo: any): any {
     return JSON.stringify(serializeMetaInfo(metaInfo));
 }
 
+// TODO: dont just use date.now()!! use something more. add more randomness!!! What is the context of using these? for keys, md5 is unacceptable!
 export function generate32CharactersRandomString(): string {
-    return createHash("md5").update(Date.now().toString()).digest("hex");
+    return createHash("md5").update(Date.now().toString()).digest("hex");   // TODO: DO NOT USE MD5!!!!!!!!
 }
 
 export function generate40CharactersRandomString(): string {
@@ -100,5 +101,5 @@ export function generate40CharactersRandomString(): string {
 }
 
 export function generate24CharactersRandomString(): string {
-    return createHash("md5").update(Date.now().toString()).digest("base64");
+    return createHash("md5").update(Date.now().toString()).digest("base64");  // TODO: DO NOT USE MD5!!!!!!!!
 }
