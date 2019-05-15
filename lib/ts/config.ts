@@ -101,10 +101,10 @@ const defaultConfig = {
         host: "localhost",
         port: 3306,
         connectionLimit: 50,
-        db: "qually-auth",  // TODO: just make it auth
+        db: "qually_auth", // TODO: just make it auth
         tables: {
-            signingKey: "signing-key",
-            refreshTokens: "refresh-token"
+            signingKey: "signing_key",
+            refreshTokens: "refresh_token"
         }
     },
     tokens: {

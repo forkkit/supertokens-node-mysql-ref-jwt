@@ -1,7 +1,7 @@
 import { Config } from "../config";
 import { Request, Response } from "express";
 import { getCookieValue, setCookie } from "../cookie";
-import { getConnection, Connection } from "../db/mysql";
+import { Connection } from "../db/mysql";
 import {
     getSigningKeyForAccessToken,
     newSigningKeyForAccessToken,
@@ -13,6 +13,7 @@ import {
     TypeAccessTokenJWTPayload,
     TypeInputAccessTokenJWTPayload
 } from "../jwt";
+import { generate40CharactersRandomString } from "../utils";
 
 export type TypeGetSigningKeyFunction = (connection?: Connection) => Promise<string>;
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
@@ -75,7 +76,7 @@ export class SigningKey {
         if (this.key === undefined) {
             let key = await getSigningKeyForAccessToken(connection);
             if (key === undefined) {
-                const value = '' // @todo: generate random string
+                const value = generate40CharactersRandomString();
                 const createdAt = Date.now();
                 await newSigningKeyForAccessToken(connection, value, createdAt);
                 this.key = {
@@ -87,7 +88,7 @@ export class SigningKey {
             }
         }
         if (this.dynamic && Date.now() > (this.key.createdAt + this.updateInterval)) {
-            const value = '' // @todo: generate random string
+            const value = generate40CharactersRandomString();
             const createdAt = Date.now();
             await updateSingingKeyForAccessToken(connection, value, createdAt);
             this.key = {

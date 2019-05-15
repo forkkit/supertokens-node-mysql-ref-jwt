@@ -1,4 +1,5 @@
 import * as validator from "validator";
+import { createHash } from "crypto";
 
 export const SessionErrors = {
     noAccessTokenInHeaders: ""
@@ -88,4 +89,16 @@ export function serializeMetaInfo(metaInfo: any): any {
 
 export function serializeMetaInfoToString(metaInfo: any): any {
     return JSON.stringify(serializeMetaInfo(metaInfo));
+}
+
+export function generate32CharactersRandomString(): string {
+    return createHash("md5").update(Date.now().toString()).digest("hex");
+}
+
+export function generate40CharactersRandomString(): string {
+    return createHash("sha1").update(Date.now().toString()).digest("hex");
+}
+
+export function generate24CharactersRandomString(): string {
+    return createHash("md5").update(Date.now().toString()).digest("base64");
 }

@@ -20,7 +20,8 @@ import {
     updateRefershTokenInHeaders,
     verifyAndDecryptRefreshToken,
 } from './tokens/refreshToken';
-import { serializeMetaInfo, SessionErrors } from './utils';
+import { generate32CharactersRandomString, serializeMetaInfo, SessionErrors } from './utils';
+
 
 export function init(config: TypeInputConfig) {
     Config.set(config); // TODO: this also might throw an error if config is not valid. So combine catching this errow with the mysql init error and other errors here too.
@@ -135,10 +136,10 @@ async function newSession(request: Request, response: Response, userId: string, 
             rTHash: refreshToken,
             exp: accessTokenExpiry
         }
-        const idRefreshToken = "" // @todo: random string
+        const idRefreshToken = generate32CharactersRandomString();
         await updateAccessTokenInHeaders(jwtPayload, response, connection);
         await updateRefershTokenInHeaders(refreshToken, response);
-        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, config.cookie.secure, false, config.tokens.refreshToken.validity, null);
+        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
         return new Session(userId, metaInfo, accessTokenExpiry, refreshToken);
     } catch (err) {
         connection.setDestroyConnection();
