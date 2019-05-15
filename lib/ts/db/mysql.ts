@@ -1,6 +1,8 @@
-import * as mysql from "mysql";
-import { Config } from "../config";
+import * as mysql from 'mysql';
 
+import { Config } from '../config';
+
+// TODO: i would like you to make this as close to our production system as possible.. since thats already tested!! so i don't wanna take risk. use same structure and function largely!
 /**
  * @todo read about what happens when connection is released, does the isolation level stays for that connection?
  */
@@ -8,7 +10,7 @@ export class Mysql {
     private static instance: undefined | Mysql;
     private pool: mysql.Pool;
 
-    private constructor (config: TypeMysqlConfig) {
+    private constructor(config: TypeMysqlConfig) {
         this.pool = mysql.createPool({
             host: config.host,
             port: config.port,
@@ -16,10 +18,10 @@ export class Mysql {
             password: config.password,
             database: config.db,
             connectionLimit: config.connectionLimit
-        })
+        });
     }
 
-    static async init () {
+    static async init() {
         if (Mysql.instance !== undefined) {
             const config = Config.get();
             Mysql.instance = new Mysql(config.mysql);
@@ -27,7 +29,7 @@ export class Mysql {
         }
     }
 
-    static getConnection (): Promise<mysql.PoolConnection> {
+    static getConnection(): Promise<mysql.PoolConnection> { // TODO: you can do this in the getConnection function below itself.. no need to have 2 getConnection functions like this.
         return new Promise<mysql.PoolConnection>((resolve, reject) => {
             if (Mysql.instance === undefined) {
                 reject("mysql not initiated");
@@ -39,7 +41,7 @@ export class Mysql {
                     return;
                 }
                 resolve(connection);
-            })
+            });
         });
     }
 }
@@ -47,7 +49,7 @@ export class Mysql {
 export async function getConnection(): Promise<Connection> {
     try {
         const mysqlConnection = await Mysql.getConnection();
-        return new Connection(mysqlConnection); 
+        return new Connection(mysqlConnection);
     } catch (err) {
         /**
          * @todo
@@ -61,23 +63,24 @@ export class Connection {
     private destroyConnnection = false;
     private connection: mysql.PoolConnection;
 
-    constructor (connection: mysql.PoolConnection) {
+    constructor(connection: mysql.PoolConnection) {
         this.connection = connection;
     }
 
+    // TODO: do not use any for params.. define them as being strings or number etc.. 
     executeQuery = (query: string, params: any[]): Promise<any> => {
         const connection = this.connection;
         return new Promise<any>(async (resolve, reject) => {
-            try {
+            try {   // TODO: why have this await new Promise thing? Why not just call connection.query.. and then in that use resolve, reject?
                 const queryResult = await new Promise<any>((resolve2, reject2) => {
-                    connection.query(query, params, (err, results, fields) => {
+                    connection.query(query, params, (err, results, fields) => { // TODO: we should also pass back field?
                         if (err) {
                             reject2(err);
                             return;
                         }
-                        resolve2(results)
-                    })
-                })
+                        resolve2(results);
+                    });
+                });
                 resolve(queryResult);
             } catch (err) {
                 /**
@@ -85,7 +88,7 @@ export class Connection {
                  */
                 reject(err);
             }
-        })
+        });
     }
 
     // executeTransactions = (queries: {
@@ -152,7 +155,8 @@ export class Connection {
             } else {
                 this.connection.release();
             }
-        } catch (err) {
+            // TODO: set isClosed to true?
+        } catch (err) { // TODO: are you sure those functions above throw errors?
             /**
              * @todo
              */
@@ -186,8 +190,8 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
         const refreshTokensTableQueryPromise = mysqlConnection.executeQuery(refreshTokensTableQuery, []);
         await signKeyTableQueryPromise;
         await refreshTokensTableQueryPromise;
-        mysqlConnection.closeConnection();
-    } catch (err) {
+        mysqlConnection.closeConnection();  // TODO: this should be in try {} finally block!
+    } catch (err) { // TODO: destroy connection in catch block?
         throw err;
     }
 }
