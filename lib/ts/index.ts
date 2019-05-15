@@ -1,28 +1,30 @@
-import { Config, TypeInputConfig } from "./config";
-import { Mysql, getConnection, Connection } from "./db/mysql";
-import { 
-    verifyTokenAndPayload,
-    getAccessTokenFromRequest,
-    updateAccessTokenInHeaders,
-    SigningKey as accessTokenSigningKey
-} from "./tokens/accessToken";
+import { Request, Response } from 'express';
+
+import { Config, TypeInputConfig } from './config';
+import { setCookie } from './cookie';
+import { getConnection, Mysql } from './db/mysql';
+import { TypeInputAccessTokenJWTPayload } from './jwt';
 import {
-    updateMetaInfo,
+    getAccessTokenFromRequest,
+    SigningKey as accessTokenSigningKey,
+    updateAccessTokenInHeaders,
+    verifyTokenAndPayload,
+} from './tokens/accessToken';
+import {
     getNewRefreshToken,
-    getRefreshTokenInfo,
     getRefreshTokenFromRequest,
+    getRefreshTokenInfo,
+    promoteChildRefreshTokenToMainTable,
+    SigningKey as refreshTokenSigningKey,
+    updateMetaInfo,
     updateRefershTokenInHeaders,
     verifyAndDecryptRefreshToken,
-    promoteChildRefreshTokenToMainTable,
-    SigningKey as refreshTokenSigningKey
-} from "./tokens/refreshToken";
-import { Request, Response } from "express";
-import { SessionErrors, serializeMetaInfo, generate32CharactersRandomString } from "./utils";
-import { TypeInputAccessTokenJWTPayload } from "./jwt";
-import { setCookie } from "./cookie";
+} from './tokens/refreshToken';
+import { generate32CharactersRandomString, serializeMetaInfo, SessionErrors } from './utils';
 
-export function init (config: TypeInputConfig) {
-    Config.set(config);
+
+export function init(config: TypeInputConfig) {
+    Config.set(config); // TODO: this also might throw an error if config is not valid. So combine catching this errow with the mysql init error and other errors here too.
     Mysql.init().then(() => {
         accessTokenSigningKey.init();
         refreshTokenSigningKey.init();
@@ -39,7 +41,7 @@ class Session {
     private expiresAt: number;
     private rTHash: string;
 
-    constructor (userId: string, metaInfo: any, expiresAt: number, rTHash: string) {
+    constructor(userId: string, metaInfo: any, expiresAt: number, rTHash: string) {
         this.userId = userId;
         this.metaInfo = metaInfo;
         this.expiresAt = expiresAt;
@@ -75,7 +77,7 @@ class Session {
     }
 }
 
-export async function getSession (request: Request, response: Response): Promise<Session> {
+export async function getSession(request: Request, response: Response): Promise<Session> {
     const connection = await getConnection();
     try {
         const accessToken = getAccessTokenFromRequest(request);
@@ -97,7 +99,7 @@ export async function getSession (request: Request, response: Response): Promise
                 }
             }
             await updateRefershTokenInHeaders(jwtPayload.rTHash, response);
-            jwtPayload = { 
+            jwtPayload = {
                 userId: jwtPayload.userId,
                 metaInfo: parentRefreshTokenInfo.metaInfo,
                 exp: jwtPayload.exp,
@@ -121,7 +123,7 @@ export async function createNewSession(request: Request, response: Response, use
     return await newSession(request, response, userId, metaInfo, null);
 }
 
-async function newSession (request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null): Promise<Session> {
+async function newSession(request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null): Promise<Session> {
     const connection = await getConnection();
     try {
         metaInfo = serializeMetaInfo(metaInfo);
@@ -150,7 +152,7 @@ async function newSession (request: Request, response: Response, userId: string,
     }
 }
 
-export async function refreshSession (request: Request, response: Response) {
+export async function refreshSession(request: Request, response: Response) {
     const connection = await getConnection();
     try {
         const refreshToken = getRefreshTokenFromRequest(request);
