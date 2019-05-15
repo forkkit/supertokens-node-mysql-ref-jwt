@@ -53,29 +53,25 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
         tokens: {
             accessTokens: config.tokens.accessTokens === undefined ? {
                 signingKey: {
-                    length: defaultConfig.tokens.accessTokens.signingKey.length.default,
                     dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
-                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
+                    updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default * 60 * 60 * 1000,
                     get: undefined
                 },
-                validity: defaultConfig.tokens.accessTokens.validity.default
+                validity: defaultConfig.tokens.accessTokens.validity.default * 1000
             } : {
                     signingKey: config.tokens.accessTokens.signingKey === undefined ? {
-                        length: defaultConfig.tokens.accessTokens.signingKey.length.default,
                         dynamic: defaultConfig.tokens.accessTokens.signingKey.dynamic,
                         updateInterval: defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
                         get: undefined
                     } : {
-                            length: config.tokens.accessTokens.signingKey.length || defaultConfig.tokens.accessTokens.signingKey.length.default,
                             dynamic: config.tokens.accessTokens.signingKey.dynamic || defaultConfig.tokens.accessTokens.signingKey.dynamic,
                             updateInterval: config.tokens.accessTokens.signingKey.updateInterval || defaultConfig.tokens.accessTokens.signingKey.updateInterval.default,
                             get: config.tokens.accessTokens.signingKey.get
                         },
-                    validity: config.tokens.accessTokens.validity || defaultConfig.tokens.accessTokens.validity.default
+                    validity: config.tokens.accessTokens.validity || defaultConfig.tokens.accessTokens.validity.default * 1000
                 },
             refreshToken: {
-                length: config.tokens.refreshToken.length || defaultConfig.tokens.refreshToken.length.default,
-                validity: config.tokens.refreshToken.validity || defaultConfig.tokens.refreshToken.validity.default,
+                validity: (config.tokens.refreshToken.validity || defaultConfig.tokens.refreshToken.validity.default) * 60 * 60 * 1000,
                 renewTokenURL: config.tokens.refreshToken.renewTokenURL
             }
         },
@@ -93,15 +89,15 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
         security: {
             onTheftDetection: config.security.onTheftDetection
         }
-    }
-}
+    };
+};
 
 const defaultConfig = {
     mysql: {
         host: "localhost",
         port: 3306,
         connectionLimit: 50,
-        db: "qually_auth", // TODO: just make it auth
+        db: "auth_session",
         tables: {
             signingKey: "signing_key",
             refreshTokens: "refresh_token"
@@ -110,11 +106,6 @@ const defaultConfig = {
     tokens: {
         accessTokens: {
             signingKey: {
-                length: {   // TODO: do not need length.
-                    max: 128,
-                    min: 32,
-                    default: 64
-                },
                 dynamic: false,
                 updateInterval: {   // in hours.
                     min: 1,
@@ -129,11 +120,6 @@ const defaultConfig = {
             }
         },
         refreshToken: {
-            length: { // TODO: do not need length.
-                min: 32,
-                max: 128,
-                default: 64
-            },
             validity: { // in hours.
                 min: 1,
                 max: 365 * 24,
@@ -149,20 +135,20 @@ const defaultConfig = {
     }
 };
 
-type TypeInfoLoggingFunction = (info: any) => void
-type TypeErrorLoggingFunction = (err: any) => void
+type TypeInfoLoggingFunction = (info: any) => void;
+type TypeErrorLoggingFunction = (err: any) => void;
 
 // TODO: also have refresh token in this function? So that user can invalidate just that particular session.. and not logout user from all their devices.
-type TypeSecurityOnTheftDetectionFunction = (userId: string, reason: any) => void
+type TypeSecurityOnTheftDetectionFunction = (userId: string, reason: any) => void;
 
 type TypeSecurityConfig = {
     onTheftDetection: TypeSecurityOnTheftDetectionFunction | undefined
-}
+};
 
 type TypeLoggingConfig = {
     info: TypeInfoLoggingFunction | undefined,
     error: TypeErrorLoggingFunction | undefined
-}
+};
 
 export type TypeInputConfig = {
     mysql: {
@@ -180,7 +166,6 @@ export type TypeInputConfig = {
     tokens: {
         accessTokens: {
             signingKey: {
-                length: number | undefined,
                 dynamic: boolean | undefined,
                 updateInterval: number | undefined,
                 get: TypeGetSigningKeyUserFunction | undefined
@@ -188,7 +173,6 @@ export type TypeInputConfig = {
             validity: number | undefined
         } | undefined,
         refreshToken: {
-            length: number | undefined,
             validity: number | undefined,
             renewTokenURL: string   // TODO: this is just the path right? If so, please specify this.
         }
@@ -206,7 +190,6 @@ type TypeConfig = {
     tokens: {
         accessTokens: TypeAccessTokenConfig,
         refreshToken: {
-            length: number,
             validity: number,
             renewTokenURL: string
         }
@@ -220,4 +203,4 @@ type TypeConfig = {
         idRefreshTokenCookieKey: string
     },
     security: TypeSecurityConfig
-}
+};

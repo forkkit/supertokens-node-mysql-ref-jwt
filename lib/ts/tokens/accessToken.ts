@@ -15,7 +15,6 @@ import { generate40CharactersRandomString } from '../utils';
 export type TypeGetSigningKeyFunction = (connection?: Connection) => Promise<string>;
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
 export type TypeSingingKeyConfig = {
-    length: number, // TODO: we do not need this
     dynamic: boolean,
     updateInterval: number
     get: TypeGetSigningKeyUserFunction | undefined
@@ -29,7 +28,6 @@ export const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = 'access-token-signing-key';  
 
 export class SigningKey {
     private dynamic: boolean;
-    private length: number; // TODO: no need for this.
     private updateInterval: number;
     private get: TypeGetSigningKeyFunction;
     private key: {
@@ -41,7 +39,6 @@ export class SigningKey {
 
     private constructor(config: TypeSingingKeyConfig) {
         this.dynamic = config.dynamic;
-        this.length = config.length;
         this.updateInterval = config.updateInterval;
         if (config.get === undefined) {
             this.get = this.getKey;
