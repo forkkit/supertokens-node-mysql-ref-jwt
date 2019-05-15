@@ -6,9 +6,9 @@ import {
     updateMetaInfoForRefreshToken
 } from "../db/tokens";
 import { getConnection, Connection } from "../db/mysql";
-import { setCookie } from "../cookie";
+import { setCookie, getCookieValue } from "../cookie";
 import { Config } from "../config";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { serializeMetaInfoToString } from "../utils";
 
 export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
@@ -48,7 +48,7 @@ export async function getRefreshTokenInfo(refreshToken: string, connection: Conn
     return await getInfoForRefreshToken(connection, refreshToken);
 }
 
-export async function getNewRefreshToken(userId: string, metaInfo: any, connection: Connection): Promise<string> {
+export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, connection: Connection): Promise<string> {
     /**
      * @todo
      */
@@ -79,6 +79,28 @@ export async function updateRefershTokenInHeaders(refreshToken: string, response
 export async function updateMetaInfo(refreshToken: string, metaInfo: any, connection: Connection) {
     metaInfo = serializeMetaInfoToString(metaInfo);
     await updateMetaInfoForRefreshToken(connection, refreshToken, metaInfo);
+}
+
+export function getRefreshTokenFromRequest(request: Request): string | null {
+    const config = Config.get();
+    const refreshToken = getCookieValue(request, config.cookie.refreshTokenCookieKey);
+    if (refreshToken === undefined) {
+        return null;
+    }
+    return refreshToken;
+}
+
+export async function verifyAndDecryptRefreshToken(refreshToken: string, connection: Connection): Promise<{
+    parentToken: string | null,
+    userId: string
+}> {
+    /**
+     * @todo
+     */
+    return {
+        parentToken: "",
+        userId: ""
+    };
 }
 
 export type TypeRefreshTokenInfo = {
