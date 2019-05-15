@@ -11,6 +11,7 @@ import {
     sanitizeBooleanInput,
     checkIfStringIsJSONObj
 } from "./utils";
+import { Connection } from "./db/mysql";
 
 const algorithm = "sha256";
 const header = Buffer.from(JSON.stringify({
@@ -18,12 +19,12 @@ const header = Buffer.from(JSON.stringify({
     typ:"JWT"
 })).toString("base64");
 
-type TypeInputAccessTokenJWTPayload = {
+export type TypeInputAccessTokenJWTPayload = {
     exp: number,
     userId: string,
     metaInfo: string,
     rTHash: string,
-    pRTHash: string | undefined
+    pRTHash?: string
 };
 
 export type TypeAccessTokenJWTPayload = {
@@ -31,11 +32,11 @@ export type TypeAccessTokenJWTPayload = {
     userId: string,
     metaInfo: any,
     rTHash: string
-    pRTHash: string | undefined
+    pRTHash?: string
 };
 
-export async function createNewAccessTokenJWT(jsonPayload: TypeInputAccessTokenJWTPayload): Promise<string> {
-    const signingKey = await getAccessTokenSigningKey();
+export async function createNewAccessTokenJWT(jsonPayload: TypeInputAccessTokenJWTPayload, connection: Connection): Promise<string> {
+    const signingKey = await getAccessTokenSigningKey(connection);
     const payload = Buffer.from(JSON.stringify(jsonPayload)).toString("base64");
     const hashFunction = createHmac(algorithm, signingKey);
     const signature = hashFunction.update(`${header}.${payload}`).digest("hex");
@@ -43,7 +44,7 @@ export async function createNewAccessTokenJWT(jsonPayload: TypeInputAccessTokenJ
 }
 
 // @todo think if you want to change the name of the function
-export async function verifyAccessTokenJWTAndGetPayload(token: string): Promise<TypeAccessTokenJWTPayload> {
+export async function verifyAccessTokenJWTAndGetPayload(token: string, connection: Connection): Promise<TypeAccessTokenJWTPayload> {
     const splittedInput = token.split(".");
     if (splittedInput.length !== 3) {
         throw Error(JWTErrors.invalidJWT);
@@ -53,7 +54,7 @@ export async function verifyAccessTokenJWTAndGetPayload(token: string): Promise<
     }
     const payload = splittedInput[1];
     const signature = splittedInput[2];
-    const signingKey = await getAccessTokenSigningKey();
+    const signingKey = await getAccessTokenSigningKey(connection);
     const hashFunction = createHmac(algorithm, signingKey);
     const signatureFromHeaderAndPayload = hashFunction.update(`${header}.${payload}`).digest("hex");
     if (signatureFromHeaderAndPayload !== signature) {

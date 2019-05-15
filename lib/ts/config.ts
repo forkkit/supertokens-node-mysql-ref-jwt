@@ -1,5 +1,5 @@
 import { TypeMysqlConfig } from "./db/mysql";
-import { TypeAccessTokenConfig, TypeGetSigningKeyFunction } from "./tokens/accessToken";
+import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from "./tokens/accessToken";
 /**
  * @class
  */
@@ -78,7 +78,10 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
         },
         cookie: {
             secure: config.cookie.secure || defaultConfig.cookie.secure,
-            domain: config.cookie.domain
+            domain: config.cookie.domain,
+            accessTokenCookieKey: defaultConfig.cookie.accessTokenCookieKey,
+            refreshTokenCookieKey: defaultConfig.cookie.refreshTokenCookieKey,
+            idRefreshTokenCookieKey: defaultConfig.cookie.idRefreshTokenCookieKey
         },
         logging: {
             info: config.logging.info,
@@ -136,7 +139,10 @@ const defaultConfig = {
         }
     },
     cookie: {
-        secure: true
+        secure: true,
+        accessTokenCookieKey: "sAccessToken",
+        refreshTokenCookieKey: "sRefreshToken",
+        idRefreshTokenCookieKey: "sIdRefreshToken"
     }
 };
 
@@ -172,7 +178,7 @@ export type TypeInputConfig = {
                 length: number | undefined,
                 dynamic: boolean | undefined,
                 updateInterval: number | undefined,
-                get: TypeGetSigningKeyFunction | undefined
+                get: TypeGetSigningKeyUserFunction | undefined
             } | undefined,
             validity: number | undefined
         } | undefined,
@@ -203,7 +209,10 @@ type TypeConfig = {
     logging: TypeLoggingConfig,
     cookie: {
         domain: string,
-        secure: boolean
+        secure: boolean,
+        accessTokenCookieKey: string,
+        refreshTokenCookieKey: string,
+        idRefreshTokenCookieKey: string
     },
     security: TypeSecurityConfig
 }
