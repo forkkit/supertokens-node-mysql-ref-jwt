@@ -31,7 +31,7 @@ import {
 
 
 export async function init(config: TypeInputConfig) {
-    Config.set(config); // TODO: this also might throw an error if config is not valid. So combine catching this errow with the mysql init error and other errors here too.
+    Config.set(config);
     await Mysql.init();
     accessTokenSigningKey.init();
     refreshTokenSigningKey.init();
@@ -63,36 +63,36 @@ class Session {
     }
 
     updateMetaInfo = async (metaInfo: any) => {
-        const connection = await getConnection();
+        const mysqlConnection = await getConnection();
         try {
-            await updateMetaInfo(this.rTHash, metaInfo, connection);
+            await updateMetaInfo(this.rTHash, metaInfo, mysqlConnection);
             this.metaInfo = metaInfo;
         } catch (err) {
-            connection.setDestroyConnection();
+            mysqlConnection.setDestroyConnection();
             /**
              * @todo
              */
             throw Error()
         } finally {
-            connection.closeConnection();
+            mysqlConnection.closeConnection();
         }
     }
 }
 
 export async function getSession(request: Request, response: Response): Promise<Session> {
-    const connection = await getConnection();
+    const mysqlConnection = await getConnection();
     try {
         const accessToken = getAccessTokenFromRequest(request);
         if (accessToken === null) {
             throw Error(SessionErrors.noAccessTokenInHeaders);
         }
-        let jwtPayload = await verifyTokenAndGetPayload(accessToken, connection);
+        let jwtPayload = await verifyTokenAndGetPayload(accessToken, mysqlConnection);
         if (jwtPayload.pRTHash !== undefined) {
-            let parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.pRTHash, connection);
+            let parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.pRTHash, mysqlConnection);
             if (parentRefreshTokenInfo !== undefined && jwtPayload.userId === parentRefreshTokenInfo.userId) {
-                await promoteChildRefreshTokenToMainTable(jwtPayload.rTHash, jwtPayload.pRTHash, connection);
+                await promoteChildRefreshTokenToMainTable(jwtPayload.rTHash, jwtPayload.pRTHash, mysqlConnection);
             } else {
-                parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.rTHash, connection);
+                parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.rTHash, mysqlConnection);
                 if (parentRefreshTokenInfo === undefined || parentRefreshTokenInfo.userId !== jwtPayload.userId) {
                     /**
                      * @todo error message
@@ -107,17 +107,17 @@ export async function getSession(request: Request, response: Response): Promise<
                 exp: jwtPayload.exp,
                 rTHash: jwtPayload.rTHash
             };
-            await updateAccessTokenInHeaders(jwtPayload, response, connection);
+            await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         }
         return new Session(jwtPayload.userId, jwtPayload.metaInfo, jwtPayload.exp, jwtPayload.rTHash);
     } catch (err) {
-        connection.setDestroyConnection();
+        mysqlConnection.setDestroyConnection();
         /**
          * @todo error
          */
         throw Error();
     } finally {
-        connection.closeConnection();
+        mysqlConnection.closeConnection();
     }
 }
 
@@ -132,11 +132,11 @@ export async function createNewSession(request: Request, response: Response, use
 }
 
 async function newSession(request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null, sessionId: string | null): Promise<Session> {
-    const connection = await getConnection();
+    const mysqlConnection = await getConnection();
     try {
         metaInfo = serializeMetaInfo(metaInfo);
         const config = Config.get();
-        const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, sessionId, connection);
+        const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, sessionId, mysqlConnection);
         const accessTokenExpiry = Date.now() + config.tokens.accessTokens.validity;
         const jwtPayload: TypeInputAccessTokenPayload = {
             userId,
@@ -145,23 +145,23 @@ async function newSession(request: Request, response: Response, userId: string, 
             exp: accessTokenExpiry
         }
         const idRefreshToken = generate32CharactersRandomString();
-        await updateAccessTokenInHeaders(jwtPayload, response, connection);
+        await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         await updateRefershTokenInHeaders(refreshToken, response);
         setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
         return new Session(userId, metaInfo, accessTokenExpiry, refreshToken);
     } catch (err) {
-        connection.setDestroyConnection();
+        mysqlConnection.setDestroyConnection();
         /**
          * @todo error
          */
         throw Error();
     } finally {
-        connection.closeConnection();
+        mysqlConnection.closeConnection();
     }
 }
 
 export async function refreshSession(request: Request, response: Response) {
-    const connection = await getConnection();
+    const mysqlConnection = await getConnection();
     try {
         const refreshToken = getRefreshTokenFromRequest(request);
         if (refreshToken === null) {
@@ -170,9 +170,9 @@ export async function refreshSession(request: Request, response: Response) {
              */
             throw Error();
         }
-        const decryptedInfoForRefreshToken = await verifyAndDecryptRefreshToken(refreshToken, connection);
+        const decryptedInfoForRefreshToken = await verifyAndDecryptRefreshToken(refreshToken, mysqlConnection);
         let parentToken = hash(refreshToken);
-        let parentRefreshTokenInfo = await getRefreshTokenInfo(parentToken, connection);
+        let parentRefreshTokenInfo = await getRefreshTokenInfo(parentToken, mysqlConnection);
         if (parentRefreshTokenInfo === undefined || decryptedInfoForRefreshToken.userId !== parentRefreshTokenInfo.userId || hash(decryptedInfoForRefreshToken.sessionId) !== parentRefreshTokenInfo.sessionId) {
             if (parentRefreshTokenInfo !== undefined) {
                 // NOTE: this part will never really be called. this is just precaution
@@ -183,9 +183,9 @@ export async function refreshSession(request: Request, response: Response) {
                 throw Error();
             }
             if (decryptedInfoForRefreshToken.parentToken !== null) {
-                parentRefreshTokenInfo = await getRefreshTokenInfo(decryptedInfoForRefreshToken.parentToken, connection);
+                parentRefreshTokenInfo = await getRefreshTokenInfo(decryptedInfoForRefreshToken.parentToken, mysqlConnection);
                 if (parentRefreshTokenInfo === undefined || parentRefreshTokenInfo.userId !== decryptedInfoForRefreshToken.userId) {
-                    await checkIfSessionIdExistsAndNotifyForTokenTheft(connection, hash(decryptedInfoForRefreshToken.sessionId));
+                    await checkIfSessionIdExistsAndNotifyForTokenTheft(mysqlConnection, hash(decryptedInfoForRefreshToken.sessionId));
                     /**
                      * @todo
                      */
@@ -200,12 +200,12 @@ export async function refreshSession(request: Request, response: Response) {
         }
         return await newSession(request, response, parentRefreshTokenInfo.userId, parentRefreshTokenInfo.metaInfo, parentToken, parentRefreshTokenInfo.sessionId);
     } catch (err) {
-        connection.setDestroyConnection();
+        mysqlConnection.setDestroyConnection();
         /**
          * @todo error
          */
         throw Error();
     } finally {
-        connection.closeConnection();
+        mysqlConnection.closeConnection();
     }
 }

@@ -33,15 +33,15 @@ export class SigningKey {
         }
     }
 
-    static async getSigningKey (connection: Connection): Promise<string> {
+    static async getSigningKey (mysqlConnection: Connection): Promise<string> {
         if (SigningKey.instance === undefined) {
             throw Error(); // @todo
         }
         if (SigningKey.instance.key === undefined) {
-            let key = await getSigningKeyForRefreshToken(connection);
+            let key = await getSigningKeyForRefreshToken(mysqlConnection);
             if (key === null) {
                 key = await generateNewKey();
-                await newSigningKeyForRefreshToken(connection, key, Date.now());
+                await newSigningKeyForRefreshToken(mysqlConnection, key, Date.now());
             }
             SigningKey.instance.key = key;
         }
@@ -49,37 +49,37 @@ export class SigningKey {
     }
 }
 
-export function getRefreshTokenSigningKey(connection: Connection): Promise<string> {
-    return SigningKey.getSigningKey(connection);
+export function getRefreshTokenSigningKey(mysqlConnection: Connection): Promise<string> {
+    return SigningKey.getSigningKey(mysqlConnection);
 }
 
-export async function getRefreshTokenInfo(refreshTokenHash: string, connection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
+export async function getRefreshTokenInfo(refreshTokenHash: string, mysqlConnection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
     const refreshTokenInDB = hash(refreshTokenHash);
-    return await getInfoForRefreshToken(connection, refreshTokenInDB);
+    return await getInfoForRefreshToken(mysqlConnection, refreshTokenInDB);
 }
 
-export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, sessionId: string | null, connection: Connection): Promise<string> {
+export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, sessionId: string | null, mysqlConnection: Connection): Promise<string> {
     const randomString = generate44ChararctersRandomString();
     sessionId = sessionId === null ? generate32CharactersRandomString() : sessionId;
     let stringToEncrypt = `${randomString}.${userId}.${sessionId}`;
     if (parentToken !== null) {
         stringToEncrypt += `.${parentToken}`;
     }
-    const signingKey = await getRefreshTokenSigningKey(connection);
+    const signingKey = await getRefreshTokenSigningKey(mysqlConnection);
     const encryptedPart = await encrypt(stringToEncrypt, signingKey);
     const refreshToken = `${encryptedPart}.${randomString}`;
     const refreshTokenToStoreInDB = hash(hash(refreshToken));
     metaInfo = serializeMetaInfoToString(metaInfo);
-    await insertIntoRefreshToken(connection, refreshTokenToStoreInDB, userId, hash(sessionId), metaInfo, Date.now());
+    await insertIntoRefreshToken(mysqlConnection, refreshTokenToStoreInDB, userId, hash(sessionId), metaInfo, Date.now());
     return refreshToken;
 }
 
-export async function promoteChildRefreshTokenToMainTable(childToken: string, parentToken: string, connection: Connection) {
+export async function promoteChildRefreshTokenToMainTable(childToken: string, parentToken: string, mysqlConnection: Connection) {
     const config = Config.get();
     const childTokenCreatedAt = Date.now(); 
     const childTokenExpiresAt = childTokenCreatedAt + config.tokens.refreshToken.validity;
-    await promoteRefreshToken(connection, childToken, childTokenExpiresAt, childTokenCreatedAt, parentToken);
-    const childInfoInMainTable = await getInfoForRefreshToken(connection, childToken);
+    await promoteRefreshToken(mysqlConnection, childToken, childTokenExpiresAt, childTokenCreatedAt, parentToken);
+    const childInfoInMainTable = await getInfoForRefreshToken(mysqlConnection, childToken);
     if (childInfoInMainTable === undefined) {
         /**
          * @todo
@@ -94,9 +94,9 @@ export async function updateRefershTokenInHeaders(refreshToken: string, response
     setCookie(response, config.cookie.refreshTokenCookieKey, refreshToken, config.cookie.domain, config.cookie.secure, true, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
 }
 
-export async function updateMetaInfo(refreshToken: string, metaInfo: any, connection: Connection) {
+export async function updateMetaInfo(refreshToken: string, metaInfo: any, mysqlConnection: Connection) {
     metaInfo = serializeMetaInfoToString(metaInfo);
-    await updateMetaInfoForRefreshToken(connection, refreshToken, metaInfo);
+    await updateMetaInfoForRefreshToken(mysqlConnection, refreshToken, metaInfo);
 }
 
 export function getRefreshTokenFromRequest(request: Request): string | null {
@@ -108,7 +108,7 @@ export function getRefreshTokenFromRequest(request: Request): string | null {
     return refreshToken;
 }
 
-export async function verifyAndDecryptRefreshToken(refreshToken: string, connection: Connection): Promise<{
+export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlConnection: Connection): Promise<{
     parentToken: string | null,
     userId: string,
     sessionId: string
@@ -120,7 +120,7 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, connect
          */
         throw Error();
     }
-    const signingKey = await getRefreshTokenSigningKey(connection);
+    const signingKey = await getRefreshTokenSigningKey(mysqlConnection);
     const randomStringOutside = splittedRefreshToken[1];
     const encryptedPart = splittedRefreshToken[0];
     const decryptedRefreshToken = await decrypt(encryptedPart, signingKey);
@@ -157,8 +157,8 @@ export type TypeRefreshTokenInfo = {
     sessionId: string
 };
 
-export async function checkIfSessionIdExistsAndNotifyForTokenTheft(connection: Connection, sessionId: string) {
-    if (await checkIfSessionIdInDB(connection, sessionId)) {
+export async function checkIfSessionIdExistsAndNotifyForTokenTheft(mysqlConnection: Connection, sessionId: string) {
+    if (await checkIfSessionIdInDB(mysqlConnection, sessionId)) {
         /**
          * @todo token theft module
          */    

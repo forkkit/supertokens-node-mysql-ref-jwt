@@ -18,7 +18,7 @@ import {
     checkIfStringIsJSONObj
 } from '../utils';
 
-export type TypeGetSigningKeyFunction = (connection?: Connection) => Promise<string>;
+export type TypeGetSigningKeyFunction = (mysqlConnection?: Connection) => Promise<string>;
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
 export type TypeSingingKeyConfig = {
     dynamic: boolean,
@@ -60,24 +60,24 @@ export class SigningKey {
         }
     }
 
-    static async getSigningKey(connection: Connection | undefined): Promise<string> {
+    static async getSigningKey(mysqlConnection: Connection | undefined): Promise<string> {
         if (SigningKey.instance === undefined) {
             throw Error();  // TODO: some message!
         }
         if (SigningKey.instance.isUserFunction) {
             return await SigningKey.instance.get();
         }
-        return await SigningKey.instance.get(connection);
+        return await SigningKey.instance.get(mysqlConnection);
     }
 
-    private async getKey(connection: Connection): Promise<string> {
+    private async getKey(mysqlConnection: Connection): Promise<string> {
         const createdAt = Date.now();
         if (this.key === undefined) {
             // TODO: transaction!
-            const key = await getSigningKeyForAccessToken(connection);
+            const key = await getSigningKeyForAccessToken(mysqlConnection);
             if (key === undefined) {
                 const value = await generateNewKey();   // TODO: variable name value?! what does this represent? This is not signing key!? no..
-                await newSigningKeyForAccessToken(connection, value, createdAt);
+                await newSigningKeyForAccessToken(mysqlConnection, value, createdAt);
                 this.key = {
                     value,
                     createdAt
@@ -88,7 +88,7 @@ export class SigningKey {
         }
         if (this.dynamic && Date.now() > (this.key.createdAt + this.updateInterval)) {
             const value = await generateNewKey();
-            await updateSingingKeyForAccessToken(connection, value, createdAt);
+            await updateSingingKeyForAccessToken(mysqlConnection, value, createdAt);
             this.key = {
                 value,
                 createdAt
@@ -98,8 +98,8 @@ export class SigningKey {
     }
 }
 
-export function getAccessTokenSigningKey(connection: Connection): Promise<string> {
-    return SigningKey.getSigningKey(connection);
+export function getAccessTokenSigningKey(mysqlConnection: Connection): Promise<string> {
+    return SigningKey.getSigningKey(mysqlConnection);
 }
 
 export function getAccessTokenFromRequest(request: Request): string | null {
@@ -111,8 +111,8 @@ export function getAccessTokenFromRequest(request: Request): string | null {
     return accessToken;
 }
 
-export async function verifyTokenAndGetPayload(token: string, connection: Connection): Promise<TypeAccessTokenPayload> {
-    let payload = await verifyAndGetPayload(token, getAccessTokenSigningKey, connection);
+export async function verifyTokenAndGetPayload(token: string, mysqlConnection: Connection): Promise<TypeAccessTokenPayload> {
+    let payload = await verifyAndGetPayload(token, getAccessTokenSigningKey, mysqlConnection);
     payload = validatePayload(payload);
     if (payload.exp < Date.now()) {
         throw Error(JWTErrors.jwtExpired);
@@ -120,8 +120,8 @@ export async function verifyTokenAndGetPayload(token: string, connection: Connec
     return payload;
 }
 
-export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPayload, response: Response, connection: Connection) {
-    const accessToken = await createNewJWT<TypeInputAccessTokenPayload>(payload, connection);
+export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPayload, response: Response, mysqlConnection: Connection) {
+    const accessToken = await createNewJWT<TypeInputAccessTokenPayload>(payload, mysqlConnection);
     const config = Config.get();
     setCookie(response, config.cookie.accessTokenCookieKey, accessToken, config.cookie.domain, config.cookie.secure, true, config.tokens.accessTokens.validity, null);
 }

@@ -1,6 +1,7 @@
 import * as mysql from 'mysql';
 
 import { Config } from '../config';
+import { errorLogging } from "../logging";
 
 // TODO: i would like you to make this as close to our production system as possible.. since thats already tested!! so i don't wanna take risk. use same structure and function largely!
 /**
@@ -61,15 +62,15 @@ export async function getConnection(): Promise<Connection> {
 export class Connection {
     private isClosed = false;
     private destroyConnnection = false;
-    private connection: mysql.PoolConnection;
+    private mysqlConnection: mysql.PoolConnection;
 
-    constructor(connection: mysql.PoolConnection) {
-        this.connection = connection;
+    constructor(mysqlConnection: mysql.PoolConnection) {
+        this.mysqlConnection = mysqlConnection;
     }
 
     executeQuery = (query: string, params: paramTypes[]): Promise<any> => {
         return new Promise<any>(async (resolve, reject) => {
-            this.connection.query(query, params, (err, results, fields) => {
+            this.mysqlConnection.query(query, params, (err, results, fields) => {
                 if (err) {
                     reject(err);
                     return;
@@ -83,20 +84,20 @@ export class Connection {
     //     query: string,
     //     params: any[]
     // }[]) => {
-    //     const connection = this.connection;
+    //     const mysqlConnection = this.mysqlConnection;
     //     return new Promise<any>(async (resolve, reject) => {
     //         try {
     //             await new Promise<any>((resolve2, reject2) => {
-    //                 connection.beginTransaction(async (err) => {
+    //                 mysqlConnection.beginTransaction(async (err) => {
     //                     if (err) {
     //                         reject2(err);
     //                         return;
     //                     }
     //                     for (let i = 0; i < queries.length; i++) {
     //                         await new Promise<any>((resolve3, reject3) => {
-    //                             connection.query(queries[i].query, queries[i].params, async (err2, results, fields) => {
+    //                             mysqlConnection.query(queries[i].query, queries[i].params, async (err2, results, fields) => {
     //                                 if (err2) {
-    //                                     connection.rollback(() => {
+    //                                     mysqlConnection.rollback(() => {
     //                                         reject3(err2);
     //                                         return;
     //                                     });
@@ -105,9 +106,9 @@ export class Connection {
     //                             });
     //                         });
     //                     }
-    //                     connection.commit(err2 => {
+    //                     mysqlConnection.commit(err2 => {
     //                         if (err2) {
-    //                             connection.rollback(() => {
+    //                             mysqlConnection.rollback(() => {
     //                                 reject2(err2);
     //                                 return;
     //                             });
@@ -134,20 +135,18 @@ export class Connection {
         if (this.isClosed) {
             return;
         }
-        if (this.connection === undefined) {
+        if (this.mysqlConnection === undefined) {
             throw Error("no connect to MySQL server.");
         }
         try {
             if (this.destroyConnnection) {
-                this.connection.destroy();
+                this.mysqlConnection.destroy();
             } else {
-                this.connection.release();
+                this.mysqlConnection.release();
             }
             this.isClosed = true;
-        } catch (err) { // TODO: are you sure those functions above throw errors?
-            /**
-             * @todo
-             */
+        } catch (err) {
+            errorLogging(err);
         }
     }
 }

@@ -26,8 +26,8 @@ export type TypeAccessTokenPayload = {
     pRTHash?: string
 };
 
-export async function createNewJWT<T>(jsonPayload: T, connection: Connection): Promise<string> {
-    const signingKey = await getAccessTokenSigningKey(connection);
+export async function createNewJWT<T>(jsonPayload: T, mysqlConnection: Connection): Promise<string> {
+    const signingKey = await getAccessTokenSigningKey(mysqlConnection);
     const payload = Buffer.from(JSON.stringify(jsonPayload)).toString("base64");
     const hashFunction = createHmac(algorithm, signingKey);
     const signature = hashFunction.update(`${header}.${payload}`).digest("hex");
@@ -35,7 +35,7 @@ export async function createNewJWT<T>(jsonPayload: T, connection: Connection): P
 }
 
 // @todo think if you want to change the name of the function
-export async function verifyAndGetPayload(token: string, getSingingKey: (connection: Connection) => Promise<string>, connection: Connection): Promise<TypeAccessTokenPayload> {
+export async function verifyAndGetPayload(token: string, getSingingKey: (mConnection: Connection) => Promise<string>, mysqlConnection: Connection): Promise<TypeAccessTokenPayload> {
     const splittedInput = token.split(".");
     if (splittedInput.length !== 3) {
         throw Error(JWTErrors.invalidJWT);
@@ -45,7 +45,7 @@ export async function verifyAndGetPayload(token: string, getSingingKey: (connect
     }
     const payload = splittedInput[1];
     const signature = splittedInput[2];
-    const signingKey = await getSingingKey(connection);
+    const signingKey = await getSingingKey(mysqlConnection);
     const hashFunction = createHmac(algorithm, signingKey);
     const signatureFromHeaderAndPayload = hashFunction.update(`${header}.${payload}`).digest("hex");
     if (signatureFromHeaderAndPayload !== signature) {
