@@ -2,8 +2,7 @@ import {
     randomBytes,
     pbkdf2,
     createCipheriv,
-    createDecipheriv,
-    Binary
+    createDecipheriv
 } from "crypto";
 
 /**

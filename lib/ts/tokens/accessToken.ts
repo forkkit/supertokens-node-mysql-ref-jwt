@@ -5,12 +5,18 @@ import { getCookieValue, setCookie } from '../cookie';
 import { Connection } from '../db/mysql';
 import { getSigningKeyForAccessToken, newSigningKeyForAccessToken, updateSingingKeyForAccessToken } from '../db/tokens';
 import {
-    createNewAccessTokenJWT,
-    TypeAccessTokenJWTPayload,
-    TypeInputAccessTokenJWTPayload,
-    verifyAccessTokenJWTAndGetPayload,
+    createNewJWT,
+    verifyAndGetPayload,
+    TypeAccessTokenPayload,
+    TypeInputAccessTokenPayload
 } from '../jwt';
-import { generate40CharactersRandomString } from '../utils';
+import {
+    JWTErrors,
+    generateNewKey,
+    sanitizeNumberInput,
+    sanitizeStringInput,
+    checkIfStringIsJSONObj
+} from '../utils';
 
 export type TypeGetSigningKeyFunction = (connection?: Connection) => Promise<string>;
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
@@ -23,8 +29,6 @@ export type TypeAccessTokenConfig = {
     signingKey: TypeSingingKeyConfig,
     validity: number
 };
-
-export const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = 'access-token-signing-key';  // store this in db/tokens.ts. This has no use here.
 
 export class SigningKey {
     private dynamic: boolean;
@@ -61,19 +65,18 @@ export class SigningKey {
             throw Error();  // TODO: some message!
         }
         if (SigningKey.instance.isUserFunction) {
-            connection = undefined; // TODO: this is bad style!! call this function here too: return await SigningKey.instance.get(connection);
+            return await SigningKey.instance.get();
         }
         return await SigningKey.instance.get(connection);
     }
 
-    async getKey(connection: Connection): Promise<string> { // TODO: make this private if not used outside the class
+    private async getKey(connection: Connection): Promise<string> {
+        const createdAt = Date.now();
         if (this.key === undefined) {
             // TODO: transaction!
-            let key = await getSigningKeyForAccessToken(connection);
+            const key = await getSigningKeyForAccessToken(connection);
             if (key === undefined) {
-                // TODO: to create key, use the method I told you about!!!!!!!!
-                const value = generate40CharactersRandomString();   // TODO: variable name value?! what does this represent? This is not signing key!? no..
-                const createdAt = Date.now();
+                const value = await generateNewKey();   // TODO: variable name value?! what does this represent? This is not signing key!? no..
                 await newSigningKeyForAccessToken(connection, value, createdAt);
                 this.key = {
                     value,
@@ -84,8 +87,7 @@ export class SigningKey {
             }
         }
         if (this.dynamic && Date.now() > (this.key.createdAt + this.updateInterval)) {
-            const value = generate40CharactersRandomString();   // TODO: see above!! please make this a function here.. do not repeate this code.
-            const createdAt = Date.now();
+            const value = await generateNewKey();
             await updateSingingKeyForAccessToken(connection, value, createdAt);
             this.key = {
                 value,
@@ -109,12 +111,35 @@ export function getAccessTokenFromRequest(request: Request): string | null {
     return accessToken;
 }
 
-export async function verifyTokenAndPayload(token: string, connection: Connection): Promise<TypeAccessTokenJWTPayload> {
-    return await verifyAccessTokenJWTAndGetPayload(token, connection);  // TODO: do check for access token payload here. not in that file
+export async function verifyTokenAndGetPayload(token: string, connection: Connection): Promise<TypeAccessTokenPayload> {
+    let payload = await verifyAndGetPayload(token, getAccessTokenSigningKey, connection);
+    payload = validatePayload(payload);
+    if (payload.exp < Date.now()) {
+        throw Error(JWTErrors.jwtExpired);
+    }
+    return payload;
 }
 
-export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenJWTPayload, response: Response, connection: Connection) {
-    const accessToken = await createNewAccessTokenJWT(payload, connection);
+export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPayload, response: Response, connection: Connection) {
+    const accessToken = await createNewJWT<TypeInputAccessTokenPayload>(payload, connection);
     const config = Config.get();
     setCookie(response, config.cookie.accessTokenCookieKey, accessToken, config.cookie.domain, config.cookie.secure, true, config.tokens.accessTokens.validity, null);
+}
+
+function validatePayload(payload: any): TypeAccessTokenPayload {
+    const exp = sanitizeNumberInput(payload.exp);
+    const userId = sanitizeStringInput(payload.userId);
+    const metaInfo = sanitizeStringInput(payload.metaInfo);
+    const rTHash = sanitizeStringInput(payload.rTHash);
+    const pRTHash = sanitizeStringInput(payload.pRTHash);
+    if (exp === undefined || userId === undefined || metaInfo === undefined || !checkIfStringIsJSONObj(metaInfo) || rTHash === undefined) {
+        throw Error(JWTErrors.invalidPaylaod);
+    }
+    return {
+        exp,
+        userId,
+        metaInfo: JSON.parse(metaInfo),
+        rTHash,
+        pRTHash
+    }
 }

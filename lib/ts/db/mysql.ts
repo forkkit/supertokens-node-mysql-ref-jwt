@@ -170,6 +170,7 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
                 token VARCHAR(128) PRIMARY KEY,
                 user_id VARCHAR(128) NOT NULL,
                 meta_info VARCHAR(255) NOT NULL,
+                session_id VARCHAR(255) NOT NULL,
                 created_at INT UNSIGNED,
                 expires_at INT UNSIGNED
             );

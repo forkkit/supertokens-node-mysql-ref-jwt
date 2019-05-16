@@ -1,6 +1,8 @@
 import {
     promoteRefreshToken,
+    checkIfSessionIdInDB,
     getInfoForRefreshToken,
+    insertIntoRefreshToken,
     getSigningKeyForRefreshToken,
     newSigningKeyForRefreshToken,
     updateMetaInfoForRefreshToken
@@ -9,7 +11,14 @@ import { Connection } from "../db/mysql";
 import { setCookie, getCookieValue } from "../cookie";
 import { Config } from "../config";
 import { Request, Response } from "express";
-import { hash, serializeMetaInfoToString, generate40CharactersRandomString } from "../utils";
+import {
+    hash,
+    generateNewKey,
+    serializeMetaInfoToString,
+    generate32CharactersRandomString,
+    generate44ChararctersRandomString
+} from "../utils";
+import { encrypt, decrypt } from "../crypto";
 
 export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
 export class SigningKey {
@@ -31,7 +40,7 @@ export class SigningKey {
         if (SigningKey.instance.key === undefined) {
             let key = await getSigningKeyForRefreshToken(connection);
             if (key === null) {
-                key = generate40CharactersRandomString();
+                key = await generateNewKey();
                 await newSigningKeyForRefreshToken(connection, key, Date.now());
             }
             SigningKey.instance.key = key;
@@ -44,17 +53,25 @@ export function getRefreshTokenSigningKey(connection: Connection): Promise<strin
     return SigningKey.getSigningKey(connection);
 }
 
-export async function getRefreshTokenInfo(refreshToken: string, connection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
-    refreshToken = hash(hash(refreshToken));
-    return await getInfoForRefreshToken(connection, refreshToken);
+export async function getRefreshTokenInfo(refreshTokenHash: string, connection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
+    const refreshTokenInDB = hash(refreshTokenHash);
+    return await getInfoForRefreshToken(connection, refreshTokenInDB);
 }
 
-export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, connection: Connection): Promise<string> {
-    /**
-     * @todo
-     */
-    const randomString = ""; // @todo some randome string
-    return "";
+export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, sessionId: string | null, connection: Connection): Promise<string> {
+    const randomString = generate44ChararctersRandomString();
+    sessionId = sessionId === null ? generate32CharactersRandomString() : sessionId;
+    let stringToEncrypt = `${randomString}.${userId}.${sessionId}`;
+    if (parentToken !== null) {
+        stringToEncrypt += `.${parentToken}`;
+    }
+    const signingKey = await getRefreshTokenSigningKey(connection);
+    const encryptedPart = await encrypt(stringToEncrypt, signingKey);
+    const refreshToken = `${encryptedPart}.${randomString}`;
+    const refreshTokenToStoreInDB = hash(hash(refreshToken));
+    metaInfo = serializeMetaInfoToString(metaInfo);
+    await insertIntoRefreshToken(connection, refreshTokenToStoreInDB, userId, hash(sessionId), metaInfo, Date.now());
+    return refreshToken;
 }
 
 export async function promoteChildRefreshTokenToMainTable(childToken: string, parentToken: string, connection: Connection) {
@@ -93,15 +110,42 @@ export function getRefreshTokenFromRequest(request: Request): string | null {
 
 export async function verifyAndDecryptRefreshToken(refreshToken: string, connection: Connection): Promise<{
     parentToken: string | null,
-    userId: string
+    userId: string,
+    sessionId: string
 }> {
-    /**
-     * @todo
-     */
+    const splittedRefreshToken = refreshToken.split(".");
+    if (splittedRefreshToken.length !== 2) {
+        /**
+         * @todo
+         */
+        throw Error();
+    }
+    const signingKey = await getRefreshTokenSigningKey(connection);
+    const randomStringOutside = splittedRefreshToken[1];
+    const encryptedPart = splittedRefreshToken[0];
+    const decryptedRefreshToken = await decrypt(encryptedPart, signingKey);
+    const splittedDecryptedRefreshToken = decryptedRefreshToken.split(".");
+    if (splittedDecryptedRefreshToken.length !== 3 && splittedDecryptedRefreshToken.length !== 4) {
+        /**
+         * @todo
+         */
+        throw Error();
+    }
+    const randomStringInside = splittedDecryptedRefreshToken[0];
+    const userId = splittedDecryptedRefreshToken[1];
+    const sessionId = splittedDecryptedRefreshToken[2];
+    const parentToken = splittedDecryptedRefreshToken.length === 3 ? null : splittedDecryptedRefreshToken[3];
+    if (randomStringInside !== randomStringOutside) {
+        /**
+         * @todo
+         */
+        throw Error();
+    }
     refreshToken = hash(refreshToken);
     return {
-        parentToken: "",
-        userId: ""
+        parentToken,
+        userId,
+        sessionId
     };
 }
 
@@ -109,5 +153,14 @@ export type TypeRefreshTokenInfo = {
     userId: string,
     metaInfo: any,
     createdAt: number,
-    expiresAt: number
+    expiresAt: number,
+    sessionId: string
 };
+
+export async function checkIfSessionIdExistsAndNotifyForTokenTheft(connection: Connection, sessionId: string) {
+    if (await checkIfSessionIdInDB(connection, sessionId)) {
+        /**
+         * @todo token theft module
+         */    
+    }
+}

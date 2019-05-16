@@ -3,24 +3,31 @@ import { Request, Response } from 'express';
 import { Config, TypeInputConfig } from './config';
 import { setCookie } from './cookie';
 import { getConnection, Mysql } from './db/mysql';
-import { TypeInputAccessTokenJWTPayload } from './jwt';
+import { TypeInputAccessTokenPayload } from './jwt';
 import {
     getAccessTokenFromRequest,
     SigningKey as accessTokenSigningKey,
     updateAccessTokenInHeaders,
-    verifyTokenAndPayload,
+    verifyTokenAndGetPayload,
 } from './tokens/accessToken';
 import {
-    getNewRefreshToken,
-    getRefreshTokenFromRequest,
-    getRefreshTokenInfo,
-    promoteChildRefreshTokenToMainTable,
-    SigningKey as refreshTokenSigningKey,
     updateMetaInfo,
+    getNewRefreshToken,
+    getRefreshTokenInfo,
+    getRefreshTokenFromRequest,
     updateRefershTokenInHeaders,
     verifyAndDecryptRefreshToken,
+    promoteChildRefreshTokenToMainTable,
+    SigningKey as refreshTokenSigningKey,
+    checkIfSessionIdExistsAndNotifyForTokenTheft
 } from './tokens/refreshToken';
-import { generate32CharactersRandomString, serializeMetaInfo, SessionErrors } from './utils';
+import {
+    hash,
+    SessionErrors,
+    serializeMetaInfo,
+    checkUserIdContainsNoDot,
+    generate32CharactersRandomString
+} from './utils';
 
 
 export function init(config: TypeInputConfig) {
@@ -84,7 +91,7 @@ export async function getSession(request: Request, response: Response): Promise<
         if (accessToken === null) {
             throw Error(SessionErrors.noAccessTokenInHeaders);
         }
-        let jwtPayload = await verifyTokenAndPayload(accessToken, connection);
+        let jwtPayload = await verifyTokenAndGetPayload(accessToken, connection);
         if (jwtPayload.pRTHash !== undefined) {
             let parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.pRTHash, connection);
             if (parentRefreshTokenInfo !== undefined && jwtPayload.userId === parentRefreshTokenInfo.userId) {
@@ -120,20 +127,26 @@ export async function getSession(request: Request, response: Response): Promise<
 }
 
 export async function createNewSession(request: Request, response: Response, userId: string, metaInfo: any): Promise<Session> {
-    return await newSession(request, response, userId, metaInfo, null);
+    if (!checkUserIdContainsNoDot(userId)) {
+        /**
+         * @todo
+         */
+        throw Error();
+    }
+    return await newSession(request, response, userId, metaInfo, null, null);
 }
 
-async function newSession(request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null): Promise<Session> {
+async function newSession(request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null, sessionId: string | null): Promise<Session> {
     const connection = await getConnection();
     try {
         metaInfo = serializeMetaInfo(metaInfo);
         const config = Config.get();
-        const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, connection);
+        const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, sessionId, connection);
         const accessTokenExpiry = Date.now() + config.tokens.accessTokens.validity;
-        const jwtPayload: TypeInputAccessTokenJWTPayload = {
+        const jwtPayload: TypeInputAccessTokenPayload = {
             userId,
             metaInfo,
-            rTHash: refreshToken,
+            rTHash: hash(refreshToken),
             exp: accessTokenExpiry
         }
         const idRefreshToken = generate32CharactersRandomString();
@@ -163,11 +176,13 @@ export async function refreshSession(request: Request, response: Response) {
             throw Error();
         }
         const decryptedInfoForRefreshToken = await verifyAndDecryptRefreshToken(refreshToken, connection);
-        let parentToken = refreshToken;
+        let parentToken = hash(refreshToken);
         let parentRefreshTokenInfo = await getRefreshTokenInfo(parentToken, connection);
-        if (parentRefreshTokenInfo === undefined || decryptedInfoForRefreshToken.userId !== parentRefreshTokenInfo.userId) {
+        if (parentRefreshTokenInfo === undefined || decryptedInfoForRefreshToken.userId !== parentRefreshTokenInfo.userId || hash(decryptedInfoForRefreshToken.sessionId) !== parentRefreshTokenInfo.sessionId) {
             if (parentRefreshTokenInfo !== undefined) {
+                // NOTE: this part will never really be called. this is just precaution
                 /**
+                 * i.e. userId mismatch OR sessionId mismatch
                  * @todo throw Error
                  */
                 throw Error();
@@ -175,8 +190,9 @@ export async function refreshSession(request: Request, response: Response) {
             if (decryptedInfoForRefreshToken.parentToken !== null) {
                 parentRefreshTokenInfo = await getRefreshTokenInfo(decryptedInfoForRefreshToken.parentToken, connection);
                 if (parentRefreshTokenInfo === undefined || parentRefreshTokenInfo.userId !== decryptedInfoForRefreshToken.userId) {
+                    await checkIfSessionIdExistsAndNotifyForTokenTheft(connection, hash(decryptedInfoForRefreshToken.sessionId));
                     /**
-                     * @todo token theft Error
+                     * @todo
                      */
                     throw Error();
                 }
@@ -187,7 +203,7 @@ export async function refreshSession(request: Request, response: Response) {
                 throw Error();
             }
         }
-        return await newSession(request, response, parentRefreshTokenInfo.userId, parentRefreshTokenInfo.metaInfo, parentToken);
+        return await newSession(request, response, parentRefreshTokenInfo.userId, parentRefreshTokenInfo.metaInfo, parentToken, parentRefreshTokenInfo.sessionId);
     } catch (err) {
         connection.setDestroyConnection();
         /**

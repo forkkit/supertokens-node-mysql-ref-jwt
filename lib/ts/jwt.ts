@@ -4,15 +4,13 @@ import { Connection } from './db/mysql';
 import { getAccessTokenSigningKey } from './tokens/accessToken';
 import { checkIfStringIsJSONObj, JWTErrors, sanitizeNumberInput, sanitizeStringInput } from './utils';
 
-// TODO: this class should only care about JWT. Not access token JWT.. that is, it should only be concerned about signing and verifying JWT. Not checking for content. That should be done in access token file
 const algorithm = "sha256";
 const header = Buffer.from(JSON.stringify({
     alg: "HS256",
     typ: "JWT"
 })).toString("base64");
 
-// TODO: remove JWT from these 2 types below.
-export type TypeInputAccessTokenJWTPayload = {
+export type TypeInputAccessTokenPayload = {
     exp: number,
     userId: string,
     metaInfo: string,
@@ -20,7 +18,7 @@ export type TypeInputAccessTokenJWTPayload = {
     pRTHash?: string
 };
 
-export type TypeAccessTokenJWTPayload = {
+export type TypeAccessTokenPayload = {
     exp: number,
     userId: string,
     metaInfo: any,
@@ -28,7 +26,7 @@ export type TypeAccessTokenJWTPayload = {
     pRTHash?: string
 };
 
-export async function createNewAccessTokenJWT(jsonPayload: TypeInputAccessTokenJWTPayload, connection: Connection): Promise<string> {
+export async function createNewJWT<T>(jsonPayload: T, connection: Connection): Promise<string> {
     const signingKey = await getAccessTokenSigningKey(connection);
     const payload = Buffer.from(JSON.stringify(jsonPayload)).toString("base64");
     const hashFunction = createHmac(algorithm, signingKey);
@@ -37,7 +35,7 @@ export async function createNewAccessTokenJWT(jsonPayload: TypeInputAccessTokenJ
 }
 
 // @todo think if you want to change the name of the function
-export async function verifyAccessTokenJWTAndGetPayload(token: string, connection: Connection): Promise<TypeAccessTokenJWTPayload> {
+export async function verifyAndGetPayload(token: string, getSingingKey: (connection: Connection) => Promise<string>, connection: Connection): Promise<TypeAccessTokenPayload> {
     const splittedInput = token.split(".");
     if (splittedInput.length !== 3) {
         throw Error(JWTErrors.invalidJWT);
@@ -47,7 +45,7 @@ export async function verifyAccessTokenJWTAndGetPayload(token: string, connectio
     }
     const payload = splittedInput[1];
     const signature = splittedInput[2];
-    const signingKey = await getAccessTokenSigningKey(connection);
+    const signingKey = await getSingingKey(connection);
     const hashFunction = createHmac(algorithm, signingKey);
     const signatureFromHeaderAndPayload = hashFunction.update(`${header}.${payload}`).digest("hex");
     if (signatureFromHeaderAndPayload !== signature) {
@@ -56,27 +54,5 @@ export async function verifyAccessTokenJWTAndGetPayload(token: string, connectio
     if (!checkIfStringIsJSONObj(payload)) { // NOTE: if somebody gets the signing key, they can potentially manipulate the payload to be a non json, which might lead to unknown behavior.
         throw Error(JWTErrors.invalidPaylaod);
     }
-    const jsonPayload = validateAccessTokenPayload(JSON.parse(payload));
-    if (jsonPayload.exp < Date.now()) {
-        throw Error(JWTErrors.jwtExpired);
-    }
-    return jsonPayload;
-}
-
-function validateAccessTokenPayload(payload: any): TypeAccessTokenJWTPayload {
-    const exp = sanitizeNumberInput(payload.exp);
-    const userId = sanitizeStringInput(payload.userId);
-    const metaInfo = sanitizeStringInput(payload.metaInfo);
-    const rTHash = sanitizeStringInput(payload.rTHash);
-    const pRTHash = sanitizeStringInput(payload.pRTHash);
-    if (exp === undefined || userId === undefined || metaInfo === undefined || !checkIfStringIsJSONObj(metaInfo) || rTHash === undefined) {
-        throw Error(JWTErrors.invalidPaylaod);
-    }
-    return {
-        exp,
-        userId,
-        metaInfo: JSON.parse(metaInfo),
-        rTHash,
-        pRTHash
-    }
+    return JSON.parse(payload);
 }

@@ -1,5 +1,5 @@
 import * as validator from "validator";
-import { createHash, randomBytes } from "crypto";
+import { createHash, randomBytes, pbkdf2 } from "crypto";
 
 export const SessionErrors = {
     noAccessTokenInHeaders: ""
@@ -96,14 +96,26 @@ export function generate32CharactersRandomString(): string {
     return createHash("md5").update(Date.now().toString() + randomBytes(8)).digest("hex");
 }
 
-export function generate40CharactersRandomString(): string {
-    return createHash("sha1").update(Date.now().toString() + randomBytes(8)).digest("hex");
-}
-
-export function generate24CharactersRandomString(): string {
-    return createHash("md5").update(Date.now().toString() + randomBytes(8)).digest("base64");
-}
-
 export function hash(stringText: string): string {
-    return createHash("md5").update(stringText).digest("hex");
+    return createHash("sha256").update(stringText).digest("hex");
+}
+
+export function generate44ChararctersRandomString(): string {
+    return createHash("sha256").update(randomBytes(64)).digest("base64").toString();
+}
+
+export function generateNewKey(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        pbkdf2(randomBytes(64), randomBytes(64), 100, 32, 'sha512', (err, i) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(i.toString("base64"));
+        })
+    })
+}
+
+export function checkUserIdContainsNoDot(userId: string): boolean {
+    return userId.split(".").length === 1;
 }

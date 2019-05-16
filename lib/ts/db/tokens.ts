@@ -1,12 +1,12 @@
 import { Connection } from "./mysql";
-import { DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN } from "../tokens/accessToken";
 import { DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN, TypeRefreshTokenInfo } from "../tokens/refreshToken";
 import { Config } from "../config";
 
 const config = Config.get();
+const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = 'access-token-signing-key';
 
 export async function newSigningKeyForAccessToken (connection: Connection, signingKey: string, createdAt: number) {
-    const query = `INSERT INTO ${config.mysql.tables.signingKey} VALUES (?, ?, ?);`;
+    const query = `INSERT INTO ${config.mysql.tables.signingKey} (key, value, created_at) VALUES (?, ?, ?);`;
     await connection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN, signingKey, createdAt]);
 }
 
@@ -40,12 +40,12 @@ export async function getSigningKeyForRefreshToken (connection: Connection): Pro
 }
 
 export async function newSigningKeyForRefreshToken (connection: Connection, signingKey: string, createdAt: number) {
-    const query = `INSERT INTO ${config.mysql.tables.signingKey} VALUES (?, ?, ?);`;
+    const query = `INSERT INTO ${config.mysql.tables.signingKey} (key, value, created_at) VALUES (?, ?, ?);`;
     await connection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN, signingKey, createdAt]);
 }
 
 export async function getInfoForRefreshToken (connection: Connection, refreshToken: string): Promise<TypeRefreshTokenInfo | undefined> {
-    const query = `SELECT user_id, meta_info, expires_at, created_at FROM ${config.mysql.tables.refreshTokens} WHERE token = ?;`;
+    const query = `SELECT user_id, meta_info, expires_at, created_at, session_id FROM ${config.mysql.tables.refreshTokens} WHERE token = ?;`;
     const results = await connection.executeQuery(query, [refreshToken]);
     if (results.length === 0) {
         return undefined;
@@ -54,7 +54,8 @@ export async function getInfoForRefreshToken (connection: Connection, refreshTok
         userId: (results[0].user_id).toString(),
         metaInfo: JSON.parse(results[0].meta_info),
         createdAt: Number(results[0].created_at),
-        expiresAt: Number(results[0].expires_at)
+        expiresAt: Number(results[0].expires_at),
+        sessionId: (results[0].session_id).toString()
     };
 }
 
@@ -71,4 +72,15 @@ export async function promoteRefreshToken (connection: Connection, childToken: s
 export async function updateMetaInfoForRefreshToken (connection: Connection, refreshToken: string, metaInfo: string) {
     const query = `UPDATE ${config.mysql.tables.refreshTokens} SET meta_info = ? WHERE token = ?`;
     await connection.executeQuery(query, [metaInfo, refreshToken]);
+}
+
+export async function insertIntoRefreshToken(connection: Connection, refreshToken: string, userId: string, sessionId: string, metaInfo: string, createdAt: number) {
+    const query = `INSERT INTO ${config.mysql.tables.refreshTokens} (token, user_id, meta_info, session_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?);`;
+    await connection.executeQuery(query, [refreshToken, userId, metaInfo, sessionId, createdAt, (createdAt + config.tokens.refreshToken.validity)]);
+}
+
+export async function checkIfSessionIdInDB(connection: Connection, sessionId: string): Promise<boolean> {
+    const query = `SELECT session_id FROM ${config.mysql.tables.refreshTokens} WHERE session_id = ?;`;
+    const results = await connection.executeQuery(query, [sessionId]);
+    return results.length !== 0;
 }
