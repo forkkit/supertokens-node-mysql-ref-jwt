@@ -30,16 +30,11 @@ import {
 } from './utils';
 
 
-export function init(config: TypeInputConfig) {
+export async function init(config: TypeInputConfig) {
     Config.set(config); // TODO: this also might throw an error if config is not valid. So combine catching this errow with the mysql init error and other errors here too.
-    Mysql.init().then(() => {
-        accessTokenSigningKey.init();
-        refreshTokenSigningKey.init();
-    }).catch(err => {
-        /**
-         * @todo
-         */
-    })
+    await Mysql.init();
+    accessTokenSigningKey.init();
+    refreshTokenSigningKey.init();
 }
 
 class Session {

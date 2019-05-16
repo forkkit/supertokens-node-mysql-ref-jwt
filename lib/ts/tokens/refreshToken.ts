@@ -27,7 +27,7 @@ export class SigningKey {
 
     private constructor () {}
 
-    static async init () {
+    static init () {
         if (SigningKey.instance === undefined) {
             SigningKey.instance = new SigningKey();
         }
