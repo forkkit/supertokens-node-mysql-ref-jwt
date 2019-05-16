@@ -1,24 +1,17 @@
-import {
-    createHmac
-} from "crypto";
-import {
-    getAccessTokenSigningKey
-} from "./tokens/accessToken";
-import {
-    JWTErrors,
-    sanitizeNumberInput,
-    sanitizeStringInput,
-    sanitizeBooleanInput,
-    checkIfStringIsJSONObj
-} from "./utils";
-import { Connection } from "./db/mysql";
+import { createHmac } from 'crypto';
 
+import { Connection } from './db/mysql';
+import { getAccessTokenSigningKey } from './tokens/accessToken';
+import { checkIfStringIsJSONObj, JWTErrors, sanitizeNumberInput, sanitizeStringInput } from './utils';
+
+// TODO: this class should only care about JWT. Not access token JWT.. that is, it should only be concerned about signing and verifying JWT. Not checking for content. That should be done in access token file
 const algorithm = "sha256";
 const header = Buffer.from(JSON.stringify({
     alg: "HS256",
-    typ:"JWT"
+    typ: "JWT"
 })).toString("base64");
 
+// TODO: remove JWT from these 2 types below.
 export type TypeInputAccessTokenJWTPayload = {
     exp: number,
     userId: string,

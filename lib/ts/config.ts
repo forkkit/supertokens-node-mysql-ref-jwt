@@ -19,7 +19,7 @@ export class Config {
             Config.instance = new Config(config);
         }
     }
-
+    // TODO: wherever you have used this, remember that this can throw an error.
     static get(): TypeConfig {
         if (Config.instance === undefined) {
             throw Error("no config set, please use init function at the start");
