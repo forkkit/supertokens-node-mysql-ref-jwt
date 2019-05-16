@@ -67,27 +67,15 @@ export class Connection {
         this.connection = connection;
     }
 
-    // TODO: do not use any for params.. define them as being strings or number etc.. 
-    executeQuery = (query: string, params: any[]): Promise<any> => {
-        const connection = this.connection;
+    executeQuery = (query: string, params: paramTypes[]): Promise<any> => {
         return new Promise<any>(async (resolve, reject) => {
-            try {   // TODO: why have this await new Promise thing? Why not just call connection.query.. and then in that use resolve, reject?
-                const queryResult = await new Promise<any>((resolve2, reject2) => {
-                    connection.query(query, params, (err, results, fields) => { // TODO: we should also pass back field?
-                        if (err) {
-                            reject2(err);
-                            return;
-                        }
-                        resolve2(results);
-                    });
-                });
-                resolve(queryResult);
-            } catch (err) {
-                /**
-                 * @todo
-                 */
-                reject(err);
-            }
+            this.connection.query(query, params, (err, results, fields) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(results);
+            });
         });
     }
 
@@ -155,7 +143,7 @@ export class Connection {
             } else {
                 this.connection.release();
             }
-            // TODO: set isClosed to true?
+            this.isClosed = true;
         } catch (err) { // TODO: are you sure those functions above throw errors?
             /**
              * @todo
@@ -208,3 +196,5 @@ export type TypeMysqlConfig = {
         refreshTokens: string
     }
 };
+
+type paramTypes = string | number | boolean | null | Date;

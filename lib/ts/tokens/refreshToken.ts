@@ -9,7 +9,7 @@ import { Connection } from "../db/mysql";
 import { setCookie, getCookieValue } from "../cookie";
 import { Config } from "../config";
 import { Request, Response } from "express";
-import { serializeMetaInfoToString, generate40CharactersRandomString } from "../utils";
+import { hash, serializeMetaInfoToString, generate40CharactersRandomString } from "../utils";
 
 export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
 export class SigningKey {
@@ -45,6 +45,7 @@ export function getRefreshTokenSigningKey(connection: Connection): Promise<strin
 }
 
 export async function getRefreshTokenInfo(refreshToken: string, connection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
+    refreshToken = hash(hash(refreshToken));
     return await getInfoForRefreshToken(connection, refreshToken);
 }
 
@@ -97,6 +98,7 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, connect
     /**
      * @todo
      */
+    refreshToken = hash(refreshToken);
     return {
         parentToken: "",
         userId: ""
