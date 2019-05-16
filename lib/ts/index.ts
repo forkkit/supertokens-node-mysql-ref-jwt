@@ -137,7 +137,7 @@ async function newSession(request: Request, response: Response, userId: string, 
         metaInfo = serializeMetaInfo(metaInfo);
         const config = Config.get();
         const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, sessionId, mysqlConnection);
-        const accessTokenExpiry = Date.now() + config.tokens.accessTokens.validity;
+        const accessTokenExpiry = Date.now() + config.tokens.accessToken.validity;
         const jwtPayload: TypeInputAccessTokenPayload = {
             userId,
             metaInfo,

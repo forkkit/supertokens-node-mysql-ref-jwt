@@ -56,7 +56,7 @@ export class SigningKey {
     static init() {
         if (SigningKey.instance === undefined) {
             const config = Config.get();
-            SigningKey.instance = new SigningKey(config.tokens.accessTokens.signingKey);
+            SigningKey.instance = new SigningKey(config.tokens.accessToken.signingKey);
         }
     }
 
@@ -123,7 +123,7 @@ export async function verifyTokenAndGetPayload(token: string, mysqlConnection: C
 export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPayload, response: Response, mysqlConnection: Connection) {
     const accessToken = await createNewJWT<TypeInputAccessTokenPayload>(payload, mysqlConnection);
     const config = Config.get();
-    setCookie(response, config.cookie.accessTokenCookieKey, accessToken, config.cookie.domain, config.cookie.secure, true, config.tokens.accessTokens.validity, null);
+    setCookie(response, config.cookie.accessTokenCookieKey, accessToken, config.cookie.domain, config.cookie.secure, true, config.tokens.accessToken.validity, null);
 }
 
 function validatePayload(payload: any): TypeAccessTokenPayload {
