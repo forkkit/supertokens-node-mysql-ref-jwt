@@ -94,7 +94,7 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
  * 
  * @param metaInfo 
  */
-export function serializeMetaInfo(metaInfo: any): any {
+export function serializeMetaInfo(metaInfo: {[key: string]: any} | undefined): {[key: string]: any} {
     if (metaInfo === undefined) {
         metaInfo = {};
     }

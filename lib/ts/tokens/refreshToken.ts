@@ -198,7 +198,7 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlCo
 
 export type TypeRefreshTokenInfo = {
     userId: string,
-    metaInfo: any,
+    metaInfo: {[key: string]: any},
     createdAt: number,
     expiresAt: number,
     sessionId: string

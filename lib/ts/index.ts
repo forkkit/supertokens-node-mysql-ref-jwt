@@ -124,26 +124,26 @@ export async function getSession(request: Request, response: Response): Promise<
     }
 }
 
-export async function createNewSession(request: Request, response: Response, userId: string, metaInfo: any): Promise<Session> {
+export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: {[key: string]: any}): Promise<Session> {
     if (!checkUserIdContainsNoDot(userId)) {
         /**
          * @todo
          */
         throw Error();
     }
-    return await newSession(request, response, userId, metaInfo, null, null);
+    return await newSession(request, response, userId, null, null, metaInfo);
 }
 
-async function newSession(request: Request, response: Response, userId: string, metaInfo: any, parentRefreshToken: string | null, sessionId: string | null): Promise<Session> {
+async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: {[key: string]: any}): Promise<Session> {
     const mysqlConnection = await getConnection();
     try {
-        metaInfo = serializeMetaInfo(metaInfo);
+        const serializedMetaInfo = serializeMetaInfo(metaInfo);
         const config = Config.get();
-        const refreshToken = await getNewRefreshToken(userId, metaInfo, parentRefreshToken, sessionId, mysqlConnection);
+        const refreshToken = await getNewRefreshToken(userId, serializedMetaInfo, parentRefreshToken, sessionId, mysqlConnection);
         const accessTokenExpiry = Date.now() + config.tokens.accessToken.validity;
         const jwtPayload: TypeInputAccessTokenPayload = {
             userId,
-            metaInfo,
+            metaInfo: JSON.stringify(serializedMetaInfo),
             rTHash: hash(refreshToken),
             exp: accessTokenExpiry
         }
@@ -151,7 +151,7 @@ async function newSession(request: Request, response: Response, userId: string, 
         await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         await updateRefershTokenInHeaders(refreshToken, response);
         setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
-        return new Session(userId, metaInfo, accessTokenExpiry, refreshToken);
+        return new Session(userId, serializedMetaInfo, accessTokenExpiry, refreshToken);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
         /**
@@ -201,7 +201,7 @@ export async function refreshSession(request: Request, response: Response) {
                 throw Error();
             }
         }
-        return await newSession(request, response, parentRefreshTokenInfo.userId, parentRefreshTokenInfo.metaInfo, parentToken, parentRefreshTokenInfo.sessionId);
+        return await newSession(request, response, parentRefreshTokenInfo.userId, parentToken, parentRefreshTokenInfo.sessionId, parentRefreshTokenInfo.metaInfo);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
         /**
