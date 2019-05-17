@@ -166,7 +166,7 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
                 key_name VARCHAR(128),
                 key_value VARCHAR(128),
-                created_at INT UNSIGNED,
+                created_at BIGINT UNSIGNED,
                 PRIMARY KEY(key_name, key_value)
             );
         `;
@@ -176,8 +176,8 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
                 user_id VARCHAR(128) NOT NULL,
                 meta_info VARCHAR(255) NOT NULL,
                 session_id VARCHAR(255) NOT NULL,
-                created_at INT UNSIGNED,
-                expires_at INT UNSIGNED,
+                created_at BIGINT UNSIGNED,
+                expires_at BIGINT UNSIGNED,
                 PRIMARY KEY(token)
             );
         `;
