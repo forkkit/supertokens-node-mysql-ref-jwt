@@ -7,7 +7,7 @@ const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = 'access-token-signing-key';
 export async function newSigningKeyForAccessToken (mysqlConnection: Connection, signingKey: string, createdAt: number) {
     const config = Config.get();
     const signingKeyTableName = config.mysql.tables.signingKey;
-    const query = `INSERT INTO ${signingKeyTableName} (key, value, created_at) VALUES (?, ?, ?);`;
+    const query = `INSERT INTO ${signingKeyTableName} (key_name, key_value, created_at) VALUES (?, ?, ?);`;
     await mysqlConnection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN, signingKey, createdAt]);
 }
 
@@ -17,13 +17,13 @@ export async function getSigningKeyForAccessToken (mysqlConnection: Connection):
 } | undefined> {
     const config = Config.get();
     const signingKeyTableName = config.mysql.tables.signingKey;
-    const query = `SELECT value, created_at FROM ${signingKeyTableName} WHERE key = ?;`;
+    const query = `SELECT key_value, created_at FROM ${signingKeyTableName} WHERE key_name = ?;`;
     const results = await mysqlConnection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN]);
     if (results.length === 0) {
         return undefined;
     }
     return {
-        value: (results[0].value).toString(),
+        value: (results[0].key_value).toString(),
         createdAt: Number(results[0].created_at)
     }
 }
@@ -31,25 +31,25 @@ export async function getSigningKeyForAccessToken (mysqlConnection: Connection):
 export async function updateSingingKeyForAccessToken (mysqlConnection: Connection, signingKey: string, createdAt: number) {
     const config = Config.get();
     const signingKeyTableName = config.mysql.tables.signingKey;
-    const query = `UPDATE ${signingKeyTableName} SET value = ?, created_at = ? WHERE key = ?;`;
+    const query = `UPDATE ${signingKeyTableName} SET key_value = ?, created_at = ? WHERE key_name = ?;`;
     await mysqlConnection.executeQuery(query, [signingKey, createdAt, DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN]);
 }
 
 export async function getSigningKeyForRefreshToken (mysqlConnection: Connection): Promise<string | null> {
     const config = Config.get();
     const signingKeyTableName = config.mysql.tables.signingKey;
-    const query = `SELECT value FROM ${signingKeyTableName} WHERE key = ?;`;
+    const query = `SELECT key_value FROM ${signingKeyTableName} WHERE key_name = ?;`;
     const results = await mysqlConnection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN]);
     if (results.length === 0) {
         return null;
     }
-    return (results[0].value).toString();
+    return (results[0].key_value).toString();
 }
 
 export async function newSigningKeyForRefreshToken (mysqlConnection: Connection, signingKey: string, createdAt: number) {
     const config = Config.get();
     const signingKeyTableName = config.mysql.tables.signingKey;
-    const query = `INSERT INTO ${signingKeyTableName} (key, value, created_at) VALUES (?, ?, ?);`;
+    const query = `INSERT INTO ${signingKeyTableName} (key_name, key_value, created_at) VALUES (?, ?, ?);`;
     await mysqlConnection.executeQuery(query, [DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN, signingKey, createdAt]);
 }
 

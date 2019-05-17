@@ -164,19 +164,21 @@ async function createTablesIfNotExists(signingKeyTableName: string, refreshToken
         const mysqlConnection = await getConnection();
         const signKeyTableQuery = `
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
-                key VARCHAR(128) PRIMARY KEY,
-                value VARCHAR(128) PRIMARY KEY,
-                created_at INT UNSIGNED
+                key_name VARCHAR(128),
+                key_value VARCHAR(128),
+                created_at INT UNSIGNED,
+                PRIMARY KEY(key_name, key_value)
             );
         `;
         const refreshTokensTableQuery = `
             CREATE TABLE IF NOT EXISTS ${refreshTokensTableName} (
-                token VARCHAR(128) PRIMARY KEY,
+                token VARCHAR(128),
                 user_id VARCHAR(128) NOT NULL,
                 meta_info VARCHAR(255) NOT NULL,
                 session_id VARCHAR(255) NOT NULL,
                 created_at INT UNSIGNED,
-                expires_at INT UNSIGNED
+                expires_at INT UNSIGNED,
+                PRIMARY KEY(token)
             );
         `;
         const signKeyTableQueryPromise = mysqlConnection.executeQuery(signKeyTableQuery, []);
