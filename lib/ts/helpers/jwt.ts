@@ -54,7 +54,7 @@ export async function verifyAndGetPayload(token: string, getSingingKey: (mConnec
     if (splittedInput[0] !== header) {
         throw Error(JWTErrors.headerMismatch);
     }
-    const payload = Buffer.from(splittedInput[1], "base64").toString();
+    let payload = splittedInput[1];
     const signature = splittedInput[2];
     const signingKey = await getSingingKey(mysqlConnection);
     const hashFunction = createHmac(algorithm, signingKey);
@@ -62,6 +62,7 @@ export async function verifyAndGetPayload(token: string, getSingingKey: (mConnec
     if (signatureFromHeaderAndPayload !== signature) {
         throw Error(JWTErrors.verificationFailed);
     }
+    payload = Buffer.from(payload, "base64").toString();
     if (!checkIfStringIsJSONObj(payload)) { // NOTE: if somebody gets the signing key, they can potentially manipulate the payload to be a non json, which might lead to unknown behavior.
         throw Error(JWTErrors.invalidPaylaod);
     }
