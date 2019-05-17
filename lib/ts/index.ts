@@ -149,7 +149,6 @@ export async function getSession(request: Request, response: Response): Promise<
                     throw SessionErrors.refrehTokenInfoForSessionNotFound;
                 }
             }
-            await updateRefershTokenInHeaders(jwtPayload.rTHash, response);
             jwtPayload = {
                 userId: jwtPayload.userId,
                 exp: jwtPayload.exp,
@@ -300,7 +299,7 @@ export async function refreshSession(request: Request, response: Response): Prom
                 throw SessionErrors.invalidRefreshToken;
             }
         }
-        return await newSession(response, parentRefreshTokenInfo.userId, parentToken, parentRefreshTokenInfo.sessionId, parentRefreshTokenInfo.metaInfo);
+        return await newSession(response, parentRefreshTokenInfo.userId, parentToken, decryptedInfoForRefreshToken.sessionId, parentRefreshTokenInfo.metaInfo);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
         throw err;
