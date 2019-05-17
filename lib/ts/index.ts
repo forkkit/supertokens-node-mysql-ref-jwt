@@ -1,36 +1,36 @@
 import { Request, Response } from 'express';
 
-import { Cronjob } from "./cronjobs";
-import { setCookie } from './helpers/cookie';
-import { getConnection, Mysql } from './db/mysql';
 import { Config, TypeInputConfig } from './config';
-import { SessionErrors } from "./helpers/errors";
+import { Cronjob } from './cronjobs';
+import { getConnection, Mysql } from './db/mysql';
+import { setCookie } from './helpers/cookie';
+import { SessionErrors } from './helpers/errors';
 import { TypeInputAccessTokenPayload } from './helpers/jwt';
 import {
-    verifyTokenAndGetPayload,
-    getAccessTokenFromRequest,
-    updateAccessTokenInHeaders,
-    SigningKey as accessTokenSigningKey
-} from './tokens/accessToken';
-import {
-    updateMetaInfo,
-    getNewRefreshToken,
-    getRefreshTokenInfo,
-    getRefreshTokenFromRequest,
-    updateRefershTokenInHeaders,
-    verifyAndDecryptRefreshToken,
-    removeAllRefreshTokensForUserId,
-    promoteChildRefreshTokenToMainTable,
-    SigningKey as refreshTokenSigningKey,
-    checkIfSessionIdExistsAndNotifyForTokenTheft
-} from './tokens/refreshToken';
-import {
+    checkUserIdContainsNoDot,
+    generate32CharactersRandomString,
     hash,
     TypeMetaInfo,
     validateJSONObj,
-    checkUserIdContainsNoDot,
-    generate32CharactersRandomString
 } from './helpers/utils';
+import {
+    getAccessTokenFromRequest,
+    SigningKey as accessTokenSigningKey,
+    updateAccessTokenInHeaders,
+    verifyTokenAndGetPayload,
+} from './tokens/accessToken';
+import {
+    checkIfSessionIdExistsAndNotifyForTokenTheft,
+    getNewRefreshToken,
+    getRefreshTokenFromRequest,
+    getRefreshTokenInfo,
+    promoteChildRefreshTokenToMainTable,
+    removeAllRefreshTokensForUserId,
+    SigningKey as refreshTokenSigningKey,
+    updateMetaInfo,
+    updateRefershTokenInHeaders,
+    verifyAndDecryptRefreshToken,
+} from './tokens/refreshToken';
 
 export async function init(config: TypeInputConfig) {
     Config.set(config);
@@ -97,32 +97,32 @@ class Session {
 /*
 type TypeGetSessionErrors = ( TypeNewSessionErrors | {
     errCode: 10001,
-    errMessage: "no access token found in headers"
+    message: "no access token found in headers"
 } | {
     errCode: 20001,
-    errMessage: "invalid jwt"
+    message: "invalid jwt"
 } | {
     errCode: 20002,
-    errMessage: "jwt header mismatch"
+    message: "jwt header mismatch"
 } | {
     errCode: 20003,
-    errMessage: "jwt verification failed"
+    message: "jwt verification failed"
 } | {
     errCode: 20004,
-    errMessage: "jwt expired"
+    message: "jwt expired"
 } | {
     errCode: 20005,
-    errMessage: "invalid payload"
+    message: "invalid payload"
 } | {
     errCode: 40002,
-    errMessage: "error during query execution",
+    message: "error during query execution",
     error: Error
 } | {
     errCode: 31001,
-    errMessage: "no config set, please use init function at the start"
+    message: "no config set, please use init function at the start"
 } | {
     errCode: 10003,
-    errMessage: "session expired"
+    message: "session expired"
 });
 */
 /**
@@ -168,7 +168,7 @@ export async function getSession(request: Request, response: Response): Promise<
 /*
 type TypeCreateNewSessionErrors = ( TypeNewSessionErrors | {
     errCode: 10004,
-    errMessage: "userId without dots currently not supported"
+    message: "userId without dots currently not supported"
 });
 */
 /**
@@ -188,23 +188,23 @@ export async function createNewSession(response: Response, userId: string, metaI
 /*
 type TypeNewSessionErrors = ({
     errCode: 50001,
-    errMessage: "invalid JSON. expected JSON Object"
+    message: "invalid JSON. expected JSON Object"
 } | {
     errCode: 40001,
-    errMessage: "error in connecting to mysql"
+    message: "error in connecting to mysql"
 } | {
     errCode: 40002,
-    errMessage: "error during query execution",
+    message: "error during query execution",
     error: Error
 } | {
     errCode: 31001,
-    errMessage: "no config set, please use init function at the start"
+    message: "no config set, please use init function at the start"
 } | {
     errCode: 50002,
-    errMessage: "access token module has not been initialized correctly"
+    message: "access token module has not been initialized correctly"
 } | {
     errCode: 50003,
-    errMessage: "refresh token module has not been initialized correctly"
+    message: "refresh token module has not been initialized correctly"
 });
 */
 /**
@@ -247,16 +247,16 @@ async function newSession(response: Response, userId: string, parentRefreshToken
 /*
 type TypeRefreshSessionErrors = ( TypeNewSessionErrors | {
     errCode: 10002,
-    errMessage: "no refresh token found in headers"
+    message: "no refresh token found in headers"
 } | {
     errCode: 10005,
-    errMessage: "invalid refresh token"
+    message: "invalid refresh token"
 } | {
     errCode: 50003,
-    errMessage: "refresh token module has not been initialized correctly"
+    message: "refresh token module has not been initialized correctly"
 } | {
     errCode: 40002,
-    errMessage: "error during query execution",
+    message: "error during query execution",
     error: Error
 });
 */
