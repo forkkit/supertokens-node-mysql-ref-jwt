@@ -141,11 +141,14 @@ async function newSession(request: Request, response: Response, userId: string, 
         const config = Config.get();
         const refreshToken = await getNewRefreshToken(userId, serializedMetaInfo, parentRefreshToken, sessionId, mysqlConnection);
         const accessTokenExpiry = Date.now() + config.tokens.accessToken.validity;
-        const jwtPayload: TypeInputAccessTokenPayload = {
+        let jwtPayload: TypeInputAccessTokenPayload = {
             userId,
             metaInfo: JSON.stringify(serializedMetaInfo),
             rTHash: hash(refreshToken),
             exp: accessTokenExpiry
+        }
+        if (parentRefreshToken !== null) {
+            jwtPayload.pRTHash = hash(parentRefreshToken);
         }
         const idRefreshToken = generate32CharactersRandomString();
         await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
