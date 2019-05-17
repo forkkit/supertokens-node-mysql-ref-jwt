@@ -112,3 +112,10 @@ export async function deleteAllExpiredRefreshTokens(mysqlConnection: Connection)
     const query = `DELETE FROM ${refreshTokenTableName} WHERE expired_at <= ?;`;
     await mysqlConnection.executeQuery(query, [Date.now()]);
 }
+
+export async function deleteAllRefreshTokensForUserId(mysqlConnection: Connection, userId: string) {
+    const config = Config.get();
+    const refreshTokenTableName = config.mysql.tables.refreshTokens;
+    const query = `DELETE FROM ${refreshTokenTableName} WHERE user_id = ?`;
+    await mysqlConnection.executeQuery(query, [userId]);
+}

@@ -5,7 +5,8 @@ import {
     insertIntoRefreshToken,
     getSigningKeyForRefreshToken,
     newSigningKeyForRefreshToken,
-    updateMetaInfoForRefreshToken
+    updateMetaInfoForRefreshToken,
+    deleteAllRefreshTokensForUserId
 } from "../db/tokens";
 import { Connection } from "../db/mysql";
 import { setCookie, getCookieValue } from "../helpers/cookie";
@@ -208,10 +209,14 @@ export type TypeRefreshTokenInfo = {
  * @param mysqlConnection 
  * @param sessionId 
  */
-export async function checkIfSessionIdExistsAndNotifyForTokenTheft(mysqlConnection: Connection, sessionId: string) {
+export async function checkIfSessionIdExistsAndNotifyForTokenTheft(sessionId: string, mysqlConnection: Connection) {
     if (await checkIfSessionIdInDB(mysqlConnection, sessionId)) {
         /**
          * @todo token theft module
          */    
     }
+}
+
+export async function removeAllRefreshTokensForUserId(userId: string, mysqlConnection: Connection) {
+    await deleteAllRefreshTokensForUserId(mysqlConnection, userId);
 }

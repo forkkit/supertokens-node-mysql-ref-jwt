@@ -18,6 +18,7 @@ import {
     getRefreshTokenFromRequest,
     updateRefershTokenInHeaders,
     verifyAndDecryptRefreshToken,
+    removeAllRefreshTokensForUserId,
     promoteChildRefreshTokenToMainTable,
     SigningKey as refreshTokenSigningKey,
     checkIfSessionIdExistsAndNotifyForTokenTheft
@@ -187,7 +188,7 @@ export async function refreshSession(request: Request, response: Response) {
             if (decryptedInfoForRefreshToken.parentToken !== null) {
                 parentRefreshTokenInfo = await getRefreshTokenInfo(decryptedInfoForRefreshToken.parentToken, mysqlConnection);
                 if (parentRefreshTokenInfo === undefined || parentRefreshTokenInfo.userId !== decryptedInfoForRefreshToken.userId) {
-                    await checkIfSessionIdExistsAndNotifyForTokenTheft(mysqlConnection, hash(decryptedInfoForRefreshToken.sessionId));
+                    await checkIfSessionIdExistsAndNotifyForTokenTheft(hash(decryptedInfoForRefreshToken.sessionId), mysqlConnection);
                     /**
                      * @todo
                      */
@@ -201,6 +202,21 @@ export async function refreshSession(request: Request, response: Response) {
             }
         }
         return await newSession(request, response, parentRefreshTokenInfo.userId, parentRefreshTokenInfo.metaInfo, parentToken, parentRefreshTokenInfo.sessionId);
+    } catch (err) {
+        mysqlConnection.setDestroyConnection();
+        /**
+         * @todo error
+         */
+        throw Error();
+    } finally {
+        mysqlConnection.closeConnection();
+    }
+}
+
+export async function revokeAllRefreshTokenForUser(userId: string) {
+    const mysqlConnection = await getConnection();
+    try {
+        await removeAllRefreshTokensForUserId(userId, mysqlConnection);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
         /**

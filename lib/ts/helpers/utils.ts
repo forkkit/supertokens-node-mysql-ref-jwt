@@ -98,7 +98,7 @@ export function serializeMetaInfo(metaInfo: any): any {
     if (metaInfo === undefined) {
         metaInfo = {};
     }
-    if (!checkIfStringIsJSONObj(metaInfo)) {
+    if (metaInfo === null || typeof metaInfo !== "object") {
         /**
          * @todo error
          */
