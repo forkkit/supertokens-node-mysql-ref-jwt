@@ -17,7 +17,7 @@ export class Mysql {
             port: config.port,
             user: config.user,
             password: config.password,
-            database: config.db,
+            database: config.database,
             connectionLimit: config.connectionLimit
         });
     }
@@ -197,7 +197,7 @@ export type TypeMysqlConfig = {
     user: string,
     password: string,
     connectionLimit: number,
-    db: string,
+    database: string,
     tables: {
         signingKey: string,
         refreshTokens: string

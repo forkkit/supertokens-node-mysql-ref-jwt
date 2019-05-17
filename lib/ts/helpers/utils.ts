@@ -94,25 +94,25 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
  * 
  * @param metaInfo 
  */
-export function serializeMetaInfo(metaInfo: {[key: string]: any} | undefined): {[key: string]: any} {
-    if (metaInfo === undefined) {
-        metaInfo = {};
+export function validateJSONObj(jsonObj: {[key: string]: any} | undefined): {[key: string]: any} {
+    if (jsonObj === undefined) {
+        jsonObj = {};
     }
-    if (metaInfo === null || typeof metaInfo !== "object") {
+    if (jsonObj === null || typeof jsonObj !== "object") {
         /**
          * @todo error
          */
         throw Error();
     }
-    return metaInfo;
+    return jsonObj;
 }
 
 /**
  * 
- * @param metaInfo 
+ * @param jsonObj 
  */
 export function serializeMetaInfoToString(metaInfo: any): any {
-    return JSON.stringify(serializeMetaInfo(metaInfo));
+    return JSON.stringify(validateJSONObj(metaInfo));
 }
 
 // TODO: dont just use date.now()!! use something more. add more randomness!!! What is the context of using these? for keys, md5 is unacceptable!

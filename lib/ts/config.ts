@@ -45,7 +45,10 @@ const validate = (config: any): TypeInputConfig => {
         throw Error();
     }
     const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
-    const db = sanitizeStringInput(mysqlInputConfig.db);
+    const database = sanitizeStringInput(mysqlInputConfig.databse);
+    if (database === undefined) {
+        throw Error();
+    }
     let tables: {
         signingKey: string | undefined,
         refreshTokens: string | undefined
@@ -65,7 +68,7 @@ const validate = (config: any): TypeInputConfig => {
         user,
         password,
         connectionLimit,
-        db,
+        database,
         tables
     };
     let tokensInputConfig = config.tokens;
@@ -197,7 +200,7 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
             user: config.mysql.user,
             password: config.mysql.password,
             connectionLimit: config.mysql.connectionLimit || defaultConfig.mysql.connectionLimit,
-            db: config.mysql.db || defaultConfig.mysql.db,
+            database: config.mysql.database,
             tables: config.mysql.tables === undefined ? defaultConfig.mysql.tables : {
                 refreshTokens: config.mysql.tables.refreshTokens || defaultConfig.mysql.tables.refreshTokens,
                 signingKey: config.mysql.tables.signingKey || defaultConfig.mysql.tables.signingKey
@@ -250,7 +253,6 @@ const defaultConfig = {
         host: "localhost",
         port: 3306,
         connectionLimit: 50,
-        db: "auth_session",
         tables: {
             signingKey: "signing_key",
             refreshTokens: "refresh_token"
@@ -310,7 +312,7 @@ export type TypeInputConfig = {
         user: string,
         password: string,
         connectionLimit?: number,
-        db?: string,
+        database: string,
         tables?: {
             signingKey?: string,
             refreshTokens?: string

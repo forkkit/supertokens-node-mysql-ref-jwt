@@ -26,7 +26,7 @@ import {
 import {
     hash,
     SessionErrors,
-    serializeMetaInfo,
+    validateJSONObj,
     checkUserIdContainsNoDot,
     generate32CharactersRandomString
 } from './helpers/utils';
@@ -137,7 +137,7 @@ export async function createNewSession(request: Request, response: Response, use
 async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: {[key: string]: any}): Promise<Session> {
     const mysqlConnection = await getConnection();
     try {
-        const serializedMetaInfo = serializeMetaInfo(metaInfo);
+        const serializedMetaInfo = validateJSONObj(metaInfo);
         const config = Config.get();
         const refreshToken = await getNewRefreshToken(userId, serializedMetaInfo, parentRefreshToken, sessionId, mysqlConnection);
         const accessTokenExpiry = Date.now() + config.tokens.accessToken.validity;
