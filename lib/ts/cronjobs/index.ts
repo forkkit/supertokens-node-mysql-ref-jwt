@@ -1,6 +1,7 @@
-import { CronJob } from "cron";
-import { errorLogging, infoLogging } from "../helpers/logging";
-import oldRefreshTokenRemoval from "./oldRefereshTokenRemoval";
+import { CronJob } from 'cron';
+
+import { errorLogging, infoLogging } from '../helpers/logging';
+import oldRefreshTokenRemoval from './oldRefereshTokenRemoval';
 
 /**
  *  Seconds: 0-59
@@ -17,7 +18,7 @@ import oldRefreshTokenRemoval from "./oldRefereshTokenRemoval";
 export class Cronjob {
     private static instance: Cronjob | undefined;
 
-    private constructor () {
+    private constructor() {
         jobs.forEach(job => {
             createNewJob(job.jobFunction, job.interval, job.description).start();
         });
