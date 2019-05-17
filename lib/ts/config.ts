@@ -1,6 +1,6 @@
 import { TypeMysqlConfig } from './db/mysql';
 import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from './tokens/accessToken';
-import { sanitizeBooleanInput, sanitizeStringInput, sanitizeNumberInput } from "./utils";
+import { sanitizeBooleanInput, sanitizeStringInput, sanitizeNumberInput } from "./helpers/utils";
 
 // TODO: have all types in one file ideally.. easier to navigate and maintain. call this file types. This is done so that the other files do not get bogged down with types.. and have just the logic.
 /**

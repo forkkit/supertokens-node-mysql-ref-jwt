@@ -8,7 +8,7 @@ import {
     updateMetaInfoForRefreshToken
 } from "../db/tokens";
 import { Connection } from "../db/mysql";
-import { setCookie, getCookieValue } from "../cookie";
+import { setCookie, getCookieValue } from "../helpers/cookie";
 import { Config } from "../config";
 import { Request, Response } from "express";
 import {
@@ -17,10 +17,17 @@ import {
     serializeMetaInfoToString,
     generate32CharactersRandomString,
     generate44ChararctersRandomString
-} from "../utils";
-import { encrypt, decrypt } from "../crypto";
+} from "../helpers/utils";
+import { encrypt, decrypt } from "../helpers/crypto";
 
+/**
+ * @constant
+ */
 export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
+
+/**
+ * @class
+ */
 export class SigningKey {
     private key: string | undefined;
     private static instance: SigningKey | undefined;
@@ -49,15 +56,32 @@ export class SigningKey {
     }
 }
 
+/**
+ * 
+ * @param mysqlConnection 
+ */
 export function getRefreshTokenSigningKey(mysqlConnection: Connection): Promise<string> {
     return SigningKey.getSigningKey(mysqlConnection);
 }
 
+/**
+ * 
+ * @param refreshTokenHash 
+ * @param mysqlConnection 
+ */
 export async function getRefreshTokenInfo(refreshTokenHash: string, mysqlConnection: Connection): Promise<TypeRefreshTokenInfo | undefined> {
     const refreshTokenInDB = hash(refreshTokenHash);
     return await getInfoForRefreshToken(mysqlConnection, refreshTokenInDB);
 }
 
+/**
+ * 
+ * @param userId 
+ * @param metaInfo 
+ * @param parentToken 
+ * @param sessionId 
+ * @param mysqlConnection 
+ */
 export async function getNewRefreshToken(userId: string, metaInfo: any, parentToken: string | null, sessionId: string | null, mysqlConnection: Connection): Promise<string> {
     const randomString = generate44ChararctersRandomString();
     sessionId = sessionId === null ? generate32CharactersRandomString() : sessionId;
@@ -70,10 +94,18 @@ export async function getNewRefreshToken(userId: string, metaInfo: any, parentTo
     const refreshToken = `${encryptedPart}.${randomString}`;
     const refreshTokenToStoreInDB = hash(hash(refreshToken));
     metaInfo = serializeMetaInfoToString(metaInfo);
-    await insertIntoRefreshToken(mysqlConnection, refreshTokenToStoreInDB, userId, hash(sessionId), metaInfo, Date.now());
+    if (parentToken === null) {
+        await insertIntoRefreshToken(mysqlConnection, refreshTokenToStoreInDB, userId, hash(sessionId), metaInfo, Date.now());
+    }
     return refreshToken;
 }
 
+/**
+ * 
+ * @param childToken 
+ * @param parentToken 
+ * @param mysqlConnection 
+ */
 export async function promoteChildRefreshTokenToMainTable(childToken: string, parentToken: string, mysqlConnection: Connection) {
     const config = Config.get();
     const childTokenCreatedAt = Date.now(); 
@@ -89,6 +121,11 @@ export async function promoteChildRefreshTokenToMainTable(childToken: string, pa
     }
 }
 
+/**
+ * 
+ * @param refreshToken 
+ * @param response 
+ */
 export async function updateRefershTokenInHeaders(refreshToken: string, response: Response) {
     const config = Config.get();
     setCookie(response, config.cookie.refreshTokenCookieKey, refreshToken, config.cookie.domain, config.cookie.secure, true, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
@@ -99,6 +136,10 @@ export async function updateMetaInfo(refreshToken: string, metaInfo: any, mysqlC
     await updateMetaInfoForRefreshToken(mysqlConnection, refreshToken, metaInfo);
 }
 
+/**
+ * 
+ * @param request 
+ */
 export function getRefreshTokenFromRequest(request: Request): string | null {
     const config = Config.get();
     const refreshToken = getCookieValue(request, config.cookie.refreshTokenCookieKey);
@@ -108,6 +149,11 @@ export function getRefreshTokenFromRequest(request: Request): string | null {
     return refreshToken;
 }
 
+/**
+ * 
+ * @param refreshToken 
+ * @param mysqlConnection 
+ */
 export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlConnection: Connection): Promise<{
     parentToken: string | null,
     userId: string,
@@ -157,6 +203,11 @@ export type TypeRefreshTokenInfo = {
     sessionId: string
 };
 
+/**
+ * 
+ * @param mysqlConnection 
+ * @param sessionId 
+ */
 export async function checkIfSessionIdExistsAndNotifyForTokenTheft(mysqlConnection: Connection, sessionId: string) {
     if (await checkIfSessionIdInDB(mysqlConnection, sessionId)) {
         /**

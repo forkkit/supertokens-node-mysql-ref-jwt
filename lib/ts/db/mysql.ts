@@ -1,7 +1,7 @@
 import * as mysql from 'mysql';
 
 import { Config } from '../config';
-import { errorLogging } from "../logging";
+import { errorLogging } from "../helpers/logging";
 
 // TODO: i would like you to make this as close to our production system as possible.. since thats already tested!! so i don't wanna take risk. use same structure and function largely!
 /**
@@ -151,6 +151,11 @@ export class Connection {
     }
 }
 
+/**
+ * 
+ * @param signingKeyTableName 
+ * @param refreshTokensTableName 
+ */
 async function createTablesIfNotExists(signingKeyTableName: string, refreshTokensTableName: string) {
     /**
      * @todo add proper query. these are just dummy ones

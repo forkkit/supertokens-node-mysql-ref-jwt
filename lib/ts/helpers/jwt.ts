@@ -1,7 +1,7 @@
 import { createHmac } from 'crypto';
 
-import { Connection } from './db/mysql';
-import { getAccessTokenSigningKey } from './tokens/accessToken';
+import { Connection } from '../db/mysql';
+import { getAccessTokenSigningKey } from '../tokens/accessToken';
 import { checkIfStringIsJSONObj, JWTErrors, sanitizeNumberInput, sanitizeStringInput } from './utils';
 
 const algorithm = "sha256";
@@ -26,6 +26,11 @@ export type TypeAccessTokenPayload = {
     pRTHash?: string
 };
 
+/**
+ * 
+ * @param jsonPayload 
+ * @param mysqlConnection 
+ */
 export async function createNewJWT<T>(jsonPayload: T, mysqlConnection: Connection): Promise<string> {
     const signingKey = await getAccessTokenSigningKey(mysqlConnection);
     const payload = Buffer.from(JSON.stringify(jsonPayload)).toString("base64");
@@ -35,6 +40,12 @@ export async function createNewJWT<T>(jsonPayload: T, mysqlConnection: Connectio
 }
 
 // @todo think if you want to change the name of the function
+/**
+ * 
+ * @param token 
+ * @param getSingingKey 
+ * @param mysqlConnection 
+ */
 export async function verifyAndGetPayload(token: string, getSingingKey: (mConnection: Connection) => Promise<string>, mysqlConnection: Connection): Promise<TypeAccessTokenPayload> {
     const splittedInput = token.split(".");
     if (splittedInput.length !== 3) {

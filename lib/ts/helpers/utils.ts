@@ -13,6 +13,10 @@ export const JWTErrors = {
     invalidPaylaod: ""
 }
 
+/**
+ * 
+ * @param stringText 
+ */
 export function checkIfStringIsJSONObj(stringText: string): boolean {
     try {
         let result = JSON.parse(stringText);
@@ -22,6 +26,10 @@ export function checkIfStringIsJSONObj(stringText: string): boolean {
     }
 }
 
+/**
+ * 
+ * @param field 
+ */
 export function sanitizeStringInput(field: any): string | undefined {
     if (field === "") {
         return "";
@@ -40,6 +48,10 @@ export function sanitizeStringInput(field: any): string | undefined {
     return undefined;
 }
 
+/**
+ * 
+ * @param field 
+ */
 export function sanitizeNumberInput(field: any): number | undefined {
     if (typeof field === "number") {
         return field;
@@ -61,6 +73,10 @@ export function sanitizeNumberInput(field: any): number | undefined {
     return undefined;
 }
 
+/**
+ * 
+ * @param field 
+ */
 export function sanitizeBooleanInput(field: any): boolean | undefined {
     if (field === true || field === false) {
         return field;
@@ -74,6 +90,10 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
     return undefined;
 }
 
+/**
+ * 
+ * @param metaInfo 
+ */
 export function serializeMetaInfo(metaInfo: any): any {
     if (metaInfo === undefined) {
         metaInfo = {};
@@ -87,23 +107,40 @@ export function serializeMetaInfo(metaInfo: any): any {
     return metaInfo;
 }
 
+/**
+ * 
+ * @param metaInfo 
+ */
 export function serializeMetaInfoToString(metaInfo: any): any {
     return JSON.stringify(serializeMetaInfo(metaInfo));
 }
 
 // TODO: dont just use date.now()!! use something more. add more randomness!!! What is the context of using these? for keys, md5 is unacceptable!
+/**
+ * 
+ */
 export function generate32CharactersRandomString(): string {
     return createHash("md5").update(Date.now().toString() + randomBytes(8)).digest("hex");
 }
 
+/**
+ * 
+ * @param stringText 
+ */
 export function hash(stringText: string): string {
     return createHash("sha256").update(stringText).digest("hex");
 }
 
+/**
+ * 
+ */
 export function generate44ChararctersRandomString(): string {
     return createHash("sha256").update(randomBytes(64)).digest("base64").toString();
 }
 
+/**
+ * 
+ */
 export function generateNewKey(): Promise<string> {
     return new Promise((resolve, reject) => {
         pbkdf2(randomBytes(64), randomBytes(64), 100, 32, 'sha512', (err, i) => {
@@ -116,6 +153,10 @@ export function generateNewKey(): Promise<string> {
     })
 }
 
+/**
+ * 
+ * @param userId 
+ */
 export function checkUserIdContainsNoDot(userId: string): boolean {
     return userId.split(".").length === 1;
 }

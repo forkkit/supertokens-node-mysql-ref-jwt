@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { Config } from '../config';
-import { getCookieValue, setCookie } from '../cookie';
+import { getCookieValue, setCookie } from '../helpers/cookie';
 import { Connection } from '../db/mysql';
 import { getSigningKeyForAccessToken, newSigningKeyForAccessToken, updateSingingKeyForAccessToken } from '../db/tokens';
 import {
@@ -9,14 +9,14 @@ import {
     verifyAndGetPayload,
     TypeAccessTokenPayload,
     TypeInputAccessTokenPayload
-} from '../jwt';
+} from '../helpers/jwt';
 import {
     JWTErrors,
     generateNewKey,
     sanitizeNumberInput,
     sanitizeStringInput,
     checkIfStringIsJSONObj
-} from '../utils';
+} from '../helpers/utils';
 
 export type TypeGetSigningKeyFunction = (mysqlConnection?: Connection) => Promise<string>;
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
@@ -30,6 +30,9 @@ export type TypeAccessTokenConfig = {
     validity: number
 };
 
+/**
+ * @class
+ */
 export class SigningKey {
     private dynamic: boolean;
     private updateInterval: number;
@@ -98,10 +101,18 @@ export class SigningKey {
     }
 }
 
+/**
+ * 
+ * @param mysqlConnection 
+ */
 export function getAccessTokenSigningKey(mysqlConnection: Connection): Promise<string> {
     return SigningKey.getSigningKey(mysqlConnection);
 }
 
+/**
+ * 
+ * @param request 
+ */
 export function getAccessTokenFromRequest(request: Request): string | null {
     const config = Config.get();    // TODO: remember this can throw error!
     const accessToken = getCookieValue(request, config.cookie.accessTokenCookieKey);
@@ -111,6 +122,11 @@ export function getAccessTokenFromRequest(request: Request): string | null {
     return accessToken;
 }
 
+/**
+ * 
+ * @param token 
+ * @param mysqlConnection 
+ */
 export async function verifyTokenAndGetPayload(token: string, mysqlConnection: Connection): Promise<TypeAccessTokenPayload> {
     let payload = await verifyAndGetPayload(token, getAccessTokenSigningKey, mysqlConnection);
     payload = validatePayload(payload);
@@ -120,12 +136,22 @@ export async function verifyTokenAndGetPayload(token: string, mysqlConnection: C
     return payload;
 }
 
+/**
+ * 
+ * @param payload 
+ * @param response 
+ * @param mysqlConnection 
+ */
 export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPayload, response: Response, mysqlConnection: Connection) {
     const accessToken = await createNewJWT<TypeInputAccessTokenPayload>(payload, mysqlConnection);
     const config = Config.get();
     setCookie(response, config.cookie.accessTokenCookieKey, accessToken, config.cookie.domain, config.cookie.secure, true, config.tokens.accessToken.validity, null);
 }
 
+/**
+ * 
+ * @param payload 
+ */
 function validatePayload(payload: any): TypeAccessTokenPayload {
     const exp = sanitizeNumberInput(payload.exp);
     const userId = sanitizeStringInput(payload.userId);

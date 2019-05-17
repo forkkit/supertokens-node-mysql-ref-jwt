@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 
-import { Config, TypeInputConfig } from './config';
-import { setCookie } from './cookie';
+import { Cronjob } from "./cronjobs";
+import { setCookie } from './helpers/cookie';
 import { getConnection, Mysql } from './db/mysql';
-import { TypeInputAccessTokenPayload } from './jwt';
+import { Config, TypeInputConfig } from './config';
+import { TypeInputAccessTokenPayload } from './helpers/jwt';
 import {
     getAccessTokenFromRequest,
     SigningKey as accessTokenSigningKey,
@@ -27,7 +28,7 @@ import {
     serializeMetaInfo,
     checkUserIdContainsNoDot,
     generate32CharactersRandomString
-} from './utils';
+} from './helpers/utils';
 
 
 export async function init(config: TypeInputConfig) {
@@ -35,6 +36,7 @@ export async function init(config: TypeInputConfig) {
     await Mysql.init();
     accessTokenSigningKey.init();
     refreshTokenSigningKey.init();
+    Cronjob.init();
 }
 
 class Session {
