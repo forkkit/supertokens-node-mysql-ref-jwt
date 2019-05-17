@@ -45,7 +45,7 @@ const validate = (config: any): TypeInputConfig => {
         throw Error();
     }
     const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
-    const database = sanitizeStringInput(mysqlInputConfig.databse);
+    const database = sanitizeStringInput(mysqlInputConfig.database);
     if (database === undefined) {
         throw Error();
     }
