@@ -1,6 +1,7 @@
 import { TypeMysqlConfig } from './db/mysql';
 import { sanitizeBooleanInput, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from './tokens/accessToken';
+import { ConfigErrors } from "./helpers/errors";
 
 // TODO: have all types in one file ideally.. easier to navigate and maintain. call this file types. This is done so that the other files do not get bogged down with types.. and have just the logic.
 /**
@@ -20,10 +21,10 @@ export class Config {
             Config.instance = new Config(config);
         }
     }
-    // TODO: wherever you have used this, remember that this can throw an error.
+    // NOTE: wherever you have used this, remember that this can throw an error.
     static get(): TypeConfig {
         if (Config.instance === undefined) {
-            throw Error("no config set, please use init function at the start");
+            throw ConfigErrors.configNotSet;
         }
         return Config.instance.config;
     }
@@ -32,22 +33,22 @@ export class Config {
 const validate = (config: any): TypeInputConfig => {
     const mysqlInputConfig = config.mysql;
     if (typeof mysqlInputConfig !== "object") {
-        throw Error();
+        throw ConfigErrors.mysql.configUndefined;
     }
     const host = sanitizeStringInput(mysqlInputConfig.host);
     const port = sanitizeNumberInput(mysqlInputConfig.port);
     const user = sanitizeStringInput(mysqlInputConfig.user);
     if (user === undefined) {
-        throw Error();
+        throw ConfigErrors.mysql.userNotPassed;
     }
     const password = sanitizeStringInput(mysqlInputConfig.password);
     if (password === undefined) {
-        throw Error();
+        throw ConfigErrors.mysql.passwordNotPassed;
     }
     const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
     const database = sanitizeStringInput(mysqlInputConfig.database);
     if (database === undefined) {
-        throw Error();
+        throw ConfigErrors.mysql.databaseNotPassed;
     }
     let tables: {
         signingKey: string | undefined,
@@ -93,14 +94,14 @@ const validate = (config: any): TypeInputConfig => {
             let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
             if (updateInterval !== undefined) {
                 if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
-                    throw Error();
+                    throw ConfigErrors.tokens.accessToken.signingKey.updateIntervalNotWithinAllowedInterval;
                 } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
-                    throw Error();
+                    throw ConfigErrors.tokens.accessToken.signingKey.updateIntervalNotWithinAllowedInterval;
                 }
             }
             const get = signingKeyInputConfig.get;
             if (get !== undefined && typeof get !== "function") {
-                throw Error();
+                throw ConfigErrors.tokens.accessToken.signingKey.valuePassedInGetANotFunction;
             }
             signingKey = {
                 dynamic,
@@ -111,9 +112,9 @@ const validate = (config: any): TypeInputConfig => {
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
         if (validity !== undefined) {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
-                throw Error();
+                throw ConfigErrors.tokens.accessToken.validityNotWithinAllowedInterval;
             } else if (validity < defaultConfig.tokens.accessToken.validity.min) {
-                throw Error();
+                throw ConfigErrors.tokens.accessToken.validityNotWithinAllowedInterval;
             }
         }
         accessToken = {
@@ -123,19 +124,19 @@ const validate = (config: any): TypeInputConfig => {
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
     if (typeof refreshTokenInputConfig !== "object") {
-        throw Error();
+        throw ConfigErrors.tokens.refreshToken.configUndefined;
     }
     let validity = sanitizeNumberInput(refreshTokenInputConfig.validity);
     if (validity !== undefined) {
         if (validity > defaultConfig.tokens.refreshToken.validity.max) {
-            throw Error();
+            throw ConfigErrors.tokens.refreshToken.validityNotWithinAllowedInterval;
         } else if (validity < defaultConfig.tokens.refreshToken.validity.min) {
-            throw Error();
+            throw ConfigErrors.tokens.refreshToken.validityNotWithinAllowedInterval;
         }
     }
     const renewTokenURL = sanitizeStringInput(refreshTokenInputConfig.renewTokenURL);
     if (renewTokenURL === undefined) {
-        throw Error();
+        throw ConfigErrors.tokens.refreshToken.renewTokenURLNotPassed;
     }
     const refreshToken = {
         renewTokenURL,
@@ -151,10 +152,10 @@ const validate = (config: any): TypeInputConfig => {
         let info = loggingInputConfig.info;
         let error = loggingInputConfig.error;
         if (info !== undefined && typeof info !== "function") {
-            throw Error();
+            throw ConfigErrors.logging.infoFunctionError;
         }
         if (error !== undefined && typeof error !== "function") {
-            throw Error();
+            throw ConfigErrors.logging.errorFunctionError;
         }
         logging = {
             info,
@@ -165,7 +166,7 @@ const validate = (config: any): TypeInputConfig => {
     const domain = sanitizeStringInput(cookieInputConfig.domain);
     const secure = sanitizeBooleanInput(cookieInputConfig.secure);
     if (domain === undefined) {
-        throw Error();
+        throw ConfigErrors.cookie.cookieDomainUndefined;
     }
     const cookie = {
         domain,
@@ -176,7 +177,7 @@ const validate = (config: any): TypeInputConfig => {
     if (securityInputConfig !== undefined) {
         const onTheftDetection = securityInputConfig.onTheftDetection;
         if (onTheftDetection !== undefined && typeof onTheftDetection !== "function") {
-            throw Error();
+            throw ConfigErrors.security.onTheftDetectionFunctionError;
         }
         security = {
             onTheftDetection

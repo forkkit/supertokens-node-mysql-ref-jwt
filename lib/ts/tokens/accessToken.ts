@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Config } from '../config';
 import { getCookieValue, setCookie } from '../helpers/cookie';
 import { Connection } from '../db/mysql';
+import { JWTErrors } from "../helpers/errors";
 import { getSigningKeyForAccessToken, newSigningKeyForAccessToken, updateSingingKeyForAccessToken } from '../db/tokens';
 import {
     createNewJWT,
@@ -11,7 +12,6 @@ import {
     TypeInputAccessTokenPayload
 } from '../helpers/jwt';
 import {
-    JWTErrors,
     generateNewKey,
     sanitizeNumberInput,
     sanitizeStringInput,
@@ -114,7 +114,7 @@ export function getAccessTokenSigningKey(mysqlConnection: Connection): Promise<s
  * @param request 
  */
 export function getAccessTokenFromRequest(request: Request): string | null {
-    const config = Config.get();    // TODO: remember this can throw error!
+    const config = Config.get();    // NOTE: remember this can throw error!
     const accessToken = getCookieValue(request, config.cookie.accessTokenCookieKey);
     if (accessToken === undefined) {
         return null;
@@ -131,7 +131,7 @@ export async function verifyTokenAndGetPayload(token: string, mysqlConnection: C
     let payload = await verifyAndGetPayload(token, getAccessTokenSigningKey, mysqlConnection);
     payload = validatePayload(payload);
     if (payload.exp < Date.now()) {
-        throw Error(JWTErrors.jwtExpired);
+        throw JWTErrors.jwtExpired;
     }
     return payload;
 }
@@ -158,7 +158,7 @@ function validatePayload(payload: any): TypeAccessTokenPayload {
     const rTHash = sanitizeStringInput(payload.rTHash);
     const pRTHash = sanitizeStringInput(payload.pRTHash);
     if (exp === undefined || userId === undefined || rTHash === undefined) {
-        throw Error(JWTErrors.invalidPaylaod);
+        throw JWTErrors.invalidPaylaod;
     }
     return {
         exp,

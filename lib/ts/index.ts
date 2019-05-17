@@ -4,6 +4,7 @@ import { Cronjob } from "./cronjobs";
 import { setCookie } from './helpers/cookie';
 import { getConnection, Mysql } from './db/mysql';
 import { Config, TypeInputConfig } from './config';
+import { SessionErrors } from "./helpers/errors";
 import { TypeInputAccessTokenPayload } from './helpers/jwt';
 import {
     verifyTokenAndGetPayload,
@@ -26,12 +27,10 @@ import {
 import {
     hash,
     TypeMetaInfo,
-    SessionErrors,
     validateJSONObj,
     checkUserIdContainsNoDot,
     generate32CharactersRandomString
 } from './helpers/utils';
-
 
 export async function init(config: TypeInputConfig) {
     Config.set(config);
@@ -43,11 +42,11 @@ export async function init(config: TypeInputConfig) {
 
 class Session {
     private userId: string;
-    private metaInfo: TypeMetaInfo;
+    private metaInfo: TypeMetaInfo | undefined;
     private expiresAt: number;
     private rTHash: string;
 
-    constructor(userId: string, metaInfo: TypeMetaInfo, expiresAt: number, rTHash: string) {
+    constructor(userId: string, expiresAt: number, rTHash: string, metaInfo?: TypeMetaInfo) {
         this.userId = userId;
         this.metaInfo = metaInfo;
         this.expiresAt = expiresAt;
@@ -59,22 +58,19 @@ class Session {
     }
 
     getMetaInfo = async (): Promise<TypeMetaInfo> => {
+        if (this.metaInfo !== undefined) {
+            return this.metaInfo;
+        }
         const mysqlConnection = await getConnection();
         try {
             const refreshTokenInfo = await getRefreshTokenInfo(this.rTHash, mysqlConnection);
             if (refreshTokenInfo === undefined) {
-                /**
-                 * Error
-                 */
-                throw Error();
+                throw SessionErrors.refrehTokenInfoForSessionNotFound;
             }
             return refreshTokenInfo.metaInfo;
         } catch (err) {
             mysqlConnection.setDestroyConnection();
-            /**
-             * @todo
-             */
-            throw Error()
+            throw err;
         } finally {
             mysqlConnection.closeConnection();
         }
@@ -91,10 +87,7 @@ class Session {
             this.metaInfo = metaInfo;
         } catch (err) {
             mysqlConnection.setDestroyConnection();
-            /**
-             * @todo
-             */
-            throw Error()
+            throw err;
         } finally {
             mysqlConnection.closeConnection();
         }
@@ -106,7 +99,7 @@ export async function getSession(request: Request, response: Response): Promise<
     try {
         const accessToken = getAccessTokenFromRequest(request);
         if (accessToken === null) {
-            throw Error(SessionErrors.noAccessTokenInHeaders);
+            throw SessionErrors.noAccessTokenInHeaders;
         }
         let jwtPayload = await verifyTokenAndGetPayload(accessToken, mysqlConnection);
         if (jwtPayload.pRTHash !== undefined) {
@@ -116,10 +109,7 @@ export async function getSession(request: Request, response: Response): Promise<
             } else {
                 parentRefreshTokenInfo = await getRefreshTokenInfo(jwtPayload.rTHash, mysqlConnection);
                 if (parentRefreshTokenInfo === undefined || parentRefreshTokenInfo.userId !== jwtPayload.userId) {
-                    /**
-                     * @todo error message
-                     */
-                    throw Error()
+                    throw SessionErrors.refrehTokenInfoForSessionNotFound;
                 }
             }
             await updateRefershTokenInHeaders(jwtPayload.rTHash, response);
@@ -130,13 +120,10 @@ export async function getSession(request: Request, response: Response): Promise<
             };
             await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         }
-        return new Session(jwtPayload.userId, {}, jwtPayload.exp, jwtPayload.rTHash);
+        return new Session(jwtPayload.userId, jwtPayload.exp, jwtPayload.rTHash);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
-        /**
-         * @todo error
-         */
-        throw Error(err);
+        throw err;
     } finally {
         mysqlConnection.closeConnection();
     }
@@ -144,10 +131,7 @@ export async function getSession(request: Request, response: Response): Promise<
 
 export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: TypeMetaInfo): Promise<Session> {
     if (!checkUserIdContainsNoDot(userId)) {
-        /**
-         * @todo
-         */
-        throw Error();
+        throw SessionErrors.dotInPassedUserId;
     }
     return await newSession(request, response, userId, null, null, metaInfo);
 }
@@ -171,13 +155,10 @@ async function newSession(request: Request, response: Response, userId: string, 
         await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         await updateRefershTokenInHeaders(refreshToken, response);
         setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, null);
-        return new Session(userId, serializedMetaInfo, accessTokenExpiry, refreshToken);
+        return new Session(userId, accessTokenExpiry, refreshToken, serializedMetaInfo);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
-        /**
-         * @todo error
-         */
-        throw Error();
+        throw err;
     } finally {
         mysqlConnection.closeConnection();
     }
@@ -188,10 +169,7 @@ export async function refreshSession(request: Request, response: Response) {
     try {
         const refreshToken = getRefreshTokenFromRequest(request);
         if (refreshToken === null) {
-            /**
-             * @todo Error for refresh token not found in headers
-             */
-            throw Error();
+            throw SessionErrors.noRefreshTokenInHeaders;
         }
         const decryptedInfoForRefreshToken = await verifyAndDecryptRefreshToken(refreshToken, mysqlConnection);
         let parentToken = hash(refreshToken);
@@ -214,20 +192,15 @@ export async function refreshSession(request: Request, response: Response) {
                      */
                     throw Error();
                 }
+                await promoteChildRefreshTokenToMainTable(parentToken, decryptedInfoForRefreshToken.parentToken, mysqlConnection);
             } else {
-                /**
-                 * @todo throw Error
-                 */
-                throw Error();
+                throw SessionErrors.invalidRefreshToken;
             }
         }
         return await newSession(request, response, parentRefreshTokenInfo.userId, parentToken, parentRefreshTokenInfo.sessionId, parentRefreshTokenInfo.metaInfo);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
-        /**
-         * @todo error
-         */
-        throw Error();
+        throw err;
     } finally {
         mysqlConnection.closeConnection();
     }
@@ -239,10 +212,7 @@ export async function revokeAllRefreshTokenForUser(userId: string) {
         await removeAllRefreshTokensForUserId(userId, mysqlConnection);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
-        /**
-         * @todo error
-         */
-        throw Error();
+        throw err;
     } finally {
         mysqlConnection.closeConnection();
     }

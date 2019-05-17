@@ -20,6 +20,7 @@ import {
     generate32CharactersRandomString,
     generate44ChararctersRandomString
 } from "../helpers/utils";
+import { SessionErrors } from "../helpers/errors";
 import { encrypt, decrypt } from "../helpers/crypto";
 
 /**
@@ -107,14 +108,10 @@ export async function promoteChildRefreshTokenToMainTable(childToken: string, pa
     const config = Config.get();
     const childTokenCreatedAt = Date.now(); 
     const childTokenExpiresAt = childTokenCreatedAt + config.tokens.refreshToken.validity;
-    await promoteRefreshToken(mysqlConnection, childToken, childTokenExpiresAt, childTokenCreatedAt, parentToken);
-    const childInfoInMainTable = await getInfoForRefreshToken(mysqlConnection, childToken);
+    await promoteRefreshToken(mysqlConnection, hash(childToken), childTokenExpiresAt, childTokenCreatedAt, hash(parentToken));
+    const childInfoInMainTable = await getInfoForRefreshToken(mysqlConnection, hash(childToken));
     if (childInfoInMainTable === undefined) {
-        /**
-         * @todo
-         * if after the promotion query, childToken not in main table
-         */
-        throw Error();
+        throw SessionErrors.invalidRefreshToken;
     }
 }
 
@@ -158,10 +155,7 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlCo
 }> {
     const splittedRefreshToken = refreshToken.split(".");
     if (splittedRefreshToken.length !== 2) {
-        /**
-         * @todo
-         */
-        throw Error();
+        throw SessionErrors.invalidRefreshToken;
     }
     const signingKey = await getRefreshTokenSigningKey(mysqlConnection);
     const randomStringOutside = splittedRefreshToken[1];
@@ -169,20 +163,14 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlCo
     const decryptedRefreshToken = await decrypt(encryptedPart, signingKey);
     const splittedDecryptedRefreshToken = decryptedRefreshToken.split(".");
     if (splittedDecryptedRefreshToken.length !== 3 && splittedDecryptedRefreshToken.length !== 4) {
-        /**
-         * @todo
-         */
-        throw Error();
+        throw SessionErrors.invalidRefreshToken;
     }
     const randomStringInside = splittedDecryptedRefreshToken[0];
     const userId = splittedDecryptedRefreshToken[1];
     const sessionId = splittedDecryptedRefreshToken[2];
     const parentToken = splittedDecryptedRefreshToken.length === 3 ? null : splittedDecryptedRefreshToken[3];
     if (randomStringInside !== randomStringOutside) {
-        /**
-         * @todo
-         */
-        throw Error();
+        throw SessionErrors.invalidRefreshToken;
     }
     refreshToken = hash(refreshToken);
     return {

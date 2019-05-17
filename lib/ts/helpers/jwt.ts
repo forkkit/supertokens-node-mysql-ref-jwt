@@ -2,7 +2,8 @@ import { createHmac } from 'crypto';
 
 import { Connection } from '../db/mysql';
 import { getAccessTokenSigningKey } from '../tokens/accessToken';
-import { checkIfStringIsJSONObj, JWTErrors, sanitizeNumberInput, sanitizeStringInput } from './utils';
+import { checkIfStringIsJSONObj } from './utils';
+import { JWTErrors } from "./errors";
 
 const algorithm = "sha256";
 const header = Buffer.from(JSON.stringify({
@@ -47,10 +48,10 @@ export async function createNewJWT<T>(jsonPayload: T, mysqlConnection: Connectio
 export async function verifyAndGetPayload(token: string, getSingingKey: (mConnection: Connection) => Promise<string>, mysqlConnection: Connection): Promise<TypeAccessTokenPayload> {
     const splittedInput = token.split(".");
     if (splittedInput.length !== 3) {
-        throw Error(JWTErrors.invalidJWT);
+        throw JWTErrors.invalidJWT;
     }
     if (splittedInput[0] !== header) {
-        throw Error(JWTErrors.headerMismatch);
+        throw JWTErrors.headerMismatch;
     }
     let payload = splittedInput[1];
     const signature = splittedInput[2];
@@ -58,11 +59,11 @@ export async function verifyAndGetPayload(token: string, getSingingKey: (mConnec
     const hashFunction = createHmac(algorithm, signingKey);
     const signatureFromHeaderAndPayload = hashFunction.update(`${header}.${payload}`).digest("hex");
     if (signatureFromHeaderAndPayload !== signature) {
-        throw Error(JWTErrors.verificationFailed);
+        throw JWTErrors.verificationFailed;
     }
     payload = Buffer.from(payload, "base64").toString();
     if (!checkIfStringIsJSONObj(payload)) { // NOTE: if somebody gets the signing key, they can potentially manipulate the payload to be a non json, which might lead to unknown behavior.
-        throw Error(JWTErrors.invalidPaylaod);
+        throw JWTErrors.invalidPaylaod;
     }
     return JSON.parse(payload);
 }

@@ -1,17 +1,7 @@
 import * as validator from "validator";
 import { createHash, randomBytes, pbkdf2 } from "crypto";
-
-export const SessionErrors = {
-    noAccessTokenInHeaders: ""
-}
-
-export const JWTErrors = {
-    invalidJWT: "invalid jwt",
-    headerMismatch: "jwt header mismatch",
-    verificationFailed: "jwt verification failed",
-    jwtExpired: "jwt expired",
-    invalidPaylaod: "invalid payload"
-}
+import { errorLogging } from "./logging";
+import { MiscellaneousErrors } from "./errors";
 
 /**
  * 
@@ -41,9 +31,7 @@ export function sanitizeStringInput(field: any): string | undefined {
         let result = validator.trim(field);
         return result;
     } catch (err) {
-        /**
-         * @todo
-         */
+        errorLogging(err);
     }
     return undefined;
 }
@@ -66,9 +54,7 @@ export function sanitizeNumberInput(field: any): number | undefined {
         }
         return result;
     } catch (err) {
-        /**
-         * @todo
-         */
+        errorLogging(err);
     }
     return undefined;
 }
@@ -99,10 +85,7 @@ export function validateJSONObj(jsonObj: TypeMetaInfo | undefined): TypeMetaInfo
         jsonObj = {};
     }
     if (jsonObj === null || typeof jsonObj !== "object") {
-        /**
-         * @todo error
-         */
-        throw Error();
+        throw MiscellaneousErrors.invalidJSON;
     }
     return jsonObj;
 }

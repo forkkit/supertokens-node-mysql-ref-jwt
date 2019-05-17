@@ -2,6 +2,7 @@ import * as mysql from 'mysql';
 
 import { Config } from '../config';
 import { errorLogging } from "../helpers/logging";
+import { MySqlErrors } from "../helpers/errors";
 
 // TODO: i would like you to make this as close to our production system as possible.. since thats already tested!! so i don't wanna take risk. use same structure and function largely!
 /**
@@ -52,10 +53,7 @@ export async function getConnection(): Promise<Connection> {
         const mysqlConnection = await Mysql.getConnection();
         return new Connection(mysqlConnection);
     } catch (err) {
-        /**
-         * @todo
-         */
-        throw Error(err);
+        throw MySqlErrors.connectionError;
     }
 }
 
