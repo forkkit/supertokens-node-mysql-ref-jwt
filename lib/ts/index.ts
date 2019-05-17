@@ -150,7 +150,7 @@ async function newSession(request: Request, response: Response, userId: string, 
         const idRefreshToken = generate32CharactersRandomString();
         await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         await updateRefershTokenInHeaders(refreshToken, response);
-        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, config.tokens.refreshToken.renewTokenURL);
+        setCookie(response, config.cookie.idRefreshTokenCookieKey, idRefreshToken, config.cookie.domain, false, false, config.tokens.refreshToken.validity, null);
         return new Session(userId, serializedMetaInfo, accessTokenExpiry, refreshToken);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
