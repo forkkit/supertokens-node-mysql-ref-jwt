@@ -25,6 +25,7 @@ import {
 } from './tokens/refreshToken';
 import {
     hash,
+    TypeMetaInfo,
     SessionErrors,
     validateJSONObj,
     checkUserIdContainsNoDot,
@@ -42,11 +43,11 @@ export async function init(config: TypeInputConfig) {
 
 class Session {
     private userId: string;
-    private metaInfo: any;
+    private metaInfo: TypeMetaInfo;
     private expiresAt: number;
     private rTHash: string;
 
-    constructor(userId: string, metaInfo: any, expiresAt: number, rTHash: string) {
+    constructor(userId: string, metaInfo: TypeMetaInfo, expiresAt: number, rTHash: string) {
         this.userId = userId;
         this.metaInfo = metaInfo;
         this.expiresAt = expiresAt;
@@ -57,8 +58,26 @@ class Session {
         return this.userId;
     }
 
-    getMetaInfo = (): any => {
-        return this.metaInfo;
+    getMetaInfo = async (): Promise<TypeMetaInfo> => {
+        const mysqlConnection = await getConnection();
+        try {
+            const refreshTokenInfo = await getRefreshTokenInfo(this.rTHash, mysqlConnection);
+            if (refreshTokenInfo === undefined) {
+                /**
+                 * Error
+                 */
+                throw Error();
+            }
+            return refreshTokenInfo.metaInfo;
+        } catch (err) {
+            mysqlConnection.setDestroyConnection();
+            /**
+             * @todo
+             */
+            throw Error()
+        } finally {
+            mysqlConnection.closeConnection();
+        }
     }
 
     getExpiryTime = (): number => {
@@ -106,13 +125,12 @@ export async function getSession(request: Request, response: Response): Promise<
             await updateRefershTokenInHeaders(jwtPayload.rTHash, response);
             jwtPayload = {
                 userId: jwtPayload.userId,
-                metaInfo: parentRefreshTokenInfo.metaInfo,
                 exp: jwtPayload.exp,
                 rTHash: jwtPayload.rTHash
             };
             await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
         }
-        return new Session(jwtPayload.userId, jwtPayload.metaInfo, jwtPayload.exp, jwtPayload.rTHash);
+        return new Session(jwtPayload.userId, {}, jwtPayload.exp, jwtPayload.rTHash);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
         /**
@@ -124,7 +142,7 @@ export async function getSession(request: Request, response: Response): Promise<
     }
 }
 
-export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: {[key: string]: any}): Promise<Session> {
+export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: TypeMetaInfo): Promise<Session> {
     if (!checkUserIdContainsNoDot(userId)) {
         /**
          * @todo
@@ -134,7 +152,7 @@ export async function createNewSession(request: Request, response: Response, use
     return await newSession(request, response, userId, null, null, metaInfo);
 }
 
-async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: {[key: string]: any}): Promise<Session> {
+async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: TypeMetaInfo): Promise<Session> {
     const mysqlConnection = await getConnection();
     try {
         const serializedMetaInfo = validateJSONObj(metaInfo);
@@ -143,7 +161,6 @@ async function newSession(request: Request, response: Response, userId: string, 
         const accessTokenExpiry = Date.now() + config.tokens.accessToken.validity;
         let jwtPayload: TypeInputAccessTokenPayload = {
             userId,
-            metaInfo: JSON.stringify(serializedMetaInfo),
             rTHash: hash(refreshToken),
             exp: accessTokenExpiry
         }

@@ -94,7 +94,7 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
  * 
  * @param metaInfo 
  */
-export function validateJSONObj(jsonObj: {[key: string]: any} | undefined): {[key: string]: any} {
+export function validateJSONObj(jsonObj: TypeMetaInfo | undefined): TypeMetaInfo {
     if (jsonObj === undefined) {
         jsonObj = {};
     }
@@ -160,3 +160,5 @@ export function generateNewKey(): Promise<string> {
 export function checkUserIdContainsNoDot(userId: string): boolean {
     return userId.split(".").length === 1;
 }
+
+export type TypeMetaInfo = {[key: string]: any};

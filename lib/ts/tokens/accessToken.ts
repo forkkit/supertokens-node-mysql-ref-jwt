@@ -155,16 +155,14 @@ export async function updateAccessTokenInHeaders(payload: TypeInputAccessTokenPa
 function validatePayload(payload: any): TypeAccessTokenPayload {
     const exp = sanitizeNumberInput(payload.exp);
     const userId = sanitizeStringInput(payload.userId);
-    const metaInfo = sanitizeStringInput(payload.metaInfo);
     const rTHash = sanitizeStringInput(payload.rTHash);
     const pRTHash = sanitizeStringInput(payload.pRTHash);
-    if (exp === undefined || userId === undefined || metaInfo === undefined || !checkIfStringIsJSONObj(metaInfo) || rTHash === undefined) {
+    if (exp === undefined || userId === undefined || rTHash === undefined) {
         throw Error(JWTErrors.invalidPaylaod);
     }
     return {
         exp,
         userId,
-        metaInfo: JSON.parse(metaInfo),
         rTHash,
         pRTHash
     }

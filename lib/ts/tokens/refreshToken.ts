@@ -14,6 +14,7 @@ import { Config } from "../config";
 import { Request, Response } from "express";
 import {
     hash,
+    TypeMetaInfo,
     generateNewKey,
     serializeMetaInfoToString,
     generate32CharactersRandomString,
@@ -193,7 +194,7 @@ export async function verifyAndDecryptRefreshToken(refreshToken: string, mysqlCo
 
 export type TypeRefreshTokenInfo = {
     userId: string,
-    metaInfo: {[key: string]: any},
+    metaInfo: TypeMetaInfo,
     createdAt: number,
     expiresAt: number,
     sessionId: string

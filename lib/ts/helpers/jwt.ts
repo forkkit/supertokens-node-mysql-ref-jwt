@@ -13,7 +13,6 @@ const header = Buffer.from(JSON.stringify({
 export type TypeInputAccessTokenPayload = {
     exp: number,
     userId: string,
-    metaInfo: string,
     rTHash: string,
     pRTHash?: string
 };
@@ -21,7 +20,6 @@ export type TypeInputAccessTokenPayload = {
 export type TypeAccessTokenPayload = {
     exp: number,
     userId: string,
-    metaInfo: any,
     rTHash: string
     pRTHash?: string
 };
