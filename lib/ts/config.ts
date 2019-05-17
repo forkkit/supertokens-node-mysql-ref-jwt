@@ -220,7 +220,7 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
                         updateInterval: defaultConfig.tokens.accessToken.signingKey.updateInterval.default,
                         get: undefined
                     } : {
-                            dynamic: config.tokens.accessToken.signingKey.dynamic || defaultConfig.tokens.accessToken.signingKey.dynamic,
+                            dynamic: config.tokens.accessToken.signingKey.dynamic === undefined ? defaultConfig.tokens.accessToken.signingKey.dynamic : config.tokens.accessToken.signingKey.dynamic,
                             updateInterval: config.tokens.accessToken.signingKey.updateInterval || defaultConfig.tokens.accessToken.signingKey.updateInterval.default,
                             get: config.tokens.accessToken.signingKey.get
                         },
@@ -232,7 +232,7 @@ const sanitize = (config: TypeInputConfig): TypeConfig => {
             }
         },
         cookie: {
-            secure: config.cookie.secure || defaultConfig.cookie.secure,
+            secure: config.cookie.secure === undefined ? defaultConfig.cookie.secure : config.cookie.secure,
             domain: config.cookie.domain,
             accessTokenCookieKey: defaultConfig.cookie.accessTokenCookieKey,
             refreshTokenCookieKey: defaultConfig.cookie.refreshTokenCookieKey,
