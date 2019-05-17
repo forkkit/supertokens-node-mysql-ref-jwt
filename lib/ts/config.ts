@@ -295,7 +295,7 @@ type TypeErrorLoggingFunction = (err: any) => void;
 type TypeSecurityOnTheftDetectionFunction = (userId: string, reason: any) => void;
 
 type TypeSecurityConfig = {
-    onTheftDetection: TypeSecurityOnTheftDetectionFunction | undefined
+    onTheftDetection?: TypeSecurityOnTheftDetectionFunction
 };
 
 type TypeLoggingConfig = {
