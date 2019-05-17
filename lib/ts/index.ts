@@ -120,6 +120,9 @@ type TypeGetSessionErrors = ( TypeNewSessionErrors | {
 } | {
     errCode: 31001,
     errMessage: "no config set, please use init function at the start"
+} | {
+    errCode: 10003,
+    errMessage: "session expired"
 });
 */
 /**
@@ -227,7 +230,7 @@ async function newSession(response: Response, userId: string, parentRefreshToken
             exp: accessTokenExpiry
         }
         if (parentRefreshToken !== null) {
-            jwtPayload.pRTHash = hash(parentRefreshToken);
+            jwtPayload.pRTHash = parentRefreshToken;
         }
         const idRefreshToken = generate32CharactersRandomString();
         await updateAccessTokenInHeaders(jwtPayload, response, mysqlConnection);
