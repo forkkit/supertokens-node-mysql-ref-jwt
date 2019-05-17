@@ -93,9 +93,9 @@ const validate = (config: any): TypeInputConfig => {
             let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
             if (updateInterval !== undefined) {
                 if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
-                    updateInterval = defaultConfig.tokens.accessToken.signingKey.updateInterval.max;
+                    throw Error();
                 } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
-                    updateInterval = defaultConfig.tokens.accessToken.signingKey.updateInterval.min;
+                    throw Error();
                 }
             }
             const get = signingKeyInputConfig.get;
@@ -111,9 +111,9 @@ const validate = (config: any): TypeInputConfig => {
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
         if (validity !== undefined) {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
-                validity = defaultConfig.tokens.accessToken.validity.max;
+                throw Error();
             } else if (validity < defaultConfig.tokens.accessToken.validity.min) {
-                validity = defaultConfig.tokens.accessToken.validity.min;
+                throw Error();
             }
         }
         accessToken = {
@@ -128,9 +128,9 @@ const validate = (config: any): TypeInputConfig => {
     let validity = sanitizeNumberInput(refreshTokenInputConfig.validity);
     if (validity !== undefined) {
         if (validity > defaultConfig.tokens.refreshToken.validity.max) {
-            validity = defaultConfig.tokens.refreshToken.validity.max;
+            throw Error();
         } else if (validity < defaultConfig.tokens.refreshToken.validity.min) {
-            validity = defaultConfig.tokens.refreshToken.validity.min;
+            throw Error();
         }
     }
     const renewTokenURL = sanitizeStringInput(refreshTokenInputConfig.renewTokenURL);
@@ -269,7 +269,7 @@ const defaultConfig = {
                 }
             },
             validity: { // in seconds
-                min: 60,
+                min: 10,
                 max: 1000 * 24 * 3600,
                 default: 3600
             }
