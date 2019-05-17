@@ -1,6 +1,6 @@
 import { TypeMysqlConfig } from './db/mysql';
+import { sanitizeBooleanInput, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 import { TypeAccessTokenConfig, TypeGetSigningKeyUserFunction } from './tokens/accessToken';
-import { sanitizeBooleanInput, sanitizeStringInput, sanitizeNumberInput } from "./helpers/utils";
 
 // TODO: have all types in one file ideally.. easier to navigate and maintain. call this file types. This is done so that the other files do not get bogged down with types.. and have just the logic.
 /**
@@ -305,37 +305,37 @@ type TypeLoggingConfig = {
 
 export type TypeInputConfig = {
     mysql: {
-        host: string | undefined,
-        port: number | undefined,
+        host?: string,
+        port?: number,
         user: string,
         password: string,
-        connectionLimit: number | undefined,
-        db: string | undefined,
-        tables: {
-            signingKey: string | undefined,
-            refreshTokens: string | undefined
-        } | undefined
+        connectionLimit?: number,
+        db?: string,
+        tables?: {
+            signingKey?: string,
+            refreshTokens?: string
+        }
     },
     tokens: {
-        accessToken: {
-            signingKey: {
-                dynamic: boolean | undefined,
-                updateInterval: number | undefined,
-                get: TypeGetSigningKeyUserFunction | undefined
-            } | undefined,
-            validity: number | undefined
-        } | undefined,
+        accessToken?: {
+            signingKey?: {
+                dynamic?: boolean,
+                updateInterval?: number,
+                get?: TypeGetSigningKeyUserFunction
+            },
+            validity?: number
+        },
         refreshToken: {
-            validity: number | undefined,
+            validity?: number,
             renewTokenURL: string   // TODO: this is just the path right? If so, please specify this.
         }
     },
-    logging: TypeLoggingConfig | undefined,
+    logging?: TypeLoggingConfig,
     cookie: {
         domain: string,
-        secure: boolean | undefined
+        secure?: boolean
     },
-    security: TypeSecurityConfig | undefined
+    security?: TypeSecurityConfig
 };
 
 type TypeConfig = {
