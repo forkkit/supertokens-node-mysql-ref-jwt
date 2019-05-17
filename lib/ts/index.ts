@@ -56,7 +56,7 @@ class Session {
         return this.userId;
     }
 
-    getMetaInfo = async (): Promise<any> => {
+    getMetaInfo = (): any => {
         return this.metaInfo;
     }
 
