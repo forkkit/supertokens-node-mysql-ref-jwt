@@ -295,7 +295,7 @@ type TypeInfoLoggingFunction = (info: any) => void;
 type TypeErrorLoggingFunction = (err: any) => void;
 
 // TODO: also have refresh token in this function? So that user can invalidate just that particular session.. and not logout user from all their devices.
-type TypeSecurityOnTheftDetectionFunction = (userId: string, reason: any) => void;
+type TypeSecurityOnTheftDetectionFunction = (userId: string, uniqueSessionId: string) => void;
 
 type TypeSecurityConfig = {
     onTheftDetection?: TypeSecurityOnTheftDetectionFunction
