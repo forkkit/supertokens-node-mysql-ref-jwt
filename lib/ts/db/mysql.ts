@@ -23,7 +23,7 @@ export class Mysql {
     }
 
     static async init() {
-        if (Mysql.instance !== undefined) {
+        if (Mysql.instance === undefined) {
             const config = Config.get();
             Mysql.instance = new Mysql(config.mysql);
             await createTablesIfNotExists(config.mysql.tables.signingKey, config.mysql.tables.refreshTokens);
