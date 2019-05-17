@@ -20,7 +20,7 @@ import {
     generate32CharactersRandomString,
     generate44ChararctersRandomString
 } from "../helpers/utils";
-import { SessionErrors } from "../helpers/errors";
+import { SessionErrors, MiscellaneousErrors } from "../helpers/errors";
 import { encrypt, decrypt } from "../helpers/crypto";
 
 /**
@@ -40,7 +40,7 @@ export class SigningKey {
 
     static async getSigningKey (mysqlConnection: Connection): Promise<string> {
         if (SigningKey.instance === undefined) {
-            throw Error(); // @todo
+            throw MiscellaneousErrors.refreshTokenSigningKeyTableNotInitialized;
         }
         if (SigningKey.instance.key === undefined) {
             let key = await getSigningKeyForRefreshToken(mysqlConnection);

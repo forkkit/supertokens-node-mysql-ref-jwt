@@ -70,7 +70,10 @@ export class Connection {
         return new Promise<any>(async (resolve, reject) => {
             this.mysqlConnection.query(query, params, (err, results, fields) => {
                 if (err) {
-                    reject(err);
+                    reject({
+                        ...MySqlErrors.queryExecutionError,
+                        error: err
+                    });
                     return;
                 }
                 resolve(results);

@@ -94,7 +94,7 @@ class Session {
     }
 }
 
-export async function getSession(request: Request, response: Response): Promise<Session> {
+export async function getSession(request: Request, response: Response): Promise<TypeGetSession> {
     const mysqlConnection = await getConnection();
     try {
         const accessToken = getAccessTokenFromRequest(request);
@@ -123,20 +123,30 @@ export async function getSession(request: Request, response: Response): Promise<
         return new Session(jwtPayload.userId, jwtPayload.exp, jwtPayload.rTHash);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
+        if (err.errCode !== undefined) {
+            return err;
+        }
         throw err;
     } finally {
         mysqlConnection.closeConnection();
     }
 }
 
-export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: TypeMetaInfo): Promise<Session> {
-    if (!checkUserIdContainsNoDot(userId)) {
-        throw SessionErrors.dotInPassedUserId;
+export async function createNewSession(request: Request, response: Response, userId: string, metaInfo?: TypeMetaInfo): Promise<TypeCreateNewSession> {
+    try {
+        if (!checkUserIdContainsNoDot(userId)) {
+            throw SessionErrors.dotInPassedUserId;
+        }
+        return await newSession(request, response, userId, null, null, metaInfo);
+    } catch (err) {
+        if (err.errCode !== undefined) {
+            return err;
+        }
+        throw err;
     }
-    return await newSession(request, response, userId, null, null, metaInfo);
 }
 
-async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: TypeMetaInfo): Promise<Session> {
+async function newSession(request: Request, response: Response, userId: string, parentRefreshToken: string | null, sessionId: string | null, metaInfo?: TypeMetaInfo): Promise<TypeNewSession> {
     const mysqlConnection = await getConnection();
     try {
         const serializedMetaInfo = validateJSONObj(metaInfo);
@@ -164,7 +174,7 @@ async function newSession(request: Request, response: Response, userId: string, 
     }
 }
 
-export async function refreshSession(request: Request, response: Response) {
+export async function refreshSession(request: Request, response: Response): Promise<TypeRefreshSession> {
     const mysqlConnection = await getConnection();
     try {
         const refreshToken = getRefreshTokenFromRequest(request);
@@ -200,6 +210,9 @@ export async function refreshSession(request: Request, response: Response) {
         return await newSession(request, response, parentRefreshTokenInfo.userId, parentToken, parentRefreshTokenInfo.sessionId, parentRefreshTokenInfo.metaInfo);
     } catch (err) {
         mysqlConnection.setDestroyConnection();
+        if (err.errCode !== undefined) {
+            return err;
+        }
         throw err;
     } finally {
         mysqlConnection.closeConnection();
@@ -217,3 +230,79 @@ export async function revokeAllRefreshTokenForUser(userId: string) {
         mysqlConnection.closeConnection();
     }
 }
+
+type TypeCreateNewSession = (
+    TypeNewSession | {
+        errCode: 10004,
+        errMessage: "userId without dots currently not supported"
+    }
+);
+
+type TypeNewSession = (
+    Session | {
+        errCode: 50001,
+        errMessage: "invalid JSON. expected JSON Object"
+    } | {
+        errCode: 40001,
+        errMessage: "error in connecting to mysql"
+    } | {
+        errCode: 40002,
+        errMessage: "error during query execution",
+        error: Error
+    } | {
+        errCode: 31001,
+        errMessage: "no config set, please use init function at the start"
+    } | {
+        errCode: 50002,
+        errMessage: "access token module has not been initialized correctly"
+    } | {
+        errCode: 50003,
+        errMessage: "refresh token module has not been initialized correctly"
+    }
+);
+
+type TypeRefreshSession = (
+    TypeNewSession | {
+        errCode: 10002,
+        errMessage: "no refresh token found in headers"
+    } | {
+        errCode: 10005,
+        errMessage: "invalid refresh token"
+    } | {
+        errCode: 50003,
+        errMessage: "refresh token module has not been initialized correctly"
+    } | {
+        errCode: 40002,
+        errMessage: "error during query execution",
+        error: Error
+    }
+)
+
+type TypeGetSession = (
+    TypeNewSession | {
+        errCode: 10001,
+        errMessage: "no access token found in headers"
+    } | {
+        errCode: 20001,
+        errMessage: "invalid jwt"
+    } | {
+        errCode: 20002,
+        errMessage: "jwt header mismatch"
+    } | {
+        errCode: 20003,
+        errMessage: "jwt verification failed"
+    } | {
+        errCode: 20004,
+        errMessage: "jwt expired"
+    } | {
+        errCode: 20005,
+        errMessage: "invalid payload"
+    } | {
+        errCode: 40002,
+        errMessage: "error during query execution",
+        error: Error
+    } | {
+        errCode: 31001,
+        errMessage: "no config set, please use init function at the start"
+    }
+);
