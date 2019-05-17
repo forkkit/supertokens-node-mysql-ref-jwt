@@ -118,7 +118,7 @@ export async function getSession(request: Request, response: Response): Promise<
         /**
          * @todo error
          */
-        throw Error();
+        throw Error(err);
     } finally {
         mysqlConnection.closeConnection();
     }
