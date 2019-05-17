@@ -299,8 +299,8 @@ type TypeSecurityConfig = {
 };
 
 type TypeLoggingConfig = {
-    info: TypeInfoLoggingFunction | undefined,
-    error: TypeErrorLoggingFunction | undefined
+    info?: TypeInfoLoggingFunction,
+    error?: TypeErrorLoggingFunction
 };
 
 export type TypeInputConfig = {
