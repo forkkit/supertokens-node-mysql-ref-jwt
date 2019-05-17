@@ -54,7 +54,7 @@ export async function verifyAndGetPayload(token: string, getSingingKey: (mConnec
     if (splittedInput[0] !== header) {
         throw Error(JWTErrors.headerMismatch);
     }
-    const payload = splittedInput[1];
+    const payload = Buffer.from(splittedInput[1], "base64").toString();
     const signature = splittedInput[2];
     const signingKey = await getSingingKey(mysqlConnection);
     const hashFunction = createHmac(algorithm, signingKey);
