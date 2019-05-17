@@ -1,12 +1,11 @@
 import { Config } from "../config";
 
-const config = Config.get();
-
 /**
  * 
  * @param err 
  */
 export function errorLogging(err: any) {
+    const config = Config.get();
     if (config.logging.error !== undefined) {
         config.logging.error(err);
     }
@@ -17,6 +16,7 @@ export function errorLogging(err: any) {
  * @param info 
  */
 export function infoLogging(info: any) {
+    const config = Config.get();
     if (config.logging.info !== undefined) {
         config.logging.info(info);
     }

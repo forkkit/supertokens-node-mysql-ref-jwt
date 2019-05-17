@@ -6,10 +6,10 @@ import { getConnection, Mysql } from './db/mysql';
 import { Config, TypeInputConfig } from './config';
 import { TypeInputAccessTokenPayload } from './helpers/jwt';
 import {
-    getAccessTokenFromRequest,
-    SigningKey as accessTokenSigningKey,
-    updateAccessTokenInHeaders,
     verifyTokenAndGetPayload,
+    getAccessTokenFromRequest,
+    updateAccessTokenInHeaders,
+    SigningKey as accessTokenSigningKey
 } from './tokens/accessToken';
 import {
     updateMetaInfo,
