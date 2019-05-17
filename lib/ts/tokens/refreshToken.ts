@@ -22,11 +22,6 @@ import {
 import { encrypt, decrypt } from "../helpers/crypto";
 
 /**
- * @constant
- */
-export const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "";
-
-/**
  * @class
  */
 export class SigningKey {

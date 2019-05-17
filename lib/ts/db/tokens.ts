@@ -1,8 +1,9 @@
 import { Connection } from "./mysql";
-import { DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN, TypeRefreshTokenInfo } from "../tokens/refreshToken";
+import { TypeRefreshTokenInfo } from "../tokens/refreshToken";
 import { Config } from "../config";
 
-const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = 'access-token-signing-key';
+const DB_KEY_FOR_SIGNING_KEY_ACCESS_TOKEN = "access-token-signing-key";
+const DB_KEY_FOR_SIGNING_KEY_REFRESH_TOKEN = "refresh-token-signing-key";
 
 export async function newSigningKeyForAccessToken (mysqlConnection: Connection, signingKey: string, createdAt: number) {
     const config = Config.get();
