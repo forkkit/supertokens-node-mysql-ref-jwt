@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createHash, pbkdf2, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from 'crypto';
 import * as uuid from 'uuid';
 
 import { errorLogging } from './logging';
@@ -21,6 +21,11 @@ export function generateUUID(): string {
 
 export function hash(toHash: string): string {
     return createHash("sha256").update(toHash).digest("hex");
+}
+
+export function hmac(text: string, key: string) {
+    const hashFunction = createHmac("sha256", key);
+    return hashFunction.update(text).digest("hex");
 }
 
 /**
