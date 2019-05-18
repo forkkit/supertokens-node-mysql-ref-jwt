@@ -13,6 +13,8 @@ import {
 import { AuthError, generateError } from './error';
 import {
     createNewSession as createNewSessionInDB,
+    deleteSession,
+    getAllHash1SessionHandlesForUser,
     getSessionInfo_Transaction,
     updateSessionInfo_Transaction,
 } from './helpers/dbQueries';
@@ -178,9 +180,26 @@ async function refreshSessionHelper(res: express.Response, refreshToken: string,
 }
 
 export async function revokeAllSessionsForUser(userId: string) {
-
+    let connection = await getConnection();
+    try {
+        let sessionHandleHash1List = await getAllHash1SessionHandlesForUser(connection, userId);
+        for (let i = 0; i < sessionHandleHash1List.length; i++) {
+            await revokeSessionUsingSessionHandleHelper(sessionHandleHash1List[i]);
+        }
+    } finally {
+        connection.closeConnection();
+    }
 }
 
 export async function revokeSessionUsingSessionHandle(sessionHandle: string) {
+    return await revokeSessionUsingSessionHandleHelper(hash(sessionHandle));
+}
 
+async function revokeSessionUsingSessionHandleHelper(sessionHandleHash1: string) {
+    let connection = await getConnection();
+    try {
+        await deleteSession(connection, sessionHandleHash1);
+    } finally {
+        connection.closeConnection();
+    }
 }

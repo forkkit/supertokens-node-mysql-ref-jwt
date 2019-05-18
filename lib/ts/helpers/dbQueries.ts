@@ -51,9 +51,6 @@ export async function getKeyValueFromKeyName_Transaction(connection: Connection,
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
     let query = `SELECT key_value, created_at_time FROM ${config.mysql.tables.signingKey} WHERE key_name = ? FOR UPDATE`;
     let result = await connection.executeQuery(query, [keyName]);
-    if (result.length === 0) {
-        return [];
-    }
     return result.map((i: any) => ({
         keyValue: i.key_value.toString(),
         createdAtTime: Number(i.created_at_time)
@@ -135,6 +132,13 @@ export async function updateSessionInfo_Transaction(connection: Connection,
     let result = await connection.executeQuery(query, [refreshTokenHash2, serialiseSessionData(sessionData),
         expiresAt, sessionHandleHash1]);
     return result.affectedRows;
+}
+
+export async function getAllHash1SessionHandlesForUser(connection: Connection, userId: string): Promise<string[]> {
+    const config = Config.get();
+    let query = `SELECT session_handle_hash_1 FROM ${config.mysql.tables.refreshTokens} WHERE user_id = ?`;
+    let result = await connection.executeQuery(query, [userId]);
+    return result.map((i: any) => i.session_handle_hash_1.toString());
 }
 
 function serialiseSessionData(data: any): string {
