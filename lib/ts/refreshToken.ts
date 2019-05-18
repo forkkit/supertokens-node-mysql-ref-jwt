@@ -40,7 +40,8 @@ export async function getInfoFromRefreshToken(token: string): Promise<{
 }
 
 export async function createNewRefreshToken(sessionHandle: string, userId: string,
-    parentRefreshTokenHash1: string | undefined): Promise<string> {
+    parentRefreshTokenHash1: string | undefined): Promise<{ token: string, expiry: number }> {
+    let config = Config.get();
     let key = await Key.getKey();
     let nonce = hash(generateUUID());
     let payloadSerialised = JSON.stringify({
@@ -49,7 +50,10 @@ export async function createNewRefreshToken(sessionHandle: string, userId: strin
         nonce
     });
     let encryptedPart = await encrypt(payloadSerialised, key);
-    return encryptedPart + "." + nonce;
+    return {
+        token: encryptedPart + "." + nonce,
+        expiry: Date.now() + config.tokens.refreshToken.validity
+    }
 }
 
 const REFRESH_TOKEN_KEY_NAME_IN_DB = "refresh_token_key";

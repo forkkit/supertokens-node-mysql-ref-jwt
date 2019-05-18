@@ -121,7 +121,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
     if (typeof refreshTokenInputConfig !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("refreshToken config not passed. renewTokenURL is required"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("refreshToken config not passed. renewTokenPath is required"));
     }
     let validity = sanitizeNumberInput(refreshTokenInputConfig.validity);
     if (validity !== undefined) {
@@ -131,12 +131,12 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"));
         }
     }
-    const renewTokenURL = sanitizeStringInput(refreshTokenInputConfig.renewTokenURL);
-    if (renewTokenURL === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenURL not passed"));
+    const renewTokenPath = sanitizeStringInput(refreshTokenInputConfig.renewTokenPath);
+    if (renewTokenPath === undefined) {
+        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenPath not passed"));
     }
     const refreshToken = {
-        renewTokenURL,
+        renewTokenPath,
         validity
     };
     const tokens = {
@@ -223,15 +223,12 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                 },
             refreshToken: {
                 validity: (config.tokens.refreshToken.validity || defaultConfig.tokens.refreshToken.validity.default) * 60 * 60 * 1000,
-                renewTokenURL: config.tokens.refreshToken.renewTokenURL
+                renewTokenPath: config.tokens.refreshToken.renewTokenPath
             }
         },
         cookie: {
             secure: config.cookie.secure === undefined ? defaultConfig.cookie.secure : config.cookie.secure,
-            domain: config.cookie.domain,
-            accessTokenCookieKey: defaultConfig.cookie.accessTokenCookieKey,
-            refreshTokenCookieKey: defaultConfig.cookie.refreshTokenCookieKey,
-            idRefreshTokenCookieKey: defaultConfig.cookie.idRefreshTokenCookieKey
+            domain: config.cookie.domain
         },
         logging: {
             info: config.logging !== undefined ? config.logging.info : undefined,
@@ -276,9 +273,6 @@ const defaultConfig = {
         }
     },
     cookie: {
-        secure: true,
-        accessTokenCookieKey: "sAccessToken",
-        refreshTokenCookieKey: "sRefreshToken",
-        idRefreshTokenCookieKey: "sIdRefreshToken"
+        secure: true
     }
 };

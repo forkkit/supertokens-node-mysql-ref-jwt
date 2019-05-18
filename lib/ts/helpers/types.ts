@@ -22,7 +22,7 @@ export type TypeInputConfig = {
         },
         refreshToken: {
             validity?: number,
-            renewTokenURL: string   // TODO: this is just the path right? If so, please specify this.
+            renewTokenPath: string
         }
     },
     logging?: TypeLoggingConfig,
@@ -57,16 +57,13 @@ export type TypeConfig = {
         },
         refreshToken: {
             validity: number,
-            renewTokenURL: string
+            renewTokenPath: string
         }
     },
     logging: TypeLoggingConfig,
     cookie: {
         domain: string,
-        secure: boolean,
-        accessTokenCookieKey: string,
-        refreshTokenCookieKey: string,
-        idRefreshTokenCookieKey: string
+        secure: boolean
     },
     onTokenTheftDetection: TypeSecurityConfig
 };

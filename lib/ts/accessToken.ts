@@ -43,17 +43,18 @@ export async function getInfoFromAccessToken(token: string): Promise<{
 }
 
 export async function createNewAccessToken(sessionHandle: string, userId: string, refreshTokenHash1: string,
-    parentRefreshTokenHash1: string | undefined): Promise<string> {
+    parentRefreshTokenHash1: string | undefined): Promise<{ token: string, expiry: number }> {
     let config = Config.get();
     let signingKey = await SigningKey.getKey();
+    let expiry = Date.now() + config.tokens.accessToken.validity;
     let token = JWT.createJWT({
         sessionHandle,
         userId,
         rt: refreshTokenHash1,
         prt: parentRefreshTokenHash1,
-        expiryTime: Date.now() + config.tokens.accessToken.validity
+        expiryTime: expiry
     }, signingKey);
-    return token;
+    return { token, expiry };
 }
 
 const ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB = "access_token_signing_key";
