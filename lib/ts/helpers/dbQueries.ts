@@ -1,4 +1,5 @@
 import Config from '../config';
+import { AuthError, generateError } from '../error';
 import { Connection } from './mysql';
 
 /**
@@ -44,9 +45,9 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
     await refreshTokensTableQueryPromise;
 }
 
-export async function getKeyValueFromKeyName(connection: Connection, keyName: string): Promise<{ keyValue: string, createdAtTime: number }[]> {
+export async function getKeyValueFromKeyName_Transaction(connection: Connection, keyName: string): Promise<{ keyValue: string, createdAtTime: number }[]> {
     const config = Config.get();
-    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading access token signing key");
+    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
     let query = `SELECT key_value, created_at_time FROM ${config.mysql.tables.signingKey} WHERE key_name = ? FOR UPDATE`;
     let result = await connection.executeQuery(query, [keyName]);
     if (result.length === 0) {
@@ -58,9 +59,56 @@ export async function getKeyValueFromKeyName(connection: Connection, keyName: st
     }));
 }
 
-export async function insertKeyValueForKeyName(connection: Connection, keyName: string, keyValue: string, createdAtTime: number) {
+export async function insertKeyValueForKeyName_Transaction(connection: Connection, keyName: string, keyValue: string, createdAtTime: number) {
     const config = Config.get();
-    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading access token signing key");
+    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
     let query = `INSERT INTO ${config.mysql.tables.signingKey} VALUES (key_name, key_value, created_at_time) VALUES (?, ?, ?)`;
     await connection.executeQuery(query, [keyName, keyValue, createdAtTime]);
+}
+
+export async function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any) {
+    const config = Config.get();
+    let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle = ?`;
+    await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandle]);
+}
+
+export async function getSessionData(connection: Connection, sessionHandle: string): Promise<{ found: false } | { found: true, data: any }> {
+    const config = Config.get();
+    let query = `SELECT session_info FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
+    let result = await connection.executeQuery(query, [sessionHandle]);
+    if (result.length === 0) {
+        return {
+            found: false
+        };
+    }
+    return {
+        found: true,
+        data: unserialiseSessionData(result[0].session_info)
+    };
+}
+
+export async function deleteSession(connection: Connection, sessionHandle: string) {
+    const config = Config.get();
+    let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
+    await connection.executeQuery(query, [sessionHandle]);
+}
+
+function serialiseSessionData(data: any): string {
+    if (data === undefined) {
+        return "";
+    } else {
+        return JSON.stringify(data);
+    }
+}
+
+function unserialiseSessionData(data: string): any {
+    if (data === "") {
+        return undefined;
+    } else {
+        try {
+            return JSON.parse(data);
+        } catch (err) {
+            throw generateError(AuthError.GENERAL_ERROR, err);
+        }
+    }
 }

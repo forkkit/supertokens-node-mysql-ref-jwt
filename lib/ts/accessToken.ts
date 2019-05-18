@@ -1,6 +1,6 @@
 import Config from './config';
 import { AuthError, generateError } from './error';
-import { getKeyValueFromKeyName, insertKeyValueForKeyName } from './helpers/dbQueries';
+import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from './helpers/dbQueries';
 import * as JWT from './helpers/jwt';
 import { getConnection } from './helpers/mysql';
 import { TypeConfig, TypeGetSigningKeyUserFunction } from './helpers/types';
@@ -16,7 +16,8 @@ export async function getInfoFromAccessToken(token: string): Promise<{
     userId: string,
     refreshTokenHash1: string,
     expiryTime: number,
-    parentRefreshTokenHash1: string | undefined
+    parentRefreshTokenHash1: string | undefined,
+    userPayload: any
 }> {
     let signingKey = await SigningKey.getKey();
     try {
@@ -26,6 +27,7 @@ export async function getInfoFromAccessToken(token: string): Promise<{
         let refreshTokenHash1 = sanitizeStringInput(payload.rt);
         let expiryTime = sanitizeNumberInput(payload.expiryTime);
         let parentRefreshTokenHash1 = sanitizeStringInput(payload.prt);
+        let userPayload = payload.userPayload;
         if (sessionHandle === undefined || userId === undefined ||
             refreshTokenHash1 === undefined || expiryTime === undefined) {
             throw Error("invalid access token payload");
@@ -35,7 +37,7 @@ export async function getInfoFromAccessToken(token: string): Promise<{
         }
         return {
             sessionHandle, userId, refreshTokenHash1,
-            expiryTime, parentRefreshTokenHash1
+            expiryTime, parentRefreshTokenHash1, userPayload
         };
     } catch (err) {
         throw generateError(AuthError.TRY_REFRESH_TOKEN, err);
@@ -43,7 +45,7 @@ export async function getInfoFromAccessToken(token: string): Promise<{
 }
 
 export async function createNewAccessToken(sessionHandle: string, userId: string, refreshTokenHash1: string,
-    parentRefreshTokenHash1: string | undefined): Promise<{ token: string, expiry: number }> {
+    parentRefreshTokenHash1: string | undefined, userPayload: any): Promise<{ token: string, expiry: number }> {
     let config = Config.get();
     let signingKey = await SigningKey.getKey();
     let expiry = Date.now() + config.tokens.accessToken.validity;
@@ -52,7 +54,8 @@ export async function createNewAccessToken(sessionHandle: string, userId: string
         userId,
         rt: refreshTokenHash1,
         prt: parentRefreshTokenHash1,
-        expiryTime: expiry
+        expiryTime: expiry,
+        userPayload
     }, signingKey);
     return { token, expiry };
 }
@@ -107,7 +110,7 @@ class SigningKey {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let keys = await getKeyValueFromKeyName(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
+            let keys = await getKeyValueFromKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
             let generateNewKey = keys.length === 0;
             if (!generateNewKey) {  // read key may have expired...
                 if (this.dynamic && Date.now() > (keys[0].createdAtTime + this.updateInterval)) {
@@ -120,7 +123,7 @@ class SigningKey {
                     keyValue,
                     createdAtTime: Date.now()
                 }];
-                await insertKeyValueForKeyName(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
+                await insertKeyValueForKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
             }
             await connection.commit();
             return keys[0];

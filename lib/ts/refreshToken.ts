@@ -1,6 +1,6 @@
 import Config from './config';
 import { AuthError, generateError } from './error';
-import { getKeyValueFromKeyName, insertKeyValueForKeyName } from './helpers/dbQueries';
+import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from './helpers/dbQueries';
 import { getConnection } from './helpers/mysql';
 import { decrypt, encrypt, generateNewSigningKey, generateUUID, hash, sanitizeStringInput } from './helpers/utils';
 
@@ -81,14 +81,14 @@ class Key {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let keys = await getKeyValueFromKeyName(connection, REFRESH_TOKEN_KEY_NAME_IN_DB);
+            let keys = await getKeyValueFromKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB);
             if (keys.length === 0) {
                 let keyValue = await generateNewSigningKey();
                 keys = [{
                     keyValue,
                     createdAtTime: Date.now()
                 }];
-                await insertKeyValueForKeyName(connection, REFRESH_TOKEN_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
+                await insertKeyValueForKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
             }
             await connection.commit();
             return keys[0].keyValue;
