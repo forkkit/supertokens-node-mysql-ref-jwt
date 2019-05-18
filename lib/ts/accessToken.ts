@@ -24,6 +24,7 @@ export function createNewAccessToken(sessionHandle: string, userId: string, refr
     expiryTime: number, parentRefreshTokenHash1: string | undefined): string {
 
 }
+
 const ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB = "access_token_signing_key";
 class SigningKey {
 

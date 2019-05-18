@@ -1,9 +1,17 @@
 import * as express from 'express';
 
+import { init as accessTokenInit } from './accessToken';
+import Config from './config';
+import { Mysql } from './helpers/mysql';
+import { TypeConfig } from './helpers/types';
+import { init as refreshTokenInit } from './refreshToken';
 import { Session } from './session';
 
-export async function init() {
-
+export async function init(config: TypeConfig) {
+    Config.init(config);
+    await Mysql.init();
+    await accessTokenInit();
+    await refreshTokenInit();
 }
 
 export async function login(res: express.Response, userId: string,
