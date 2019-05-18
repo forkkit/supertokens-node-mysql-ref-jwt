@@ -17,25 +17,24 @@ export async function checkIfTableExists(connection: Connection, tableName: stri
  */
 export async function createTablesIfNotExists(connection: Connection, signingKeyTableName: string, refreshTokensTableName: string) {
     /**
-     * @todo add proper query. these are just dummy ones
+     * @todo add proper query. these are just dummy ones + optimise the length of VARCHAR
      */
     const signKeyTableQuery = `
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
                 key_name VARCHAR(128),
-                key_value VARCHAR(128),
+                key_value VARCHAR(255),
                 created_at BIGINT UNSIGNED,
                 PRIMARY KEY(key_name, key_value)
             );
         `;
     const refreshTokensTableQuery = `
             CREATE TABLE IF NOT EXISTS ${refreshTokensTableName} (
-                token VARCHAR(128),
+                session_handle VARCHAR(255) NOT NULL,
                 user_id VARCHAR(128) NOT NULL,
-                meta_info VARCHAR(255) NOT NULL,
-                session_id VARCHAR(255) NOT NULL,
-                created_at BIGINT UNSIGNED,
-                expires_at BIGINT UNSIGNED,
-                PRIMARY KEY(token)
+                refresh_token_hash_2 VARCHAR(128) NOT NULL,
+                session_info TEXT,
+                expires_at BIGINT UNSIGNED NOT NULL,
+                PRIMARY KEY(session_handle)
             );
         `;
     const signKeyTableQueryPromise = connection.executeQuery(signKeyTableQuery, []);
