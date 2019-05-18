@@ -53,7 +53,7 @@ export async function createNewRefreshToken(sessionHandle: string, userId: strin
     return {
         token: encryptedPart + "." + nonce,
         expiry: Date.now() + config.tokens.refreshToken.validity
-    }
+    };
 }
 
 const REFRESH_TOKEN_KEY_NAME_IN_DB = "refresh_token_key";
