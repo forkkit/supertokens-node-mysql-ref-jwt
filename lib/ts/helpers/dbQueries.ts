@@ -87,10 +87,11 @@ export async function getSessionData(connection: Connection, sessionHandle: stri
     };
 }
 
-export async function deleteSession(connection: Connection, sessionHandle: string) {
+export async function deleteSession(connection: Connection, sessionHandle: string): Promise<number> {
     const config = Config.get();
     let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    await connection.executeQuery(query, [sessionHandle]);
+    let result = await connection.executeQuery(query, [sessionHandle]);
+    return result.affectedRows;
 }
 
 function serialiseSessionData(data: any): string {

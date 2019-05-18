@@ -22,8 +22,10 @@ export class Session {
     revokeSession = async () => {
         let connection = await getConnection();
         try {
-            await deleteSession(connection, this.sessionHandle);
-            clearSessionFromCookie(this.res);
+            let affectedRows = await deleteSession(connection, this.sessionHandle);
+            if (affectedRows === 1) {
+                clearSessionFromCookie(this.res);
+            }
         } finally {
             connection.closeConnection();
         }
