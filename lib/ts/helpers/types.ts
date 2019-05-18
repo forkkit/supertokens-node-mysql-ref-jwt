@@ -34,7 +34,18 @@ export type TypeInputConfig = {
 };
 
 export type TypeConfig = {
-    mysql: TypeMysqlConfig,
+    mysql: {
+        host: string,
+        port: number,
+        user: string,
+        password: string,
+        connectionLimit: number,
+        database: string,
+        tables: {
+            signingKey: string,
+            refreshTokens: string
+        }
+    },
     tokens: {
         accessToken: {
             signingKey: {
@@ -71,16 +82,3 @@ type TypeLoggingConfig = {
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
 
 export type MySQLParamTypes = string | number | boolean | null | Date;
-
-export type TypeMysqlConfig = {
-    host: string,
-    port: number,
-    user: string,
-    password: string,
-    connectionLimit: number,
-    database: string,
-    tables: {
-        signingKey: string,
-        refreshTokens: string
-    }
-};

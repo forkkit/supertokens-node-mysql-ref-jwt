@@ -3,7 +3,7 @@ import * as uuid from 'uuid';
 
 import { errorLogging } from './logging';
 
-export async function generateNewSigninKey(): Promise<string> {
+export async function generateNewSigningKey(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
         pbkdf2(randomBytes(64), randomBytes(64), 100, 32, "sha512", (err, key) => {
             if (err) {

@@ -1,3 +1,4 @@
+import Config from '../config';
 import { Connection } from './mysql';
 
 /**
@@ -23,7 +24,7 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
                 key_name VARCHAR(128),
                 key_value VARCHAR(255),
-                created_at BIGINT UNSIGNED,
+                created_at_time BIGINT UNSIGNED,
                 PRIMARY KEY(key_name, key_value)
             );
         `;
@@ -41,4 +42,25 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
     const refreshTokensTableQueryPromise = connection.executeQuery(refreshTokensTableQuery, []);
     await signKeyTableQueryPromise;
     await refreshTokensTableQueryPromise;
+}
+
+export async function getKeyValueFromKeyName(connection: Connection, keyName: string): Promise<{ keyValue: string, createdAtTime: number }[]> {
+    const config = Config.get();
+    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading access token signing key");
+    let query = `SELECT key_value, created_at_time FROM ${config.mysql.tables.signingKey} WHERE key_name = ? FOR UPDATE`;
+    let result = await connection.executeQuery(query, [keyName]);
+    if (result.length === 0) {
+        return [];
+    }
+    return result.map((i: any) => ({
+        keyValue: i.key_value.toString(),
+        createdAtTime: Number(i.created_at_time)
+    }));
+}
+
+export async function insertKeyValueForKeyName(connection: Connection, keyName: string, keyValue: string, createdAtTime: number) {
+    const config = Config.get();
+    connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading access token signing key");
+    let query = `INSERT INTO ${config.mysql.tables.signingKey} VALUES (key_name, key_value, created_at_time) VALUES (?, ?, ?)`;
+    await connection.executeQuery(query, [keyName, keyValue, createdAtTime]);
 }

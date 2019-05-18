@@ -3,7 +3,7 @@ import * as mysql from 'mysql';
 import Config from '../config';
 import { AuthError, generateError } from '../error';
 import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from './dbQueries';
-import { MySQLParamTypes, TypeMysqlConfig } from './types';
+import { MySQLParamTypes, TypeConfig } from './types';
 
 /**
  * @todo read about what happens when connection is released, does the isolation level stays for that connection?
@@ -12,21 +12,21 @@ export class Mysql {
     private static instance: undefined | Mysql;
     private pool: mysql.Pool;
 
-    private constructor(config: TypeMysqlConfig) {
+    private constructor(config: TypeConfig) {
         this.pool = mysql.createPool({
-            host: config.host,
-            port: config.port,
-            user: config.user,
-            password: config.password,
-            database: config.database,
-            connectionLimit: config.connectionLimit
+            host: config.mysql.host,
+            port: config.mysql.port,
+            user: config.mysql.user,
+            password: config.mysql.password,
+            database: config.mysql.database,
+            connectionLimit: config.mysql.connectionLimit
         });
     }
 
     static async init() {
         if (Mysql.instance === undefined) {
             const config = Config.get();
-            Mysql.instance = new Mysql(config.mysql);
+            Mysql.instance = new Mysql(config);
             await createTablesIfNotExists();
         }
     }
@@ -61,6 +61,7 @@ export class Connection {
     private isClosed = false;
     private destroyConnnection = false;
     private mysqlConnection: mysql.PoolConnection;
+    private currTransactionCount = 0;
 
     constructor(mysqlConnection: mysql.PoolConnection) {
         this.mysqlConnection = mysqlConnection;
@@ -82,12 +83,31 @@ export class Connection {
         this.destroyConnnection = true;
     }
 
+    throwIfTransactionIsNotStarted = (message: string) => {
+        if (this.currTransactionCount === 0) {
+            throw generateError(AuthError.GENERAL_ERROR, new Error(message));
+        }
+    }
+
+    startTransaction = async () => {
+        await this.executeQuery("START TRANSACTION", []);
+        this.currTransactionCount += 1;
+    }
+
+    commit = async () => {
+        await this.executeQuery("COMMIT", []);
+        this.currTransactionCount -= 1;
+    }
+
     closeConnection = () => {
         if (this.isClosed) {
             return;
         }
         if (this.mysqlConnection === undefined) {
             throw Error("no connect to MySQL server.");
+        }
+        if (this.currTransactionCount > 0) {
+            this.setDestroyConnection();
         }
         try {
             if (this.destroyConnnection) {
@@ -119,8 +139,6 @@ async function createTablesIfNotExists() {
             // tables probably don't exist. so we will continue..
         }
         await createTablesIfNotExistsQueries(connection, signingKeyTableName, refreshTokensTableName);
-    } catch (err) {
-        connection.setDestroyConnection();
     } finally {
         connection.closeConnection();
     }

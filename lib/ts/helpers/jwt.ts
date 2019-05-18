@@ -11,7 +11,11 @@ export function createJWT(plainTextPayload: { [key: string]: any }, signingKey: 
     return `${HEADER}.${payload}.${signature}`;
 }
 
-// Throw error if verifications fail.. or anything goes wrong.
+/**
+ * 
+ * @throws Error 
+ * @description Throw error if verifications fail.. or anything goes wrong.
+ */
 export function verifyJWTAndGetPayload(jwt: string, signingKey: string): { [key: string]: any } {
     const splittedInput = jwt.split(".");
     if (splittedInput.length !== 3) {
