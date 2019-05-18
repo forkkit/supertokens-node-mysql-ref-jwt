@@ -7,6 +7,7 @@ import {
     attachRefreshTokenToCookie,
     clearSessionFromCookie,
     getAccessTokenFromCookie,
+    getRefreshTokenFromCookie,
     requestHasSessionCookies,
 } from './cookie';
 import { AuthError, generateError } from './error';
@@ -18,7 +19,7 @@ import {
 import { getConnection, Mysql } from './helpers/mysql';
 import { TypeInputConfig } from './helpers/types';
 import { generateUUID, hash } from './helpers/utils';
-import { createNewRefreshToken, init as refreshTokenInit } from './refreshToken';
+import { createNewRefreshToken, getInfoFromRefreshToken, init as refreshTokenInit } from './refreshToken';
 import { Session } from './session';
 
 export async function init(config: TypeInputConfig) {
@@ -42,7 +43,7 @@ export async function createNewSession(res: express.Response, userId: string,
     // create new session in db
     let connection = await getConnection();
     try {
-        await createNewSessionInDB(connection, sessionHandle, userId, hash(hash(refreshToken.token)), sessionData, refreshToken.expiry);
+        await createNewSessionInDB(connection, hash(sessionHandle), userId, hash(hash(refreshToken.token)), sessionData, refreshToken.expiry);
     } finally {
         connection.closeConnection();
     }
@@ -78,7 +79,7 @@ export async function getSession(req: express.Request, res: express.Response): P
     try {
         await connection.startTransaction();
         let sessionHandle = accessTokenInfo.sessionHandle;
-        let sessionInfo = await getSessionInfo_Transaction(connection, sessionHandle);
+        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
 
         if (sessionInfo === undefined) {    // this session no longer exists.
             await connection.commit();
@@ -90,7 +91,7 @@ export async function getSession(req: express.Request, res: express.Response): P
         if (promote || sessionInfo.refreshTokenHash2 === hash(accessTokenInfo.refreshTokenHash1)) {
             if (promote) {
                 // we now have to promote:
-                await updateSessionInfo_Transaction(connection, sessionHandle, hash(accessTokenInfo.refreshTokenHash1),
+                await updateSessionInfo_Transaction(connection, hash(sessionHandle), hash(accessTokenInfo.refreshTokenHash1),
                     sessionInfo.sessionData, Date.now() + config.tokens.refreshToken.validity);
             }
             await connection.commit();
@@ -112,7 +113,33 @@ export async function getSession(req: express.Request, res: express.Response): P
 }
 
 export async function refreshSession(req: express.Request, res: express.Response): Promise<Session> {
+    let config = Config.get();
+    let refreshToken = getRefreshTokenFromCookie(req);
+    let refreshTokenInfo;
+    try {
+        refreshTokenInfo = await getInfoFromRefreshToken(refreshToken);
+    } catch (err) {
+        clearSessionFromCookie(res);
+        throw err;
+    }
+    await refreshSessionHelper(res, refreshToken, refreshTokenInfo);
+}
 
+async function refreshSessionHelper(res: express.Response, refreshToken: string, refreshTokenInfo: {
+    sessionHandle: string,
+    userId: string,
+    parentRefreshTokenHash1: string | undefined
+}) {
+    let connection = await getConnection();
+    try {
+        connection.startTransaction();
+        // we first read session info from DB
+        // TODO:
+
+        connection.closeConnection();
+    } finally {
+        connection.closeConnection();
+    }
 }
 
 export async function revokeAllSessionsForUser(userId: string) {

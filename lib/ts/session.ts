@@ -4,6 +4,7 @@ import { clearSessionFromCookie } from './cookie';
 import { AuthError, generateError } from './error';
 import { deleteSession, getSessionData, updateSessionData } from './helpers/dbQueries';
 import { getConnection } from './helpers/mysql';
+import { hash } from './helpers/utils';
 
 export class Session {
     private sessionHandle: string;
@@ -22,7 +23,7 @@ export class Session {
     revokeSession = async () => {
         let connection = await getConnection();
         try {
-            let affectedRows = await deleteSession(connection, this.sessionHandle);
+            let affectedRows = await deleteSession(connection, hash(this.sessionHandle));
             if (affectedRows === 1) {
                 clearSessionFromCookie(this.res);
             }
@@ -37,7 +38,7 @@ export class Session {
     getSessionData = async (): Promise<any> => {
         let connection = await getConnection();
         try {
-            let result = await getSessionData(connection, this.sessionHandle);
+            let result = await getSessionData(connection, hash(this.sessionHandle));
             if (!result.found) {
                 throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
             } else {
@@ -54,7 +55,7 @@ export class Session {
     updateSessionData = async (newSessionData: any) => {
         let connection = await getConnection();
         try {
-            await updateSessionData(connection, this.sessionHandle, newSessionData);
+            await updateSessionData(connection, hash(this.sessionHandle), newSessionData);
         } finally {
             connection.closeConnection();
         }

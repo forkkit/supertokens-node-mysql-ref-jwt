@@ -31,12 +31,12 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
         `;
     const refreshTokensTableQuery = `
             CREATE TABLE IF NOT EXISTS ${refreshTokensTableName} (
-                session_handle VARCHAR(255) NOT NULL,
+                session_handle_hash_1 VARCHAR(255) NOT NULL,
                 user_id VARCHAR(128) NOT NULL,
                 refresh_token_hash_2 VARCHAR(128) NOT NULL,
                 session_info TEXT,
                 expires_at BIGINT UNSIGNED NOT NULL,
-                PRIMARY KEY(session_handle)
+                PRIMARY KEY(session_handle_hash_1)
             );
         `;
     const signKeyTableQueryPromise = connection.executeQuery(signKeyTableQuery, []);
@@ -66,16 +66,16 @@ export async function insertKeyValueForKeyName_Transaction(connection: Connectio
     await connection.executeQuery(query, [keyName, keyValue, createdAtTime]);
 }
 
-export async function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any) {
+export async function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any) {
     const config = Config.get();
-    let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle = ?`;
-    await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandle]);
+    let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle_hash_1 = ?`;
+    await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandleHash1]);
 }
 
-export async function getSessionData(connection: Connection, sessionHandle: string): Promise<{ found: false } | { found: true, data: any }> {
+export async function getSessionData(connection: Connection, sessionHandleHash1: string): Promise<{ found: false } | { found: true, data: any }> {
     const config = Config.get();
-    let query = `SELECT session_info FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
+    let query = `SELECT session_info FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ?`;
+    let result = await connection.executeQuery(query, [sessionHandleHash1]);
     if (result.length === 0) {
         return {
             found: false
@@ -87,36 +87,35 @@ export async function getSessionData(connection: Connection, sessionHandle: stri
     };
 }
 
-export async function deleteSession(connection: Connection, sessionHandle: string): Promise<number> {
+export async function deleteSession(connection: Connection, sessionHandleHash1: string): Promise<number> {
     const config = Config.get();
-    let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
+    let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ?`;
+    let result = await connection.executeQuery(query, [sessionHandleHash1]);
     return result.affectedRows;
 }
 
-export async function createNewSession(connection: Connection, sessionHandle: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number) {
+export async function createNewSession(connection: Connection, sessionHandleHash1: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number) {
     const config = Config.get();
     let query = `INSERT INTO ${config.mysql.tables.refreshTokens} 
-    (session_handle, user_id, refresh_token_hash_2,
+    (session_handle_hash_1, user_id, refresh_token_hash_2,
     session_info, expires_at) VALUES (?, ?, ?, ?, ?)`;
-    await connection.executeQuery(query, [sessionHandle, userId, refreshTokenHash2, serialiseSessionData(sessionData), expiresAt]);
+    await connection.executeQuery(query, [sessionHandleHash1, userId, refreshTokenHash2, serialiseSessionData(sessionData), expiresAt]);
 }
 
-export async function getSessionInfo_Transaction(connection: Connection, sessionHandle: string): Promise<{
-    sessionHandle: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number
+export async function getSessionInfo_Transaction(connection: Connection, sessionHandleHash1: string): Promise<{
+    userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number
 } | undefined> {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading session data");
-    let query = `SELECT session_handle, user_id,
+    let query = `SELECT user_id,
     refresh_token_hash_2, session_info,
-    expires_at FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ? FOR UPDATE`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
+    expires_at FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ? FOR UPDATE`;
+    let result = await connection.executeQuery(query, [sessionHandleHash1]);
     if (result.length === 0) {
         return undefined;
     }
     let row = result[0];
     return {
-        sessionHandle: row.session_handle.toString(),
         userId: row.user_id.toString(),
         refreshTokenHash2: row.refresh_token_hash_2,
         sessionData: unserialiseSessionData(row.session_info.toString()),
@@ -125,13 +124,13 @@ export async function getSessionInfo_Transaction(connection: Connection, session
 }
 
 export async function updateSessionInfo_Transaction(connection: Connection,
-    sessionHandle: string, refreshTokenHash2: string, sessionData: any, expiresAt: number): Promise<number> {
+    sessionHandleHash1: string, refreshTokenHash2: string, sessionData: any, expiresAt: number): Promise<number> {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when updating session data");
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET refresh_token_hash_2 = ?, 
-    session_info = ?, expires_at = ? WHERE session_handle = ?`;
+    session_info = ?, expires_at = ? WHERE session_handle_hash_1 = ?`;
     let result = await connection.executeQuery(query, [refreshTokenHash2, serialiseSessionData(sessionData),
-        expiresAt, sessionHandle]);
+        expiresAt, sessionHandleHash1]);
     return result.affectedRows;
 }
 
