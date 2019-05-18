@@ -7,7 +7,7 @@ export default class Config {
     private config: TypeConfig;
 
     private constructor(config: TypeConfig) {
-        this.config = setDefaults(config);
+        this.config = config;
     }
 
     static init(config: TypeInputConfig) {

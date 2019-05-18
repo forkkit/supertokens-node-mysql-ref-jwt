@@ -36,6 +36,7 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
                 refresh_token_hash_2 VARCHAR(128) NOT NULL,
                 session_info TEXT,
                 expires_at BIGINT UNSIGNED NOT NULL,
+                jwt_user_payload TEXT,
                 PRIMARY KEY(session_handle_hash_1)
             );
         `;
@@ -94,22 +95,23 @@ export async function deleteSession(connection: Connection, sessionHandleHash1: 
     return result.affectedRows;
 }
 
-export async function createNewSession(connection: Connection, sessionHandleHash1: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number) {
+export async function createNewSession(connection: Connection, sessionHandleHash1: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number,
+    jwtPayload: any) {
     const config = Config.get();
     let query = `INSERT INTO ${config.mysql.tables.refreshTokens} 
     (session_handle_hash_1, user_id, refresh_token_hash_2,
-    session_info, expires_at) VALUES (?, ?, ?, ?, ?)`;
-    await connection.executeQuery(query, [sessionHandleHash1, userId, refreshTokenHash2, serialiseSessionData(sessionData), expiresAt]);
+    session_info, expires_at, jwt_user_payload) VALUES (?, ?, ?, ?, ?, ?)`;
+    await connection.executeQuery(query, [sessionHandleHash1, userId, refreshTokenHash2, serialiseSessionData(sessionData), expiresAt, serialiseSessionData(jwtPayload)]);
 }
 
 export async function getSessionInfo_Transaction(connection: Connection, sessionHandleHash1: string): Promise<{
-    userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number
+    userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number, jwtPayload: any
 } | undefined> {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading session data");
     let query = `SELECT user_id,
     refresh_token_hash_2, session_info,
-    expires_at FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ? FOR UPDATE`;
+    expires_at, jwt_user_payload FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ? FOR UPDATE`;
     let result = await connection.executeQuery(query, [sessionHandleHash1]);
     if (result.length === 0) {
         return undefined;
@@ -119,7 +121,8 @@ export async function getSessionInfo_Transaction(connection: Connection, session
         userId: row.user_id.toString(),
         refreshTokenHash2: row.refresh_token_hash_2,
         sessionData: unserialiseSessionData(row.session_info.toString()),
-        expiresAt: Number(row.expires_at)
+        expiresAt: Number(row.expires_at),
+        jwtPayload: unserialiseSessionData(row.jwt_user_payload.toString())
     };
 }
 

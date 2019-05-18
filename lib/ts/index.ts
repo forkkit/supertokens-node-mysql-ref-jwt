@@ -43,7 +43,8 @@ export async function createNewSession(res: express.Response, userId: string,
     // create new session in db
     let connection = await getConnection();
     try {
-        await createNewSessionInDB(connection, hash(sessionHandle), userId, hash(hash(refreshToken.token)), sessionData, refreshToken.expiry);
+        await createNewSessionInDB(connection, hash(sessionHandle), userId, hash(hash(refreshToken.token)), sessionData, refreshToken.expiry,
+            jwtPayload);
     } finally {
         connection.closeConnection();
     }
@@ -64,11 +65,9 @@ export async function getSession(req: express.Request, res: express.Response): P
         clearSessionFromCookie(res);
         throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
     }
-
     // get access token info from request
     let accessToken = getAccessTokenFromCookie(req);
     let accessTokenInfo = await getInfoFromAccessToken(accessToken);
-
     // at this point, we have a valid access token.
     if (accessTokenInfo.parentRefreshTokenHash1 === undefined) {
         return new Session(accessTokenInfo.sessionHandle, accessTokenInfo.userId, accessTokenInfo.userPayload, res);
@@ -122,21 +121,57 @@ export async function refreshSession(req: express.Request, res: express.Response
         clearSessionFromCookie(res);
         throw err;
     }
-    await refreshSessionHelper(res, refreshToken, refreshTokenInfo);
+    return await refreshSessionHelper(res, refreshToken, refreshTokenInfo);
 }
 
 async function refreshSessionHelper(res: express.Response, refreshToken: string, refreshTokenInfo: {
     sessionHandle: string,
     userId: string,
     parentRefreshTokenHash1: string | undefined
-}) {
+}): Promise<Session> {
     let connection = await getConnection();
     try {
-        connection.startTransaction();
-        // we first read session info from DB
-        // TODO:
+        let sessionHandle = refreshTokenInfo.sessionHandle;
+        await connection.startTransaction();
 
-        connection.closeConnection();
+        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
+
+        if (sessionInfo === undefined || sessionInfo.expiresAt < Date.now()) {
+            await connection.commit();
+            clearSessionFromCookie(res);
+            throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist or has expired"));
+        }
+
+        if (sessionInfo.userId !== refreshTokenInfo.userId) {
+            // TODO: maybe refresh token key has been stolen?
+            await connection.commit();
+            clearSessionFromCookie(res);
+            throw generateError(AuthError.UNAUTHORISED, new Error("userId for session does not match that in refresh token"));
+        }
+
+        if (sessionInfo.refreshTokenHash2 === hash(hash(refreshToken))) {
+            await connection.commit();
+            let newRefreshToken = await createNewRefreshToken(sessionHandle, refreshTokenInfo.userId, hash(refreshToken));
+            let newAccessToken = await createNewAccessToken(sessionHandle, refreshTokenInfo.userId, hash(newRefreshToken.token),
+                hash(refreshToken), sessionInfo.jwtPayload);
+            attachAccessTokenToCookie(res, newAccessToken.token, newAccessToken.expiry);
+            attachRefreshTokenToCookie(res, newRefreshToken.token, newRefreshToken.expiry);
+            return new Session(sessionHandle, refreshTokenInfo.userId, sessionInfo.jwtPayload, res);
+        }
+
+        if (refreshTokenInfo.parentRefreshTokenHash1 !== undefined &&
+            hash(refreshTokenInfo.parentRefreshTokenHash1) === sessionInfo.refreshTokenHash2) {
+            await updateSessionInfo_Transaction(connection, hash(sessionHandle),
+                hash(hash(refreshToken)), sessionInfo.sessionData, sessionInfo.expiresAt);
+            await connection.commit();
+            return await refreshSessionHelper(res, refreshToken, refreshTokenInfo);
+        }
+
+        await connection.commit();
+        clearSessionFromCookie(res);
+        let config = Config.get();
+        config.onTokenTheftDetection(refreshTokenInfo.userId, refreshTokenInfo.sessionHandle);
+        throw generateError(AuthError.UNAUTHORISED, new Error("token has been stolen!?"));
     } finally {
         connection.closeConnection();
     }
