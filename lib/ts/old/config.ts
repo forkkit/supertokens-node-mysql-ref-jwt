@@ -1,51 +1,53 @@
-import { AuthError, generateError } from './error';
-import { TypeConfig, TypeGetSigningKeyUserFunction, TypeInputConfig } from './helpers/types';
+import { TypeMysqlConfig } from './db/mysql';
+import { ConfigErrors } from './helpers/errors';
 import { sanitizeBooleanInput, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 
-export default class Config {
+// TODO: have all types in one file ideally.. easier to navigate and maintain. call this file types. This is done so that the other files do not get bogged down with types.. and have just the logic.
+/**
+ * @class
+ */
+export class Config {
     private static instance: undefined | Config;
     private config: TypeConfig;
 
-    private constructor(config: TypeConfig) {
-        this.config = setDefaults(config);
+    private constructor(config: TypeInputConfig) {
+        this.config = sanitize(config);
     }
 
-    static init(config: TypeInputConfig) {
+    static set(config: any) {
+        validate(config);
         if (Config.instance === undefined) {
-            Config.instance = new Config(setDefaults(validateAndNormalise(config)));
+            Config.instance = new Config(config);
         }
     }
-
+    // NOTE: wherever you have used this, remember that this can throw an error.
     static get(): TypeConfig {
         if (Config.instance === undefined) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("configs not set. Please call the init function before using this library"));
+            throw ConfigErrors.configNotSet;
         }
         return Config.instance.config;
     }
 }
 
-const validateAndNormalise = (config: any): TypeInputConfig => {
-    if (config === null || typeof config !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("passed config is not an object"));
-    }
+const validate = (config: any): TypeInputConfig => {
     const mysqlInputConfig = config.mysql;
     if (typeof mysqlInputConfig !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config not passed. user, password and database are required"));
+        throw ConfigErrors.mysql.configUndefined;
     }
     const host = sanitizeStringInput(mysqlInputConfig.host);
     const port = sanitizeNumberInput(mysqlInputConfig.port);
     const user = sanitizeStringInput(mysqlInputConfig.user);
     if (user === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. user not passed"));
+        throw ConfigErrors.mysql.userNotPassed;
     }
     const password = sanitizeStringInput(mysqlInputConfig.password);
     if (password === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. password not passed"));
+        throw ConfigErrors.mysql.passwordNotPassed;
     }
     const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
     const database = sanitizeStringInput(mysqlInputConfig.database);
     if (database === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. database not passed"));
+        throw ConfigErrors.mysql.databaseNotPassed;
     }
     let tables: {
         signingKey: string | undefined,
@@ -91,14 +93,14 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
             if (updateInterval !== undefined) {
                 if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
-                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"));
+                    throw ConfigErrors.tokens.accessToken.signingKey.updateIntervalNotWithinAllowedInterval;
                 } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
-                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"));
+                    throw ConfigErrors.tokens.accessToken.signingKey.updateIntervalNotWithinAllowedInterval;
                 }
             }
             const get = signingKeyInputConfig.get;
             if (get !== undefined && typeof get !== "function") {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("config > tokens > accessToken > get must be a function"));
+                throw ConfigErrors.tokens.accessToken.signingKey.valuePassedInGetANotFunction;
             }
             signingKey = {
                 dynamic,
@@ -109,9 +111,9 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
         if (validity !== undefined) {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"));
+                throw ConfigErrors.tokens.accessToken.validityNotWithinAllowedInterval;
             } else if (validity < defaultConfig.tokens.accessToken.validity.min) {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"));
+                throw ConfigErrors.tokens.accessToken.validityNotWithinAllowedInterval;
             }
         }
         accessToken = {
@@ -121,19 +123,19 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
     if (typeof refreshTokenInputConfig !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("refreshToken config not passed. renewTokenURL is required"));
+        throw ConfigErrors.tokens.refreshToken.configUndefined;
     }
     let validity = sanitizeNumberInput(refreshTokenInputConfig.validity);
     if (validity !== undefined) {
         if (validity > defaultConfig.tokens.refreshToken.validity.max) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"));
+            throw ConfigErrors.tokens.refreshToken.validityNotWithinAllowedInterval;
         } else if (validity < defaultConfig.tokens.refreshToken.validity.min) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"));
+            throw ConfigErrors.tokens.refreshToken.validityNotWithinAllowedInterval;
         }
     }
     const renewTokenURL = sanitizeStringInput(refreshTokenInputConfig.renewTokenURL);
     if (renewTokenURL === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenURL not passed"));
+        throw ConfigErrors.tokens.refreshToken.renewTokenURLNotPassed;
     }
     const refreshToken = {
         renewTokenURL,
@@ -149,10 +151,10 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         let info = loggingInputConfig.info;
         let error = loggingInputConfig.error;
         if (info !== undefined && typeof info !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. info option passed must be a function"));
+            throw ConfigErrors.logging.infoFunctionError;
         }
         if (error !== undefined && typeof error !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. error option passed must be a function"));
+            throw ConfigErrors.logging.errorFunctionError;
         }
         logging = {
             info,
@@ -163,30 +165,33 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     const domain = sanitizeStringInput(cookieInputConfig.domain);
     const secure = sanitizeBooleanInput(cookieInputConfig.secure);
     if (domain === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("domain parameter for cookie not passed"));
+        throw ConfigErrors.cookie.cookieDomainUndefined;
     }
     const cookie = {
         domain,
         secure
     };
-    const onTokenTheftDetectionFromUser = config.onTokenTheftDetection;
-    let onTokenTheftDetection;
-    if (onTokenTheftDetectionFromUser !== undefined) {
-        if (typeof onTokenTheftDetectionFromUser !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("onTokenTheftDetection must be a function"));
+    const securityInputConfig = config.security;
+    let security;
+    if (securityInputConfig !== undefined) {
+        const onTheftDetection = securityInputConfig.onTheftDetection;
+        if (onTheftDetection !== undefined && typeof onTheftDetection !== "function") {
+            throw ConfigErrors.security.onTheftDetectionFunctionError;
         }
-        onTokenTheftDetection = onTokenTheftDetectionFromUser;
+        security = {
+            onTheftDetection
+        };
     }
     return {
         mysql,
         tokens,
         cookie,
         logging,
-        onTokenTheftDetection
+        security
     };
 }
 
-const setDefaults = (config: TypeInputConfig): TypeConfig => {
+const sanitize = (config: TypeInputConfig): TypeConfig => {
     // TODO: do not do this style.. check for explicit undefined... what is something is number | undefined and that person gives 0 as a number.. then its as good as false. Or an empty string???
     return {
         mysql: {
@@ -237,7 +242,9 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
             info: config.logging !== undefined ? config.logging.info : undefined,
             error: config.logging !== undefined ? config.logging.error : undefined
         },
-        onTokenTheftDetection: config.onTokenTheftDetection === undefined ? () => { } : config.onTokenTheftDetection
+        security: {
+            onTheftDetection: config.security !== undefined ? config.security.onTheftDetection : undefined
+        }
     };
 };
 
@@ -281,4 +288,86 @@ const defaultConfig = {
         refreshTokenCookieKey: "sRefreshToken",
         idRefreshTokenCookieKey: "sIdRefreshToken"
     }
+};
+
+type TypeInfoLoggingFunction = (info: any) => void;
+type TypeErrorLoggingFunction = (err: any) => void;
+
+// TODO: also have refresh token in this function? So that user can invalidate just that particular session.. and not logout user from all their devices.
+type TypeSecurityOnTheftDetectionFunction = (userId: string, uniqueSessionId: string) => void;
+
+type TypeSecurityConfig = {
+    onTheftDetection?: TypeSecurityOnTheftDetectionFunction
+};
+
+type TypeLoggingConfig = {
+    info?: TypeInfoLoggingFunction,
+    error?: TypeErrorLoggingFunction
+};
+
+export type TypeInputConfig = {
+    mysql: {
+        host?: string,
+        port?: number,
+        user: string,
+        password: string,
+        connectionLimit?: number,
+        database: string,
+        tables?: {
+            signingKey?: string,
+            refreshTokens?: string
+        }
+    },
+    tokens: {
+        accessToken?: {
+            signingKey?: {
+                dynamic?: boolean,
+                updateInterval?: number,
+                get?: TypeGetSigningKeyUserFunction
+            },
+            validity?: number
+        },
+        refreshToken: {
+            validity?: number,
+            renewTokenURL: string   // TODO: this is just the path right? If so, please specify this.
+        }
+    },
+    logging?: TypeLoggingConfig,
+    cookie: {
+        domain: string,
+        secure?: boolean
+    },
+    security?: TypeSecurityConfig
+};
+
+type TypeConfig = {
+    mysql: TypeMysqlConfig,
+    tokens: {
+        accessToken: TypeAccessTokenConfig,
+        refreshToken: {
+            validity: number,
+            renewTokenURL: string
+        }
+    },
+    logging: TypeLoggingConfig,
+    cookie: {
+        domain: string,
+        secure: boolean,
+        accessTokenCookieKey: string,
+        refreshTokenCookieKey: string,
+        idRefreshTokenCookieKey: string
+    },
+    security: TypeSecurityConfig
+};
+
+export type TypeGetSigningKeyFunction = (mysqlConnection?: Connection) => Promise<string>;
+export type TypeGetSigningKeyUserFunction = () => Promise<string>;
+export type TypeSingingKeyConfig = {
+    dynamic: boolean,
+    updateInterval: number
+    get: TypeGetSigningKeyUserFunction | undefined
+};
+export type TypeAccessTokenConfig = {
+    signingKey: TypeSingingKeyConfig,
+    validity: number
 };
