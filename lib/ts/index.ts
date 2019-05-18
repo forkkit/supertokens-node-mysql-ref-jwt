@@ -1,10 +1,24 @@
 import * as express from 'express';
 
-import { init as accessTokenInit } from './accessToken';
+import { createNewAccessToken, getInfoFromAccessToken, init as accessTokenInit } from './accessToken';
 import Config from './config';
-import { Mysql } from './helpers/mysql';
+import {
+    attachAccessTokenToCookie,
+    attachRefreshTokenToCookie,
+    clearSessionFromCookie,
+    getAccessTokenFromCookie,
+    requestHasSessionCookies,
+} from './cookie';
+import { AuthError, generateError } from './error';
+import {
+    createNewSession as createNewSessionInDB,
+    getSessionInfo_Transaction,
+    updateSessionInfo_Transaction,
+} from './helpers/dbQueries';
+import { getConnection, Mysql } from './helpers/mysql';
 import { TypeInputConfig } from './helpers/types';
-import { init as refreshTokenInit } from './refreshToken';
+import { generateUUID, hash } from './helpers/utils';
+import { createNewRefreshToken, init as refreshTokenInit } from './refreshToken';
 import { Session } from './session';
 
 export async function init(config: TypeInputConfig) {
@@ -14,13 +28,85 @@ export async function init(config: TypeInputConfig) {
     await refreshTokenInit();
 }
 
-export async function login(res: express.Response, userId: string,
-    jwtPayload?: { [key: string]: any }, sessionData?: { [key: string]: any }): Promise<Session> {
+export async function createNewSession(res: express.Response, userId: string,
+    jwtPayload: any, sessionData?: { [key: string]: any }): Promise<Session> {
+    let sessionHandle = generateUUID();
 
+    // generate tokens:
+    let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
+    let accessToken = await createNewAccessToken(sessionHandle, userId, hash(refreshToken.token),
+        undefined, jwtPayload);
+
+    // create new session in db
+    let connection = await getConnection();
+    try {
+        await createNewSessionInDB(connection, sessionHandle, userId, hash(hash(refreshToken.token)), sessionData, refreshToken.expiry);
+    } finally {
+        connection.closeConnection();
+    }
+
+    // attach tokens to cookies
+    attachAccessTokenToCookie(res, accessToken.token, accessToken.expiry);
+    attachRefreshTokenToCookie(res, refreshToken.token, refreshToken.expiry);
+
+    // send reply to user
+    return new Session(sessionHandle, userId, jwtPayload, res);
 }
 
 export async function getSession(req: express.Request, res: express.Response): Promise<Session> {
+    let config = Config.get();
+    if (!requestHasSessionCookies(req)) {
+        // means ID refresh token is not available. Which means that refresh token is not going to be there either.
+        // so the session does not exist.
+        clearSessionFromCookie(res);
+        throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
+    }
 
+    // get access token info from request
+    let accessToken = getAccessTokenFromCookie(req);
+    let accessTokenInfo = await getInfoFromAccessToken(accessToken);
+
+    // at this point, we have a valid access token.
+    if (accessTokenInfo.parentRefreshTokenHash1 === undefined) {
+        return new Session(accessTokenInfo.sessionHandle, accessTokenInfo.userId, accessTokenInfo.userPayload, res);
+    }
+
+    // we must attempt to promote this child now
+    let connection = await getConnection();
+    try {
+        await connection.startTransaction();
+        let sessionHandle = accessTokenInfo.sessionHandle;
+        let sessionInfo = await getSessionInfo_Transaction(connection, sessionHandle);
+
+        if (sessionInfo === undefined) {    // this session no longer exists.
+            await connection.commit();
+            clearSessionFromCookie(res);
+            throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
+        }
+
+        let promote = sessionInfo.refreshTokenHash2 === hash(accessTokenInfo.parentRefreshTokenHash1);
+        if (promote || sessionInfo.refreshTokenHash2 === hash(accessTokenInfo.refreshTokenHash1)) {
+            if (promote) {
+                // we now have to promote:
+                await updateSessionInfo_Transaction(connection, sessionHandle, hash(accessTokenInfo.refreshTokenHash1),
+                    sessionInfo.sessionData, Date.now() + config.tokens.refreshToken.validity);
+            }
+            await connection.commit();
+
+            // we need to remove PRT from JWT.
+            let newAccessToken = await createNewAccessToken(sessionHandle, accessTokenInfo.userId, accessTokenInfo.refreshTokenHash1,
+                undefined, accessTokenInfo.userPayload);
+            attachAccessTokenToCookie(res, newAccessToken.token, newAccessToken.expiry);
+            return new Session(sessionHandle, accessTokenInfo.userId, accessTokenInfo.userPayload, res);
+        }
+
+        // here it means that this access token is old..
+        await connection.commit();
+        clearSessionFromCookie(res);
+        throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
+    } finally {
+        connection.closeConnection();
+    }
 }
 
 export async function refreshSession(req: express.Request, res: express.Response): Promise<Session> {

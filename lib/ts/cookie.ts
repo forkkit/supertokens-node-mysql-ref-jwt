@@ -28,7 +28,7 @@ export function attachAccessTokenToCookie(res: express.Response, token: string, 
 export function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(res, idRefreshTokenCookieKey, generateUUID(), config.cookie.domain,
-        false, false, 0, "/");
+        false, false, expiry, "/");
     setCookie(res, refreshTokenCookieKey, token, config.cookie.domain,
         config.cookie.secure, true, expiry, config.tokens.refreshToken.renewTokenPath);
 }
