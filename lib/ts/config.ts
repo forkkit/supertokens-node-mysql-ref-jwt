@@ -18,7 +18,7 @@ export default class Config {
 
     static get(): TypeConfig {
         if (Config.instance === undefined) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("configs not set. Please call the init function before using this library"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("configs not set. Please call the init function before using this library"), false);
         }
         return Config.instance.config;
     }
@@ -26,26 +26,26 @@ export default class Config {
 
 const validateAndNormalise = (config: any): TypeInputConfig => {
     if (config === null || typeof config !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("passed config is not an object"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("passed config is not an object"), false);
     }
     const mysqlInputConfig = config.mysql;
     if (typeof mysqlInputConfig !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config not passed. user, password and database are required"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config not passed. user, password and database are required"), false);
     }
     const host = sanitizeStringInput(mysqlInputConfig.host);
     const port = sanitizeNumberInput(mysqlInputConfig.port);
     const user = sanitizeStringInput(mysqlInputConfig.user);
     if (user === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. user not passed"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. user not passed"), false);
     }
     const password = sanitizeStringInput(mysqlInputConfig.password);
     if (password === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. password not passed"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. password not passed"), false);
     }
     const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
     const database = sanitizeStringInput(mysqlInputConfig.database);
     if (database === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. database not passed"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. database not passed"), false);
     }
     let tables: {
         signingKey: string | undefined,
@@ -91,14 +91,14 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
             if (updateInterval !== undefined) {
                 if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
-                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"));
+                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"), false);
                 } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
-                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"));
+                    throw generateError(AuthError.GENERAL_ERROR, new Error("update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"), false);
                 }
             }
             const get = signingKeyInputConfig.get;
             if (get !== undefined && typeof get !== "function") {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("config > tokens > accessToken > get must be a function"));
+                throw generateError(AuthError.GENERAL_ERROR, new Error("config > tokens > accessToken > get must be a function"), false);
             }
             signingKey = {
                 dynamic,
@@ -109,9 +109,9 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
         if (validity !== undefined) {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"));
+                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"), false);
             } else if (validity < defaultConfig.tokens.accessToken.validity.min) {
-                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"));
+                throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of access token is not within allowed interval. (Note: value passed will be in units of seconds)"), false);
             }
         }
         accessToken = {
@@ -121,19 +121,19 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
     if (typeof refreshTokenInputConfig !== "object") {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("refreshToken config not passed. renewTokenPath is required"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("refreshToken config not passed. renewTokenPath is required"), false);
     }
     let validity = sanitizeNumberInput(refreshTokenInputConfig.validity);
     if (validity !== undefined) {
         if (validity > defaultConfig.tokens.refreshToken.validity.max) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"), false);
         } else if (validity < defaultConfig.tokens.refreshToken.validity.min) {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("passed value for validity of refresh token is not within allowed interval. (Note: value passed will be in units of hours)"), false);
         }
     }
     const renewTokenPath = sanitizeStringInput(refreshTokenInputConfig.renewTokenPath);
     if (renewTokenPath === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenPath not passed"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenPath not passed"), false);
     }
     const refreshToken = {
         renewTokenPath,
@@ -149,10 +149,10 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         let info = loggingInputConfig.info;
         let error = loggingInputConfig.error;
         if (info !== undefined && typeof info !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. info option passed must be a function"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. info option passed must be a function"), false);
         }
         if (error !== undefined && typeof error !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. error option passed must be a function"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("logging config error. error option passed must be a function"), false);
         }
         logging = {
             info,
@@ -163,7 +163,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     const domain = sanitizeStringInput(cookieInputConfig.domain);
     const secure = sanitizeBooleanInput(cookieInputConfig.secure);
     if (domain === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("domain parameter for cookie not passed"));
+        throw generateError(AuthError.GENERAL_ERROR, new Error("domain parameter for cookie not passed"), false);
     }
     const cookie = {
         domain,
@@ -173,7 +173,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     let onTokenTheftDetection;
     if (onTokenTheftDetectionFromUser !== undefined) {
         if (typeof onTokenTheftDetectionFromUser !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("onTokenTheftDetection must be a function"));
+            throw generateError(AuthError.GENERAL_ERROR, new Error("onTokenTheftDetection must be a function"), false);
         }
         onTokenTheftDetection = onTokenTheftDetectionFromUser;
     }

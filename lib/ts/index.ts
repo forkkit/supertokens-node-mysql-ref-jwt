@@ -3,11 +3,11 @@ import * as express from 'express';
 import { init as accessTokenInit } from './accessToken';
 import Config from './config';
 import { Mysql } from './helpers/mysql';
-import { TypeConfig } from './helpers/types';
+import { TypeInputConfig } from './helpers/types';
 import { init as refreshTokenInit } from './refreshToken';
 import { Session } from './session';
 
-export async function init(config: TypeConfig) {
+export async function init(config: TypeInputConfig) {
     Config.init(config);
     await Mysql.init();
     await accessTokenInit();

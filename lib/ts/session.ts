@@ -39,7 +39,6 @@ export class Session {
         try {
             let result = await getSessionData(connection, this.sessionHandle);
             if (!result.found) {
-                clearSessionFromCookie(this.res);
                 throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
             } else {
                 return result.data;

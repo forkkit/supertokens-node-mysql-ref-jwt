@@ -2,11 +2,13 @@ import { errorLogging } from './helpers/logging';
 
 const ERROR_MAGIC = "ndskajfasndlfkj435234krjdsa";
 
-export function generateError(errType: number, err: any): any {
+export function generateError(errType: number, err: any, log = true): any {
     if (AuthError.isErrorFromAuth(err)) {
         return err;
     }
-    errorLogging(err);
+    if (log) {
+        errorLogging(err);
+    }
     return {
         errMagic: ERROR_MAGIC,
         errType,

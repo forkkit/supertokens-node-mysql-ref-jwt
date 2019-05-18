@@ -1,7 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from 'crypto';
 import * as uuid from 'uuid';
-
-import { errorLogging } from './logging';
+import * as validator from 'validator';
 
 export async function generateNewSigningKey(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
@@ -119,9 +118,7 @@ export function sanitizeStringInput(field: any): string | undefined {
     try {
         let result = validator.trim(field);
         return result;
-    } catch (err) {
-        errorLogging(err);
-    }
+    } catch (err) { }
     return undefined;
 }
 
@@ -142,9 +139,7 @@ export function sanitizeNumberInput(field: any): number | undefined {
             return undefined;
         }
         return result;
-    } catch (err) {
-        errorLogging(err);
-    }
+    } catch (err) { }
     return undefined;
 }
 

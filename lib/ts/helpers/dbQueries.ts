@@ -62,7 +62,7 @@ export async function getKeyValueFromKeyName_Transaction(connection: Connection,
 export async function insertKeyValueForKeyName_Transaction(connection: Connection, keyName: string, keyValue: string, createdAtTime: number) {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
-    let query = `INSERT INTO ${config.mysql.tables.signingKey} VALUES (key_name, key_value, created_at_time) VALUES (?, ?, ?)`;
+    let query = `INSERT INTO ${config.mysql.tables.signingKey}(key_name, key_value, created_at_time) VALUES (?, ?, ?)`;
     await connection.executeQuery(query, [keyName, keyValue, createdAtTime]);
 }
 
