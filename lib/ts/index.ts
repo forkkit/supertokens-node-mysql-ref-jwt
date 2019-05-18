@@ -28,6 +28,8 @@ export async function init(config: TypeInputConfig) {
     await refreshTokenInit();
 }
 
+export { AuthError as Error } from "./error";
+
 export async function createNewSession(res: express.Response, userId: string,
     jwtPayload: any, sessionData?: { [key: string]: any }): Promise<Session> {
     let sessionHandle = generateUUID();

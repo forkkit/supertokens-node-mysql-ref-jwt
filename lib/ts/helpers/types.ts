@@ -79,3 +79,8 @@ type TypeLoggingConfig = {
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;
 
 export type MySQLParamTypes = string | number | boolean | null | Date;
+
+export type TypeAuthError = {
+    errType: number,
+    err: any
+};
