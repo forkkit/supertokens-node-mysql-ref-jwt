@@ -2,24 +2,54 @@ import Config from './config';
 import { AuthError, generateError } from './error';
 import { getKeyValueFromKeyName, insertKeyValueForKeyName } from './helpers/dbQueries';
 import { getConnection } from './helpers/mysql';
-import { generateNewSigningKey } from './helpers/utils';
+import { decrypt, encrypt, generateNewSigningKey, generateUUID, hash, sanitizeStringInput } from './helpers/utils';
 
 export async function init() {
     let config = Config.get();
     await Key.init();
 }
 
-export function getInfoFromRefreshToken(token: string): {
+export async function getInfoFromRefreshToken(token: string): Promise<{
     sessionHandle: string,
     userId: string,
     parentRefreshTokenHash1: string | undefined
-} {
-
+}> {
+    let key = await Key.getKey();
+    try {
+        let splittedToken = token.split(".");
+        if (splittedToken.length !== 2) {
+            throw Error("invalid refresh token");
+        }
+        let nonce = splittedToken[1];
+        let payload = JSON.parse(await decrypt(splittedToken[0], key));
+        let sessionHandle = sanitizeStringInput(payload.sessionHandle);
+        let userId = sanitizeStringInput(payload.userId);
+        let prt = sanitizeStringInput(payload.prt);
+        let nonceFromEnc = sanitizeStringInput(payload.nonce);
+        if (sessionHandle === undefined || userId === undefined ||
+            nonceFromEnc !== nonce) {
+            throw Error("invalid refresh token");
+        }
+        return {
+            sessionHandle,
+            userId, parentRefreshTokenHash1: prt
+        };
+    } catch (err) {
+        throw generateError(AuthError.UNAUTHORISED, err);
+    }
 }
 
-export function createNewRefreshToken(sessionHandle: string, userId: string,
-    parentRefreshTokenHash1: string | undefined): string {
-
+export async function createNewRefreshToken(sessionHandle: string, userId: string,
+    parentRefreshTokenHash1: string | undefined): Promise<string> {
+    let key = await Key.getKey();
+    let nonce = hash(generateUUID());
+    let payloadSerialised = JSON.stringify({
+        sessionHandle, userId,
+        prt: parentRefreshTokenHash1,
+        nonce
+    });
+    let encryptedPart = await encrypt(payloadSerialised, key);
+    return encryptedPart + "." + nonce;
 }
 
 const REFRESH_TOKEN_KEY_NAME_IN_DB = "refresh_token_key";

@@ -1,28 +1,59 @@
 import Config from './config';
 import { AuthError, generateError } from './error';
 import { getKeyValueFromKeyName, insertKeyValueForKeyName } from './helpers/dbQueries';
+import * as JWT from './helpers/jwt';
 import { getConnection } from './helpers/mysql';
 import { TypeConfig, TypeGetSigningKeyUserFunction } from './helpers/types';
-import { generateNewSigningKey } from './helpers/utils';
+import { generateNewSigningKey, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 
 export async function init() {
     let config = Config.get();
     await SigningKey.init(config);
 }
 
-export function getInfoFromAccessToken(token: string): {
+export async function getInfoFromAccessToken(token: string): Promise<{
     sessionHandle: string,
     userId: string,
     refreshTokenHash1: string,
     expiryTime: number,
     parentRefreshTokenHash1: string | undefined
-} {
-
+}> {
+    let signingKey = await SigningKey.getKey();
+    try {
+        let payload = JWT.verifyJWTAndGetPayload(token, signingKey);
+        let sessionHandle = sanitizeStringInput(payload.sessionHandle);
+        let userId = sanitizeStringInput(payload.userId);
+        let refreshTokenHash1 = sanitizeStringInput(payload.rt);
+        let expiryTime = sanitizeNumberInput(payload.expiryTime);
+        let parentRefreshTokenHash1 = sanitizeStringInput(payload.prt);
+        if (sessionHandle === undefined || userId === undefined ||
+            refreshTokenHash1 === undefined || expiryTime === undefined) {
+            throw Error("invalid access token payload");
+        }
+        if (expiryTime < Date.now()) {
+            throw Error("expired access token");
+        }
+        return {
+            sessionHandle, userId, refreshTokenHash1,
+            expiryTime, parentRefreshTokenHash1
+        };
+    } catch (err) {
+        throw generateError(AuthError.TRY_REFRESH_TOKEN, err);
+    }
 }
 
-export function createNewAccessToken(sessionHandle: string, userId: string, refreshTokenHash1: string,
-    expiryTime: number, parentRefreshTokenHash1: string | undefined): string {
-
+export async function createNewAccessToken(sessionHandle: string, userId: string, refreshTokenHash1: string,
+    parentRefreshTokenHash1: string | undefined): Promise<string> {
+    let config = Config.get();
+    let signingKey = await SigningKey.getKey();
+    let token = JWT.createJWT({
+        sessionHandle,
+        userId,
+        rt: refreshTokenHash1,
+        prt: parentRefreshTokenHash1,
+        expiryTime: Date.now() + config.tokens.accessToken.validity
+    }, signingKey);
+    return token;
 }
 
 const ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB = "access_token_signing_key";
