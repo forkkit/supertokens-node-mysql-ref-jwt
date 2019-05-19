@@ -85,5 +85,8 @@ export function setCookie(res: express.Response, key: string, value: string, dom
  * @param key 
  */
 export function getCookieValue(req: express.Request, key: string): string | undefined {
+    if (req.cookies === undefined) {
+        throw generateError(AuthError.GENERAL_ERROR, new Error("did you forget to use cookie-parser middleware?"));
+    }
     return req.cookies[key];
 }
