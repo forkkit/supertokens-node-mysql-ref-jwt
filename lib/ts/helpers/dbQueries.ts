@@ -144,6 +144,12 @@ export async function getAllHash1SessionHandlesForUser(connection: Connection, u
     return result.map((i: any) => i.session_handle_hash_1.toString());
 }
 
+export async function deleteAllExpiredSessions(connection: Connection) {
+    const config = Config.get();
+    const query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE expires_at <= ?;`;
+    await connection.executeQuery(query, [Date.now()]);
+}
+
 function serialiseSessionData(data: any): string {
     if (data === undefined) {
         return "";

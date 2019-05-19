@@ -10,6 +10,7 @@ import {
     getRefreshTokenFromCookie,
     requestHasSessionCookies,
 } from './cookie';
+import CronJob from './cronjobs';
 import { AuthError, generateError } from './error';
 import {
     createNewSession as createNewSessionInDB,
@@ -29,6 +30,7 @@ export async function init(config: TypeInputConfig) {
     await Mysql.init();
     await accessTokenInit();
     await refreshTokenInit();
+    CronJob.init();
 }
 
 export { AuthError as Error } from "./error";
