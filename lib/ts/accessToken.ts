@@ -110,23 +110,23 @@ class SigningKey {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let keys = await getKeyValueFromKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
-            let generateNewKey = keys.length === 0;
-            if (!generateNewKey) {  // read key may have expired...
-                if (this.dynamic && Date.now() > (keys[0].createdAtTime + this.updateInterval)) {
+            let key = await getKeyValueFromKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
+            let generateNewKey = false;
+            if (key !== undefined) {  // read key may have expired...
+                if (this.dynamic && Date.now() > (key.createdAtTime + this.updateInterval)) {
                     generateNewKey = true;
                 }
             }
-            if (generateNewKey) {
+            if (key === undefined || generateNewKey) {
                 let keyValue = await generateNewSigningKey();
-                keys = [{
+                key = {
                     keyValue,
                     createdAtTime: Date.now()
-                }];
-                await insertKeyValueForKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
+                };
+                await insertKeyValueForKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB, key.keyValue, key.createdAtTime);
             }
             await connection.commit();
-            return keys[0];
+            return key;
         } finally {
             connection.closeConnection();
         }

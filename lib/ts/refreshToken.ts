@@ -81,17 +81,17 @@ class Key {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let keys = await getKeyValueFromKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB);
-            if (keys.length === 0) {
+            let key = await getKeyValueFromKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB);
+            if (key === undefined) {
                 let keyValue = await generateNewSigningKey();
-                keys = [{
+                key = {
                     keyValue,
                     createdAtTime: Date.now()
-                }];
-                await insertKeyValueForKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB, keys[0].keyValue, keys[0].createdAtTime);
+                };
+                await insertKeyValueForKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB, key.keyValue, key.createdAtTime);
             }
             await connection.commit();
-            return keys[0].keyValue;
+            return key.keyValue;
         } finally {
             connection.closeConnection();
         }

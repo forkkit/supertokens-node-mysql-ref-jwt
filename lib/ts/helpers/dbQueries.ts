@@ -26,7 +26,7 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
                 key_name VARCHAR(128),
                 key_value VARCHAR(255),
                 created_at_time BIGINT UNSIGNED,
-                PRIMARY KEY(key_name, key_value)
+                PRIMARY KEY(key_name)
             );
         `;
     const refreshTokensTableQuery = `
@@ -46,22 +46,25 @@ export async function createTablesIfNotExists(connection: Connection, signingKey
     await refreshTokensTableQueryPromise;
 }
 
-export async function getKeyValueFromKeyName_Transaction(connection: Connection, keyName: string): Promise<{ keyValue: string, createdAtTime: number }[]> {
+export async function getKeyValueFromKeyName_Transaction(connection: Connection, keyName: string): Promise<{ keyValue: string, createdAtTime: number } | undefined> {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
     let query = `SELECT key_value, created_at_time FROM ${config.mysql.tables.signingKey} WHERE key_name = ? FOR UPDATE`;
     let result = await connection.executeQuery(query, [keyName]);
-    return result.map((i: any) => ({
-        keyValue: i.key_value.toString(),
-        createdAtTime: Number(i.created_at_time)
-    }));
+    if (result.length === 0) {
+        return undefined;
+    }
+    return {
+        keyValue: result[0].key_value.toString(),
+        createdAtTime: Number(result[0].created_at_time)
+    };
 }
 
 export async function insertKeyValueForKeyName_Transaction(connection: Connection, keyName: string, keyValue: string, createdAtTime: number) {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading signing keys");
-    let query = `INSERT INTO ${config.mysql.tables.signingKey}(key_name, key_value, created_at_time) VALUES (?, ?, ?)`;
-    await connection.executeQuery(query, [keyName, keyValue, createdAtTime]);
+    let query = `INSERT INTO ${config.mysql.tables.signingKey}(key_name, key_value, created_at_time) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE key_value = ?, created_at_time = ?`;
+    await connection.executeQuery(query, [keyName, keyValue, createdAtTime, keyValue, createdAtTime]);
 }
 
 export async function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any) {

@@ -212,7 +212,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
             } : {
                     signingKey: config.tokens.accessToken.signingKey === undefined ? {
                         dynamic: defaultConfig.tokens.accessToken.signingKey.dynamic,
-                        updateInterval: defaultConfig.tokens.accessToken.signingKey.updateInterval.default,
+                        updateInterval: defaultConfig.tokens.accessToken.signingKey.updateInterval.default * 60 * 60 * 1000,
                         get: undefined
                     } : {
                             dynamic: config.tokens.accessToken.signingKey.dynamic === undefined ? defaultConfig.tokens.accessToken.signingKey.dynamic : config.tokens.accessToken.signingKey.dynamic,
@@ -251,7 +251,7 @@ const defaultConfig = {
     tokens: {
         accessToken: {
             signingKey: {
-                dynamic: false,
+                dynamic: true,
                 updateInterval: {   // in hours.
                     min: 1,
                     max: 720,
