@@ -1,5 +1,5 @@
 {
-  "name": "auth-node-mysql-jwt",
+  "name": "auth-node-mysql-ref-jwt",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vrai-labs/auth-node-mysql.git"
+    "url": "git+https://github.com/supertokens/auth-node-mysql-ref-jwt.git"
   },
   "author": "bhumilsarvaiya",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vrai-labs/auth-node-mysql/issues"
+    "url": "https://github.com/supertokens/auth-node-mysql-ref-jwt/issues"
   },
-  "homepage": "https://github.com/vrai-labs/auth-node-mysql#readme",
+  "homepage": "https://github.com/supertokens/auth-node-mysql-ref-jwt#readme",
   "dependencies": {
     "cron": "1.7.1",
     "mysql": "2.17.1",
