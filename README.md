@@ -1,6 +1,6 @@
 # SuperTokens
 ## About
-This is a library that implements user session management for websites that run on NodeJS with MySQL. This is to be used with your backend code.
+This is a library written in TypeScript that implements user session management for websites that run on NodeJS with MySQL. This is to be used with your backend code.
 
 It has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
@@ -29,6 +29,13 @@ Together this library and the auth-website library take into account all the var
 Before we dive into the usage and the functions for this library, please have a look at the open source demo project that uses this and the auth-website library: https://github.com/supertokens/auth-demo. The demo demonstrats how this package behaves when it detects auth token theft (you are the attacker)!
 
 ## Usage
+There are three mobules that you have to interact with: Auth, Session and AuthError:
+
+### Auth
+
+### Session
+
+### AuthError
 
 ## Making changes
 This library is written in TypeScript (TS). If you are not familiar with this language, don't worry. It's extremely similar to Javascript. Getting used to TS will take just a few mins. 
@@ -44,7 +51,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
-- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on <TODO: email here>, until our webiste is ready :grinning:MIT
+- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on <TODO: email here>, until our webiste is ready :grinning:
 
 ## License
 MIT license. For more information, please see the license tab on this repo.
