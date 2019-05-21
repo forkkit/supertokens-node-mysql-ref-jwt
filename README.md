@@ -30,7 +30,7 @@ Together this library and the auth-website library take into account all the var
 Before we dive into the usage and the functions for this library, please have a look at the open source demo project that uses this and the auth-website library: https://github.com/supertokens/auth-demo. The demo demonstrats how this package behaves when it detects auth token theft (you are the attacker)!
 
 ## Usage
-There are four modules that you have to interact with: Auth, Config, Session and Auth.Error:
+There are four modules that you have to interact with: Auth, Session, Config and Auth.Error:
 
 ### Auth
 ```js
@@ -109,10 +109,22 @@ Auth.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
   // type of err is Auth.Error Will be GENERAL_ERROR
 });
 ```
+### Session
+An instance of this class will be returned to you from some of the functions mentioned above.
+#### session.getUserId()
+- To be called when you want to get the unique ID of the user for whom this session was created
+```js
+// @returns a string
+let userId = session.getUserId()
+```
+#### session.getJWTPayload()
+- To be called when you want to get the JWT payload that was set when creating the session
+```js
+// @returns a js object/array/primitive type - depending on what you passed in createNewSession
+let payloadInfo = session.getJWTPayload()
+```
 
 ### Config
-
-### Session
 
 ### Auth.Error
 
