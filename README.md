@@ -10,7 +10,7 @@ It has the following features:
 - Automatic JWT signing key generation, management and rotation - If you do not provide a key, this lib will create one for you and you can also set it so that it changes every X interval of time (for maximum security). The changing of the key will not log anyone user out.
 - Full cookie management - Takes care of making them secure and HttpOnly. You do not need to change/read/modify cookies yourself.
 - Lightweight and clean - Not a lot of code and only two mysql tables (one for storing signing keys, and the other for storing session info)
-- Effecient in terms of space complexity - need to store just one session row per logged in user per device.
+- Effecient in terms of space complexity - need to store just one row in a SQL table per logged in user per device.
 - Effecient in terms of time complexity - minimises number of db lookups - most requests, do not need a database call to authenticate at all!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security concequences.
 - In built support for handling multiple devices per user.
