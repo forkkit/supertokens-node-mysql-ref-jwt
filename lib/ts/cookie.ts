@@ -8,6 +8,9 @@ const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
 const idRefreshTokenCookieKey = "sIdRefreshToken";
 
+/**
+ * @description clears all the auth cookies from the response
+ */
 export function clearSessionFromCookie(res: express.Response) {
     let config = Config.get();
     setCookie(res, accessTokenCookieKey, "", config.cookie.domain,
@@ -24,7 +27,9 @@ export function attachAccessTokenToCookie(res: express.Response, token: string, 
         config.cookie.secure, true, expiry, "/");
 }
 
-// also attach id refresh token
+/**
+ * @sideEffect also attach id refresh token
+ * */
 export function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(res, idRefreshTokenCookieKey, generateUUID(), config.cookie.domain,
@@ -33,10 +38,17 @@ export function attachRefreshTokenToCookie(res: express.Response, token: string,
         config.cookie.secure, true, expiry, config.tokens.refreshToken.renewTokenPath);
 }
 
+/**
+ * @description if this returns true, then there is a chance that the session may still be alive
+ * because the user may have the refresh token.
+ */
 export function requestHasSessionCookies(req: express.Request): boolean {
     return getCookieValue(req, idRefreshTokenCookieKey) !== undefined;
 }
 
+/**
+ * @throws AuthError TRY_REFRESH_TOKEN
+ */
 export function getAccessTokenFromCookie(req: express.Request): string {
     let value = getCookieValue(req, accessTokenCookieKey);
     if (value === undefined) {
@@ -45,6 +57,9 @@ export function getAccessTokenFromCookie(req: express.Request): string {
     return value;
 }
 
+/**
+ * @throws AuthError UNAUTHORISED
+ */
 export function getRefreshTokenFromCookie(req: express.Request): string {
     let value = getCookieValue(req, refreshTokenCookieKey);
     if (value === undefined) {
@@ -81,8 +96,7 @@ export function setCookie(res: express.Response, key: string, value: string, dom
 
 /**
  * 
- * @param req 
- * @param key 
+ * @param throws AuthError GENERAL_ERROR
  */
 export function getCookieValue(req: express.Request, key: string): string | undefined {
     if (req.cookies === undefined) {

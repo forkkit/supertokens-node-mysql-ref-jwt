@@ -4,11 +4,18 @@ import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transactio
 import { getConnection } from './helpers/mysql';
 import { decrypt, encrypt, generateNewSigningKey, generateUUID, hash, sanitizeStringInput } from './helpers/utils';
 
+/**
+ * @description: called during library init. Should be called after initing Config and MySQL.
+ */
 export async function init() {
     let config = Config.get();
     await Key.init();
 }
 
+/**
+ * @description given a token, it verifies it with the stored signature and returns the payload contained in it
+ * @throws AuthError GENERAL_ERROR UNAUTHORISED
+ */
 export async function getInfoFromRefreshToken(token: string): Promise<{
     sessionHandle: string,
     userId: string,
@@ -39,8 +46,17 @@ export async function getInfoFromRefreshToken(token: string): Promise<{
     }
 }
 
+/**
+ * @description given token payload, it creates a new token that is signed by a key stored in the DB.
+ * Note: The expiry time of the token is not in the token itself. This may result in the token being alive for a longer duration 
+ * than what is desired. We can easily fix this by adding the expiry time in the token
+ * @throws AuthError GENERAL_ERROR
+ */
 export async function createNewRefreshToken(sessionHandle: string, userId: string,
     parentRefreshTokenHash1: string | undefined): Promise<{ token: string, expiry: number }> {
+    // token = key1({funcArgs + nonce}).nonce where key1(a) = a encrypted using key1
+    // we have the nonce for 2 reasons: given same arguments, the token would be different, 
+    // and it can be used to verify that the token was indeed created by us.
     let config = Config.get();
     let key = await Key.getKey();
     let nonce = hash(generateUUID());
@@ -57,12 +73,19 @@ export async function createNewRefreshToken(sessionHandle: string, userId: strin
 }
 
 const REFRESH_TOKEN_KEY_NAME_IN_DB = "refresh_token_key";
+/**
+ * @class Key
+ * @description this is a singleton class since there is just one key in the whole system for refresh tokens
+ */
 class Key {
     private key: string | undefined;
     private static instance: Key | undefined;
 
     private constructor() { }
 
+    /**
+     * @description called when libraries' init is called. Creates and stores an encryption/decryption key to be used if not already there.
+     */
     static init = async () => {
         if (Key.instance === undefined) {
             Key.instance = new Key();
@@ -77,6 +100,9 @@ class Key {
         return this.key;
     }
 
+    /**
+     * @description Generates a new key in a way that takes race conditions in account in case there are multiple node processes running.
+     */
     private generateNewKeyAndUpdateInDb = async (): Promise<string> => {
         let connection = await getConnection();
         try {

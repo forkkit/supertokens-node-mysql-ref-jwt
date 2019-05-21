@@ -31,7 +31,7 @@
     "bhumilsarvaiya",
     "rishabhpoddar"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/supertokens/auth-node-mysql-ref-jwt/issues"
   },

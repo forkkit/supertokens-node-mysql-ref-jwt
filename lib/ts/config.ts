@@ -2,6 +2,10 @@ import { AuthError, generateError } from './error';
 import { TypeConfig, TypeGetSigningKeyUserFunction, TypeInputConfig } from './helpers/types';
 import { sanitizeBooleanInput, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 
+/**
+ * @class Config
+ * @description this is a singleton class since we need just one Config for this node process.
+ */
 export default class Config {
     private static instance: undefined | Config;
     private config: TypeConfig;
@@ -10,6 +14,10 @@ export default class Config {
         this.config = config;
     }
 
+    /**
+     * @description called when library is being initialised
+     * @throws AuthError GENERAL_ERROR
+     */
     static init(config: TypeInputConfig) {
         if (Config.instance === undefined) {
             Config.instance = new Config(setDefaults(validateAndNormalise(config)));
@@ -24,6 +32,10 @@ export default class Config {
     }
 }
 
+/**
+ * @description checks for user input validity in terms of types and ranges
+ * @throws AuthError GENERAL_ERROR
+ */
 const validateAndNormalise = (config: any): TypeInputConfig => {
     if (config === null || typeof config !== "object") {
         throw generateError(AuthError.GENERAL_ERROR, new Error("passed config is not an object"), false);

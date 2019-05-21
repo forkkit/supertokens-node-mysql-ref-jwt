@@ -6,6 +6,10 @@ import { deleteSession, getSessionData, updateSessionData } from './helpers/dbQu
 import { getConnection } from './helpers/mysql';
 import { hash } from './helpers/utils';
 
+/**
+ * @class Session
+ * @description an instance of this is created when a session is valid.
+ */
 export class Session {
     private sessionHandle: string;
     private userId: string;
@@ -20,6 +24,12 @@ export class Session {
         this.res = res;
     }
 
+    /**
+     * @description call this to logout the current user. 
+     * This only invalidates the refresh token. The access token can still be used after
+     * @sideEffect may clear cookies from response.
+     * @throw AuthError GENERAL_ERROR
+     */
     revokeSession = async () => {
         let connection = await getConnection();
         try {
@@ -33,7 +43,9 @@ export class Session {
     }
 
     /**
-     * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well.
+     * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself.
+     * @returns session data as provided by the user earlier
+     * @throws AuthError GENERAL_ERROR, UNAUTHORISED. 
      */
     getSessionData = async (): Promise<any> => {
         let connection = await getConnection();
@@ -51,6 +63,8 @@ export class Session {
 
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
+     * @param newSessionData this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
+     * @throws AuthError GENERAL_ERROR
      */
     updateSessionData = async (newSessionData: any) => {
         let connection = await getConnection();
@@ -71,21 +85,3 @@ export class Session {
 
 
 }
-
-// export async function readSessionDataFromDb(sessionHandle: string): Promise<{
-//     userId: string,
-//     sessionInfo: { [key: string]: any },
-//     refreshTokenHash2: string,
-//     expiryTime: number,
-// } | undefined> {
-
-// }
-
-// export async function updateSessionDataInDb(sessionHandle: string,
-//     sessionInfo: { [key: string]: any }, refreshTokenHash2: string, expiryTime: number) {
-
-// }
-
-// export async function removeSessionDataInDb(sessionHandle: string) {
-
-// }

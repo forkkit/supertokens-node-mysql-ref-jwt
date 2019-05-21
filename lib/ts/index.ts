@@ -165,6 +165,7 @@ async function refreshSessionHelper(res: express.Response, refreshToken: string,
     userId: string,
     parentRefreshTokenHash1: string | undefined
 }): Promise<Session> {
+    let config = Config.get();
     let connection = await getConnection();
     try {
         let sessionHandle = refreshTokenInfo.sessionHandle;
@@ -205,12 +206,16 @@ async function refreshSessionHelper(res: express.Response, refreshToken: string,
             hash(refreshTokenInfo.parentRefreshTokenHash1) === sessionInfo.refreshTokenHash2) {
             // At this point, the input refresh token is a child and its parent is in the database. Normally, this part of the code
             // will be reached only when the client uses a refresh token to request a new refresh token before 
-            // using its access token. This would happen in case client recieves a new set of token and right before the next 
+            // using its access token. This would happen in case client recieves a new set of tokens and right before the next 
             // API call, the app is killed. and when the app opens again, the client's access token is expired.
 
             // Since this is used by the client, we know that the client has this set of tokens, so we can make them the parent.
+            // Here we set the expiry based on the current time and not the time this refresh token was created. This may
+            // result in refresh tokens living on for a longer period of time than what is expected. But that is OK, since they keep changing
+            // based on access token's expiry anyways. 
+            // This can be solved fairly easily by keeping the expiry time in the refresh token payload as well.
             await updateSessionInfo_Transaction(connection, hash(sessionHandle),
-                hash(hash(refreshToken)), sessionInfo.sessionData, sessionInfo.expiresAt);
+                hash(hash(refreshToken)), sessionInfo.sessionData, Date.now() + config.tokens.refreshToken.validity);
             await connection.commit();
 
             // now we can generate children tokens for the current input token.
@@ -222,7 +227,6 @@ async function refreshSessionHelper(res: express.Response, refreshToken: string,
         // synchronises calls to refresh token API.
         await connection.commit();
         clearSessionFromCookie(res);
-        let config = Config.get();
         config.onTokenTheftDetection(refreshTokenInfo.userId, refreshTokenInfo.sessionHandle);
         throw generateError(AuthError.UNAUTHORISED, new Error("token has been stolen!?"));
     } finally {
