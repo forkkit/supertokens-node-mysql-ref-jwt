@@ -30,6 +30,14 @@ Before we dive into the usage and the functions for this library, please have a 
 
 ## Usage
 
+## Making changes
+This library is written in TypeScript (TS). If you are not familiar with this language, don't worry. It's extremely similar to Javascript. Getting used to TS will take just a few mins. 
+
+That being said, if you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder:
+```bash
+tsc -p tsconfig.json
+```
+If you make any changes to index.ts in the root of this repo, once you compile it to .js, remember to change the import/export path from /lib/ts/* to /lib/build/* in the .js file.
 
 ## Future work
 - Enable this to work with mobile apps as well.
