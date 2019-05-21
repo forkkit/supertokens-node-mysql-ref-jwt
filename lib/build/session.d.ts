@@ -30,5 +30,5 @@ export declare class Session {
      */
     updateSessionData: (newSessionData: any) => Promise<void>;
     getUserId: () => string;
-    getJWTPayload: () => Promise<any>;
+    getJWTPayload: () => any;
 }

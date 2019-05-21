@@ -79,7 +79,7 @@ export class Session {
         return this.userId;
     }
 
-    getJWTPayload = async () => {
+    getJWTPayload = () => {
         return this.jwtUserPayload;
     }
 
