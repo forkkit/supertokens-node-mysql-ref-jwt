@@ -1,8 +1,5 @@
 import * as mysql from 'mysql';
 import { MySQLParamTypes } from './types';
-/**
- * @todo read about what happens when connection is released, does the isolation level stays for that connection?
- */
 export declare class Mysql {
     private static instance;
     private pool;

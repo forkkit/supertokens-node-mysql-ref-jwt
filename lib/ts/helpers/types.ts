@@ -25,12 +25,15 @@ export type TypeInputConfig = {
             renewTokenPath: string
         }
     },
-    logging?: TypeLoggingConfig,
+    logging?: {
+        info?: (info: any) => void,
+        error?: (err: any) => void
+    },
     cookie: {
         domain: string,
         secure?: boolean
     },
-    onTokenTheftDetection?: TypeSecurityConfig
+    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void;
 };
 
 export type TypeConfig = {
@@ -60,20 +63,15 @@ export type TypeConfig = {
             renewTokenPath: string
         }
     },
-    logging: TypeLoggingConfig,
+    logging: {
+        info?: (info: any) => void,
+        error?: (err: any) => void
+    },
     cookie: {
         domain: string,
         secure: boolean
     },
-    onTokenTheftDetection: TypeSecurityConfig
-};
-
-
-type TypeSecurityConfig = (userId: string, sessionHandle: string) => void;
-
-type TypeLoggingConfig = {
-    info?: (info: any) => void,
-    error?: (err: any) => void
+    onTokenTheftDetection: (userId: string, sessionHandle: string) => void;
 };
 
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;

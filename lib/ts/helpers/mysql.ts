@@ -5,9 +5,6 @@ import { AuthError, generateError } from '../error';
 import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from './dbQueries';
 import { MySQLParamTypes, TypeConfig } from './types';
 
-/**
- * @todo read about what happens when connection is released, does the isolation level stays for that connection?
- */
 export class Mysql {
     private static instance: undefined | Mysql;
     private pool: mysql.Pool;

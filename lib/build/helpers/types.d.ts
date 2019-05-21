@@ -25,12 +25,15 @@ export declare type TypeInputConfig = {
             renewTokenPath: string;
         };
     };
-    logging?: TypeLoggingConfig;
+    logging?: {
+        info?: (info: any) => void;
+        error?: (err: any) => void;
+    };
     cookie: {
         domain: string;
         secure?: boolean;
     };
-    onTokenTheftDetection?: TypeSecurityConfig;
+    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void;
 };
 export declare type TypeConfig = {
     mysql: {
@@ -59,17 +62,15 @@ export declare type TypeConfig = {
             renewTokenPath: string;
         };
     };
-    logging: TypeLoggingConfig;
+    logging: {
+        info?: (info: any) => void;
+        error?: (err: any) => void;
+    };
     cookie: {
         domain: string;
         secure: boolean;
     };
-    onTokenTheftDetection: TypeSecurityConfig;
-};
-declare type TypeSecurityConfig = (userId: string, sessionHandle: string) => void;
-declare type TypeLoggingConfig = {
-    info?: (info: any) => void;
-    error?: (err: any) => void;
+    onTokenTheftDetection: (userId: string, sessionHandle: string) => void;
 };
 export declare type TypeGetSigningKeyUserFunction = () => Promise<string>;
 export declare type MySQLParamTypes = string | number | boolean | null | Date;
@@ -77,4 +78,3 @@ export declare type TypeAuthError = {
     errType: number;
     err: any;
 };
-export {};

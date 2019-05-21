@@ -18,9 +18,7 @@ export async function checkIfTableExists(connection: Connection, tableName: stri
  * @param refreshTokensTableName 
  */
 export async function createTablesIfNotExists(connection: Connection, signingKeyTableName: string, refreshTokensTableName: string) {
-    /**
-     * @todo add proper query. these are just dummy ones + optimise the length of VARCHAR
-     */
+
     const signKeyTableQuery = `
             CREATE TABLE IF NOT EXISTS ${signingKeyTableName} (
                 key_name VARCHAR(128),

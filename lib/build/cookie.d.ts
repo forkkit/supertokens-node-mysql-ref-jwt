@@ -1,3 +1,4 @@
+/// <reference types="express" />
 import * as express from 'express';
 export declare function clearSessionFromCookie(res: express.Response): void;
 export declare function attachAccessTokenToCookie(res: express.Response, token: string, expiry: number): void;

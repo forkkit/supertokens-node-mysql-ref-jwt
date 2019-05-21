@@ -187,7 +187,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
 }
 
 const setDefaults = (config: TypeInputConfig): TypeConfig => {
-    // TODO: do not do this style.. check for explicit undefined... what is something is number | undefined and that person gives 0 as a number.. then its as good as false. Or an empty string???
+    // TODO: change this style of a || b to a === undefined ? b : a
     return {
         mysql: {
             host: config.mysql.host || defaultConfig.mysql.host,
