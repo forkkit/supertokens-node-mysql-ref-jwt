@@ -1,6 +1,6 @@
 # SuperTokens
 ## About
-This is a library that implements user session management for websites that run on NodeJS with MySQL - use it to create and manage sessions for logged in users. 
+This is a library that implements user session management for websites that run on NodeJS with MySQL. This is to be used with your backend code.
 
 It has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
