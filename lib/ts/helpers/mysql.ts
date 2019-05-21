@@ -5,6 +5,9 @@ import { AuthError, generateError } from '../error';
 import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from './dbQueries';
 import { MySQLParamTypes, TypeConfig } from './types';
 
+/**
+ * @description This is a singleton class since we need just one MySQL pool per node process.
+ */
 export class Mysql {
     private static instance: undefined | Mysql;
     private pool: mysql.Pool;
@@ -54,11 +57,15 @@ export async function getConnection(): Promise<Connection> {
     }
 }
 
+/**
+ * @class Connection
+ * @description class for one mysql connection to the DB. can be used for transactions, querying etc.. Please remember to close this connection in try {..} finally { close here. }.
+ */
 export class Connection {
     private isClosed = false;
     private destroyConnnection = false;
     private mysqlConnection: mysql.PoolConnection;
-    private currTransactionCount = 0;
+    private currTransactionCount = 0;   // used to keep track of live transactions. so that in case a connection is closed prematurely, we can destroy it.
 
     constructor(mysqlConnection: mysql.PoolConnection) {
         this.mysqlConnection = mysqlConnection;
@@ -76,7 +83,7 @@ export class Connection {
         });
     }
 
-    setDestroyConnection = () => {
+    private setDestroyConnection = () => {
         this.destroyConnnection = true;
     }
 

@@ -1,8 +1,8 @@
 import Config from '../config';
 
 /**
- * 
  * @param err 
+ * @throws AuthError GENERAL_ERROR
  */
 export function errorLogging(err: any) {
     const config = Config.get();
@@ -12,8 +12,8 @@ export function errorLogging(err: any) {
 }
 
 /**
- * 
  * @param info 
+ * @throws AuthError GENERAL_ERROR
  */
 export function infoLogging(info: any) {
     const config = Config.get();

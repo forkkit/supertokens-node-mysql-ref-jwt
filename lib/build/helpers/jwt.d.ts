@@ -3,8 +3,7 @@ export declare function createJWT(plainTextPayload: {
 }, signingKey: string): string;
 /**
  *
- * @throws Error
- * @description Throw error if verifications fail.. or anything goes wrong.
+ * @throws Error if verifications fail.. or anything goes wrong.
  */
 export declare function verifyJWTAndGetPayload(jwt: string, signingKey: string): {
     [key: string]: any;

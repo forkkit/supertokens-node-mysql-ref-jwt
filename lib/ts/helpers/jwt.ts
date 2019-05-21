@@ -1,5 +1,9 @@
 import { hmac } from './utils';
 
+/**
+ * @description library is meant to only create and verify JWTs. It does not care about the payload itself.
+ */
+
 const HEADER = Buffer.from(JSON.stringify({
     alg: "HS256",
     typ: "JWT"
@@ -13,8 +17,7 @@ export function createJWT(plainTextPayload: { [key: string]: any }, signingKey: 
 
 /**
  * 
- * @throws Error 
- * @description Throw error if verifications fail.. or anything goes wrong.
+ * @throws Error if verifications fail.. or anything goes wrong.
  */
 export function verifyJWTAndGetPayload(jwt: string, signingKey: string): { [key: string]: any } {
     const splittedInput = jwt.split(".");

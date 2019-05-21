@@ -1,8 +1,12 @@
 import { Connection } from './mysql';
 /**
+ * @description contains all the mysql queries.
+ * @throws AuthError GENERAL_ERROR
+ */
+/**
  * @param connection
  * @param tableName
- * @description: this function will throw an error if the tables don't exist.
+ * @throws error if the tables don't exist.
  */
 export declare function checkIfTableExists(connection: Connection, tableName: string): Promise<void>;
 /**

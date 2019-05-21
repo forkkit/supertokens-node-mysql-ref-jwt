@@ -4,6 +4,7 @@ import { TypeInputConfig } from './helpers/types';
 import { Session } from './session';
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
+ * Please create a database in your mysql instance before calling this function
  * @throws AuthError GENERAL_ERROR in case anything fails.
  */
 export declare function init(config: TypeInputConfig): Promise<void>;

@@ -2,6 +2,9 @@ import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, rando
 import * as uuid from 'uuid';
 import * as validator from 'validator';
 
+/**
+ * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
+ */
 export async function generateNewSigningKey(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
         pbkdf2(randomBytes(64), randomBytes(64), 100, 32, "sha512", (err, key) => {

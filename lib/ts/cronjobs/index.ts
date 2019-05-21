@@ -58,6 +58,6 @@ function createNewJob(job: Function, interval: string, jobDescription: string): 
 
 const jobs = [{
     jobFunction: oldRefreshTokenRemoval,
-    interval: "0 0 0 1-31/7 * *",
+    interval: "0 0 0 1-31/7 * *",   // run once every week starting from when this process starts. Feel free to change this as per your needs.
     description: "remove old expired refresh tokens"
 }];

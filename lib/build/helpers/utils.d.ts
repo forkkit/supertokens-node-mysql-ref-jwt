@@ -1,3 +1,6 @@
+/**
+ * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
+ */
 export declare function generateNewSigningKey(): Promise<string>;
 export declare function generateUUID(): string;
 export declare function hash(toHash: string): string;

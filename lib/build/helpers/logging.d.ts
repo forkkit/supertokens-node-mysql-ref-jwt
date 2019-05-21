@@ -1,11 +1,11 @@
 /**
- *
  * @param err
+ * @throws AuthError GENERAL_ERROR
  */
 export declare function errorLogging(err: any): void;
 /**
- *
  * @param info
+ * @throws AuthError GENERAL_ERROR
  */
 export declare function infoLogging(info: any): void;
 export declare const loggingFormat: {
