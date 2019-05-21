@@ -20,13 +20,15 @@ export declare class Session {
     /**
      * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself.
      * @returns session data as provided by the user earlier
+     * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
     getSessionData: () => Promise<any>;
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
      * @param newSessionData this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
-     * @throws AuthError GENERAL_ERROR
+     * @sideEffect may clear cookies from response.
+     * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
     updateSessionData: (newSessionData: any) => Promise<void>;
     getUserId: () => string;

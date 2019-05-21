@@ -73,7 +73,8 @@ export async function insertKeyValueForKeyName_Transaction(connection: Connectio
 export async function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any) {
     const config = Config.get();
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle_hash_1 = ?`;
-    await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandleHash1]);
+    let result = await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandleHash1]);
+    return result.affectedRows;
 }
 
 export async function getSessionData(connection: Connection, sessionHandleHash1: string): Promise<{ found: false } | { found: true, data: any }> {

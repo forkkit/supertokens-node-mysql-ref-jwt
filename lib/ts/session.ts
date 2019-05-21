@@ -45,6 +45,7 @@ export class Session {
     /**
      * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself.
      * @returns session data as provided by the user earlier
+     * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED. 
      */
     getSessionData = async (): Promise<any> => {
@@ -52,6 +53,7 @@ export class Session {
         try {
             let result = await getSessionData(connection, hash(this.sessionHandle));
             if (!result.found) {
+                clearSessionFromCookie(this.res);
                 throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
             } else {
                 return result.data;
@@ -64,12 +66,18 @@ export class Session {
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
      * @param newSessionData this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
-     * @throws AuthError GENERAL_ERROR
+     * @sideEffect may clear cookies from response.
+     * @throws AuthError GENERAL_ERROR, UNAUTHORISED. 
      */
     updateSessionData = async (newSessionData: any) => {
         let connection = await getConnection();
         try {
-            await updateSessionData(connection, hash(this.sessionHandle), newSessionData);
+            let numberOfAffectedRows = await updateSessionData(connection, hash(this.sessionHandle), newSessionData);
+            if (numberOfAffectedRows !== 1) {
+                // did not update anything, which means there was nothing to update, which means the session does not exist.
+                clearSessionFromCookie(this.res);
+                throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
+            }
         } finally {
             connection.closeConnection();
         }

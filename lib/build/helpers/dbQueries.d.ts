@@ -20,7 +20,7 @@ export declare function getKeyValueFromKeyName_Transaction(connection: Connectio
     createdAtTime: number;
 } | undefined>;
 export declare function insertKeyValueForKeyName_Transaction(connection: Connection, keyName: string, keyValue: string, createdAtTime: number): Promise<void>;
-export declare function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any): Promise<void>;
+export declare function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any): Promise<any>;
 export declare function getSessionData(connection: Connection, sessionHandleHash1: string): Promise<{
     found: false;
 } | {
