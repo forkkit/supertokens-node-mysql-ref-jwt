@@ -20,7 +20,7 @@ It has the following features:
 ```bash
 npm i --save auth-node-mysql-ref-jwt
 ```
-
+TODO: create database and tables optionally
 ## Accompanying library
 As of now, this library will only work if you frontend is a website. To use this library, you will need to use the following library in your frontend code: https://github.com/supertokens/auth-website. This library is a drop in replacement for your axios/ajax calls on the frontend.
 
@@ -30,7 +30,6 @@ Together this library and the auth-website library take into account all the var
 Before we dive into the usage and the functions for this library, please have a look at the open source demo project that uses this and the auth-website library: https://github.com/supertokens/auth-demo. The demo demonstrats how this package behaves when it detects auth token theft (you are the attacker)!
 
 ## Usage
-There are four modules that you have to interact with: Auth, Session, Auth.Error and Config:
 
 ### Auth
 ```js
@@ -53,7 +52,7 @@ Auth.init(config).then(() => {
 // @params res: express response object
 // @params userId: string - some unique ID for this user for you to retrieve in your APIs
 // @params: jwtPayload - any js object/array/primitive type to store in the JWT's payload. Once set, it cannot be changed for this session. Also, this should not contain any sensitive data. The advantage of this is that for any API call, you do not need a database lookup to retrieve the information stored here.
-// @params: sessionData - any js object/array/primitive type to store in the DB for this session. This is changeable thtoughout the lifetime of this session
+// @params: sessionData - any js object/array/primitive type to store in the DB for this session. This is changeable throughout the lifetime of this session
 // @returns a Promise
 Auth.createNewSession(res, "User1", {info: "Data in JWT"}, {info: "Data stored in DB"}).then(session => {
   // session is of type Session class - See below.
@@ -189,7 +188,47 @@ This is thrown in many of the functions that are mentioned above. There are thre
 Please see the auth-demo project (https://github.com/supertokens/auth-demo) code to see how to handle these errors in a simple way :grinning:
 
 ### Config
-// TODO
+The config object has the following shape:
+```js
+config = {
+    mysql: {
+        host?: string,  // default localhost
+        port?: number, // default 3306
+        user: string, // If the tables in the database are not created already, then this user must have permission to create tables.
+        password: string,
+        connectionLimit?: number, // default 50
+        database: string, // name of database to connect to. This must be created before running this package
+        tables?: {
+            signingKey?: string, // default signing_key - table name used to store secret keys
+            refreshTokens?: string // default refresh_token - table name used to store sessions
+        }
+    },
+    tokens: {
+        accessToken?: {
+            signingKey?: {
+                dynamic?: boolean, // default true - if this is true, then the JWT signing key will change automatically ever updateInterval hours.
+                updateInterval?: number, // in hours - default 24 - should be >= 1 && <= 720. How often to change the signing key 
+                get?: () => Promise<string> // default undefined - If you want to give your own JWT signing key, please give a function here.
+            },
+            validity?: number // in seconds, default is 3600 seconds. should be >= 10 && <= 86400000 seconds. This determines the lifetime of an access token.
+        },
+        refreshToken: {
+            validity?: number, // in hours, default is 2400 (100 days). This determines how long a refresh token is alive for. So if your user is inactive for these many hours, they will be logged out.
+            renewTokenPath: string // this is the api path that needs to be called for refreshing a session. This needs to be a POST API. An example valud is "/api/refreshtoken". This will also be the path of the refresh token cookie.
+        }
+    },
+    logging?: {
+        info?: (info: any) => void, // default undefined. This function, if provided, will be called for info logging purposes
+        error?: (err: any) => void // default undefined. This function, if provided, will be called for error logging purposes
+    },
+    cookie: {
+        domain: string, // this is the domain to set for all the cookies. The path for all cookies except the refresh token will be "/"
+        secure?: boolean // default true. Sets if the cookies are secure or not. Ideally, this value should be true in production mode.
+    },
+    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just logout this particular "stolen session".
+}
+```
+To change the default values or ranges, please see /lib/ts/config.ts file. After making changes, please be sure to compile to JS.
 
 ## Making changes
 This library is written in TypeScript (TS). If you are not familiar with this language, don't worry. It's extremely similar to Javascript. Getting used to TS will take just a few mins. 
