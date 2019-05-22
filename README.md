@@ -265,7 +265,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
-- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on <TODO: email here>, until our website is ready :grinning:
+- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at <TODO: email here>, until our website is ready :grinning:
 
 ## License
 MIT license. For more information, please see the license tab on this repo.
