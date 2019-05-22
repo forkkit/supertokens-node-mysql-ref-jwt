@@ -1,9 +1,9 @@
 ![SuperTokens banner](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/images/github%20cover.png)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
 
 
-This is a library written in TypeScript that implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [auth-website](https://github.com/supertokens/auth-website) package on your frontend.
+This is a library written in TypeScript that implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend.
 
 #### The protocol SuperTokens uses is described in detail in this article.<TODO: link to blog part 2 at [this article]>
 
@@ -26,7 +26,7 @@ The library has the following features:
 npm i --save supertokens-node-mysql-ref-jwt
 ```
 Before you start using the package:
-You will need to create a database in MySQL to store session info. This database can be either your already created DB or a new DB. This database name should be given as a config param to the library [(See config section below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
+You will need to create a database in MySQL to store session info. This database can be either your already created DB or a new DB. This database name should be given as a config param to the library [(See config section below)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config).
 
 There will be two tables created automatically for you in the provided database when you first use this library - if they don't already exist. If you want to create them yourself, you can do so with the following commands:
 ```SQL
@@ -47,12 +47,12 @@ CREATE TABLE refresh_tokens (
   PRIMARY KEY(session_handle_hash_1)
 );    
 ```
-You can call these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
+You can call these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config).
 
 ## Accompanying library
-As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
 
-Together this library and the auth-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
+Together this library and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
 ## Usage
 
@@ -257,7 +257,7 @@ config = {
 To change the default values or ranges, please see /lib/ts/config.ts file.
 
 ## Example code & Demo
-You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [auth-website](https://github.com/supertokens/auth-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
+You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Making changes
 This library is written completely in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
