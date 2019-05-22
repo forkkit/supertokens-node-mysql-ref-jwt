@@ -8,11 +8,10 @@ This is a library written in TypeScript that implements user session management 
 It has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
 - The protocol it follows is described in detail in this blog. <TODO: link to blog part 2 at [this]>
-- Token theft detection: This library is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works. For a more technical understanding, please contact us at <TODO: email>. We will also be writing the Wiki on this repo soon.
+- Token theft detection: This library is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works. For a more technical understanding, please contact us at team@supertokens.io. We will also be writing the Wiki on this repo soon.
 - Complete auth token management - It only stores the hashed version of refresh tokens in the database.
 - Automatic JWT signing key generation, management and rotation - If you do not provide a key, this library will create one for you and you can also set it so that it changes after a fixed amount of time (for maximum security). The changing of the key will not log any user out.
 - Complete cookie management - Takes care of making them secure and HttpOnly. You do not need to change/read/modify cookies yourself.
-- Lightweight and clean - 1.4MB minified (203KB GZipped) only! And you only have to create two MySQL tables (one for storing signing keys, and the other for storing session info).
 - Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
 - Efficient in terms of time complexity - Minimises number of DB lookups:  most requests do not need a database call to authenticate at all!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security concequences.
@@ -268,7 +267,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
-- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at <TODO: email here>, until our website is ready :grinning:
+- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
 
 ## License
 MIT license. For more information, please see the license tab on this repo.
