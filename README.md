@@ -1,10 +1,9 @@
-# SuperTokens
+![SuperTokens banner](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/images/github%20cover.png)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/LICENSE)
 
-TODO: link to the blog
 
-## About
-SuperTokens is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is meant to be used with your backend code. For a complete solution, you also need to use the [auth-website](https://github.com/supertokens/auth-website) package on your frontend.
+SuperTokens is a library written in TypeScript that implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [auth-website](https://github.com/supertokens/auth-website) package on your frontend.
 
 #### The protocol SuperTokens uses is described in detail in this article.<TODO: link to blog part 2 at [this article]>
 
