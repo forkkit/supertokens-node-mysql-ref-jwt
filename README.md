@@ -1,6 +1,6 @@
 # SuperTokens
 
-TODO: link to blog
+TODO: link to the blog
 
 ## About
 SuperTokens is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is meant to be used with your backend code. For a complete solution, you also need to use the [Auth Website](https://github.com/supertokens/auth-website) package on your frontend.
@@ -8,25 +8,25 @@ SuperTokens is a library written in TypeScript that implements user session mana
 #### The protocol SuperTokens uses is described in detail in this article.<TODO: link to blog part 2 at [this article]>
 
 The library has the following features:
-- It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
+- It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque)
 - Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works.
 - Complete auth token management - It only stores the hashed version of refresh tokens in the database.
 - Automatic JWT signing key generation, management and rotation
 - Complete cookie management - Takes care of making them secure and HttpOnly.
 - Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
-- Efficient in terms of time complexity - Minimises number of DB lookups (most requests do not need a database call to authenticate at all!)
-- Built in support for handling multiple devices per user.
-- Built in synchronisation in case you are running multiple node processes.
+- Efficient in terms of time complexity - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
+- Built-in support for handling multiple devices per user.
+- Built-in synchronisation in case you are running multiple node processes.
 - Easy to use and test, with well documented, modularised code and helpful error messages!
 
-#### Using this library, you can keep a user logged in for however long you want - without worrying about any security concequences. For a more technical understanding, please contact us at team@supertokens.io.
+#### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. For a more technical understanding, please contact us at team@supertokens.io.
 
 ## Installation
 ```bash
 npm i --save auth-node-mysql-ref-jwt
 ```
 Before you start using the package:
-You will need to create a database in MySQL to store session info. This database can be either your already created db, or a new db. This database name should be given as a config param to the library [(See config section below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
+You will need to create a database in MySQL to store session info. This database can be either your already created DB or a new DB. This database name should be given as a config param to the library [(See config section below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
 
 There will be two tables created automatically for you in the provided database when you first use this library - if they don't already exist. If you want to create them yourself, you can do so with the following commands:
 ```SQL
@@ -50,7 +50,7 @@ CREATE TABLE refresh_tokens (
 You can call these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
 
 ## Accompanying library
-As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) in your frontend code. This library is a drop in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
 
 Together this library and the auth-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
@@ -112,7 +112,7 @@ Auth.refreshSession(req, res).then(session => {
 });
 ```
 #### Auth.revokeAllSessionsForUser(userId)
-- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate logout for this user. The actual time they would be logged out is when their access token expires, and since these are short lived, that should be soon after calling this function.
+- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate log out for this user. The actual time they would be logged out is when their access token expires, and since these are short-lived, that should be soon after calling this function.
 ```js
 // @params userId: string - a unique ID identifying this user. This ID should be the same as what was passed when calling Auth.createNewSession
 // @returns a Promise
@@ -204,7 +204,7 @@ This is thrown in many of the functions that are mentioned above. There are thre
 // NOTE: this does not necessarily mean they are logged out! They could have a refresh token that may give them a new access token and then their session could continue.
 {errType: Auth.Error.TRY_REFRESH_TOKEN, err}
 ```
-- In a GET API call which returns a rendered html page (for example when using server side rendered ReactJS):
+- In a GET API call which returns a rendered HTML page (for example when using server-side rendered ReactJS):
   - If you get an UNAUTHORISED error, redirect to a login page.
   - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again, else redirect to a login page.
 - In all other APIs
@@ -223,7 +223,7 @@ config = {
         user: string, // If the tables in the database are not created already, then this user must have permission to create tables.
         password: string,
         connectionLimit?: number, // default 50
-        database: string, // name of database to connect to. This must be created before running this package
+        database: string, // name of the database to connect to. This must be created before running this package
         tables?: {
             signingKey?: string, // default signing_key - table name used to store secret keys
             refreshTokens?: string // default refresh_token - table name used to store sessions
@@ -240,7 +240,7 @@ config = {
         },
         refreshToken: {
             validity?: number, // in hours, default is 2400 (100 days). This determines how long a refresh token is alive for. So if your user is inactive for these many hours, they will be logged out.
-            renewTokenPath: string // this is the api path that needs to be called for refreshing a session. This needs to be a POST API. An example value is "/api/refreshtoken". This will also be the path of the refresh token cookie.
+            renewTokenPath: string // this is the API path that needs to be called for refreshing a session. This needs to be a POST API. An example value is "/api/refreshtoken". This will also be the path of the refresh token cookie.
         }
     },
     logging?: {
@@ -251,7 +251,7 @@ config = {
         domain: string, // this is the domain to set for all the cookies. The path for all cookies except the refresh token will be "/"
         secure?: boolean // default true. Sets if the cookies are secure or not. Ideally, this value should be true in production mode.
     },
-    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just logout this particular "stolen session".
+    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just log out this particular "stolen session".
 }
 ```
 To change the default values or ranges, please see /lib/ts/config.ts file.
