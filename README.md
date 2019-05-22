@@ -180,7 +180,13 @@ This is thrown in many of the functions that are mentioned above. There are thre
 // NOTE: this does not necessarily mean they are logged out! They could have a refresh token that may give them a new access token and then their session could continue.
 {errType: Auth.Error.TRY_REFRESH_TOKEN, err}
 ```
-Please see the auth-demo project code to see how to handle these errors in a simple way :grinning:
+- In a GET API which returns a rendered html page (for example when using server side rendered ReactJS):
+  - If you get an UNAUTHORISED error, redirect to a login page.
+  - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again.
+- In all other APIs
+  - If you get an UNAUTHORISED or TRY_REFRESH_TOKEN error, send a status code that represents session expiry
+  
+Please see the auth-demo project (https://github.com/supertokens/auth-demo) code to see how to handle these errors in a simple way :grinning:
 
 ### Config
 // TODO
