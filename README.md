@@ -3,21 +3,21 @@
 TODO: link to blog
 
 ## About
-This is a library written in TypeScript that implements user session management for websites that run on NodeJS, express and MySQL. This is to be used with your backend code.
+This is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is to be used with your backend code. For the frontend implementation using this library, checkout [auth-website!](https://github.com/supertokens/auth-website)
 
 It has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
-- The protocol it follows is described here: <TODO: link to blog part 2>
-- Token theft detection: The protocol it follows enables it to detect token theft in a robust manner. Please see the link mentioned above for more details on how this happens - for a technical understanding, please contact us on team@supertokens.io. We will be writing the Wiki on this repo soon.
-- Full auth token management - It only stores the hashed version of refresh tokens in the database
-- Automatic JWT signing key generation, management and rotation - If you do not provide a key, this lib will create one for you and you can also set it so that it changes every X interval of time (for maximum security). The changing of the key will not log anyone user out.
-- Full cookie management - Takes care of making them secure and HttpOnly. You do not need to change/read/modify cookies yourself.
-- Lightweight and clean - Not a lot of code and only two mysql tables (one for storing signing keys, and the other for storing session info)
-- Effecient in terms of space complexity - need to store just one row in a SQL table per logged in user per device.
-- Effecient in terms of time complexity - minimises number of db lookups - most requests, do not need a database call to authenticate at all!
+- The protocol it follows is described in detail in this blog. <TODO: link to blog part 2 at [this]>
+- Token theft detection: This library is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works. For a more technical understanding, please contact us at <TODO: email>. We will also be writing the Wiki on this repo soon.
+- Complete auth token management - It only stores the hashed version of refresh tokens in the database.
+- Automatic JWT signing key generation, management and rotation - If you do not provide a key, this library will create one for you and you can also set it so that it changes after a fixed amount of time (for maximum security). The changing of the key will not log any user out.
+- Complete cookie management - Takes care of making them secure and HttpOnly. You do not need to change/read/modify cookies yourself.
+- Lightweight and clean - 1.4MB minified (203KB GZipped) only! And you only have to create two MySQL tables (one for storing signing keys, and the other for storing session info).
+- Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
+- Efficient in terms of time complexity - Minimises number of DB lookups:  most requests do not need a database call to authenticate at all!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security concequences.
 - In built support for handling multiple devices per user.
-- Easy to use and test, with well commented, modularised code and helpful error messages!
+- Easy to use and test, with well documented, modularised code and helpful error messages!
 
 ## Installation
 ```bash
@@ -26,7 +26,7 @@ npm i --save auth-node-mysql-ref-jwt
 Before you start using the package:
 You will need to create a database in MySQL to store session info. This database can be either your name db, or a new db. Ideally keep it in a new db since that allows for good modularisation. This database name should be given as a config to the library (See config section below)
 
-There will be two tables created in the provided database for you automatically when you first use this library. Instead, if you want to create them yourself, you can do so with the following command:
+There will be two tables created in the provided database for you automatically when you first use this library. Instead, if you want to create them yourself, you can do so with the following commands:
 ```SQL
 CREATE TABLE signing_key (
   key_name VARCHAR(128),
@@ -45,15 +45,15 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
   PRIMARY KEY(session_handle_hash_1)
 );    
 ```
-You can call these tables whatever you want, but be sure to send those to the library via the config params (See below).
+You can call these tables whatever you want, but be sure to send those to the library via the config params (see below).
 
 ## Accompanying library
-As of now, this library will only work if you frontend is a website. To use this library, you will need to use the following library in your frontend code: https://github.com/supertokens/auth-website. This library is a drop in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if you frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) as your frontend code. This library is a drop in replacement for your axios/ajax calls on the frontend.
 
 Together this library and the auth-website library take into account all the various failures and race conditions that can occur when implementing session management.
 
 ## Example code & Demo
-Before we dive into the usage and the functions for this library, please have a look at the open source demo project that uses this and the auth-website library: https://github.com/supertokens/auth-demo. The demo demonstrats how this package behaves when it detects auth token theft (you are the attacker)!
+Before you dive into the usage and the functions for this library, you can play around with the demo project that uses this and the [auth-website](https://github.com/supertokens/auth-website) library. The demo demonstrats how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Usage
 
@@ -62,7 +62,7 @@ Before we dive into the usage and the functions for this library, please have a 
 import * as Auth from 'auth-node-mysql-ref-jwt';
 ```
 #### Auth.init(config)
-- To to be called at the start of your server
+- To be called while starting your server
 ```js
 // @params config: An object which allows you to set the behaviour of this library. See the Config section below for details on the options.
 // @returns a Promise
@@ -159,7 +159,7 @@ session.revokeSession().then(() => {
 });
 ```
 #### session.getSessionData()
-- To be called when you want to get the stored (in DB) session data. 
+- To be called when you want to get the stored session data from DB. 
 - Note that this function does not do any sort of synchronisation with other processes that may want to get/update session data for this session.
 ```js
 // @returns a promise
@@ -205,7 +205,7 @@ This is thrown in many of the functions that are mentioned above. There are thre
 // NOTE: this does not necessarily mean they are logged out! They could have a refresh token that may give them a new access token and then their session could continue.
 {errType: Auth.Error.TRY_REFRESH_TOKEN, err}
 ```
-- In a GET API which returns a rendered html page (for example when using server side rendered ReactJS):
+- In a GET API call which returns a rendered html page (for example when using server side rendered ReactJS):
   - If you get an UNAUTHORISED error, redirect to a login page.
   - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again, else redirect to a login page.
 - In all other APIs
@@ -240,7 +240,7 @@ config = {
         },
         refreshToken: {
             validity?: number, // in hours, default is 2400 (100 days). This determines how long a refresh token is alive for. So if your user is inactive for these many hours, they will be logged out.
-            renewTokenPath: string // this is the api path that needs to be called for refreshing a session. This needs to be a POST API. An example valud is "/api/refreshtoken". This will also be the path of the refresh token cookie.
+            renewTokenPath: string // this is the api path that needs to be called for refreshing a session. This needs to be a POST API. An example value is "/api/refreshtoken". This will also be the path of the refresh token cookie.
         }
     },
     logging?: {
@@ -257,9 +257,7 @@ config = {
 To change the default values or ranges, please see /lib/ts/config.ts file. After making changes, please be sure to compile to JS.
 
 ## Making changes
-This library is written in TypeScript (TS). If you are not familiar with this language, don't worry. It's extremely similar to Javascript. Getting used to TS will take just a few mins. 
-
-That being said, if you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder:
+This library is written in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
 ```bash
 tsc -p tsconfig.json
 ```
@@ -270,7 +268,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
-- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on team@supertokens.io, until our webiste is ready :grinning:
+- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at <TODO: email here>, until our website is ready :grinning:
 
 ## License
 MIT license. For more information, please see the license tab on this repo.
