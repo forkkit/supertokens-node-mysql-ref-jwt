@@ -257,7 +257,7 @@ config = {
 To change the default values or ranges, please see /lib/ts/config.ts file.
 
 ## Example code & Demo
-You can play around with the demo project that uses this and the [auth-website](https://github.com/supertokens/auth-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
+You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [auth-website](https://github.com/supertokens/auth-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Making changes
 This library is written completely in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
