@@ -1,5 +1,5 @@
 {
-  "name": "auth-node-mysql-ref-jwt",
+  "name": "supertokens-node-mysql-ref-jwt",
   "version": "1.0.2",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/supertokens/auth-node-mysql-ref-jwt.git"
+    "url": "git+https://github.com/supertokens/supertokens-node-mysql-ref-jwt.git"
   },
   "keywords": [
     "auth",
@@ -33,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/supertokens/auth-node-mysql-ref-jwt/issues"
+    "url": "https://github.com/supertokens/supertokens-node-mysql-ref-jwt/issues"
   },
-  "homepage": "https://github.com/supertokens/auth-node-mysql-ref-jwt#readme",
+  "homepage": "https://github.com/supertokens/supertokens-node-mysql-ref-jwt#readme",
   "dependencies": {
     "@types/uuid": "3.4.4",
     "@types/cron": "1.7.1",
