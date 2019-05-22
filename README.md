@@ -1,4 +1,7 @@
 # SuperTokens
+
+TODO: link to blog
+
 ## About
 This is a library written in TypeScript that implements user session management for websites that run on NodeJS, express and MySQL. This is to be used with your backend code.
 
