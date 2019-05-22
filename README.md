@@ -5,7 +5,7 @@ This is a library written in TypeScript that implements user session management 
 It has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
 - The protocol it follows is described here: <TODO: link to blog part 2>
-- Token theft detection: The protocol it follows enables it to detect token theft in a robust manner. Please see the link mentioned above for more details on how this happens - for a technical understanding, please contact us on <TODO: email>. We will be writing the Wiki on this repo soon.
+- Token theft detection: The protocol it follows enables it to detect token theft in a robust manner. Please see the link mentioned above for more details on how this happens - for a technical understanding, please contact us on team@supertokens.io. We will be writing the Wiki on this repo soon.
 - Full auth token management - It only stores the hashed version of refresh tokens in the database
 - Automatic JWT signing key generation, management and rotation - If you do not provide a key, this lib will create one for you and you can also set it so that it changes every X interval of time (for maximum security). The changing of the key will not log anyone user out.
 - Full cookie management - Takes care of making them secure and HttpOnly. You do not need to change/read/modify cookies yourself.
@@ -267,7 +267,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
-- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on <TODO: email here>, until our webiste is ready :grinning:
+- Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback on team@supertokens.io, until our webiste is ready :grinning:
 
 ## License
 MIT license. For more information, please see the license tab on this repo.
