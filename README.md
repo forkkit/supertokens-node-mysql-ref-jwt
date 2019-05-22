@@ -35,7 +35,7 @@ CREATE TABLE signing_key (
   PRIMARY KEY(key_name)
 );
 
-CREATE TABLE IF NOT EXISTS refresh_tokens (
+CREATE TABLE refresh_tokens (
   session_handle_hash_1 VARCHAR(255) NOT NULL,
   user_id VARCHAR(128) NOT NULL,
   refresh_token_hash_2 VARCHAR(128) NOT NULL,
