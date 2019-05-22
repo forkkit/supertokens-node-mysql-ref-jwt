@@ -1,9 +1,10 @@
 # SuperTokens
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/LICENSE)
 
 TODO: link to the blog
 
 ## About
-SuperTokens is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is meant to be used with your backend code. For a complete solution, you also need to use the [Auth Website](https://github.com/supertokens/auth-website) package on your frontend.
+SuperTokens is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is meant to be used with your backend code. For a complete solution, you also need to use the [auth-website](https://github.com/supertokens/auth-website) package on your frontend.
 
 #### The protocol SuperTokens uses is described in detail in this article.<TODO: link to blog part 2 at [this article]>
 
@@ -274,4 +275,4 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
 
 ## License
-MIT license. For more information, please see the license tab on this repo.
+MIT license. For more information, please read our license file [here](https://github.com/supertokens/auth-node-mysql-ref-jwt/blob/master/LICENSE).
