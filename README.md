@@ -3,9 +3,9 @@
 TODO: link to blog
 
 ## About
-This is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is to be used with your backend code. For the frontend implementation using this library, checkout [auth-website!](https://github.com/supertokens/auth-website)
+This is a library written in TypeScript that implements user session management for websites that run on NodeJS, Express and MySQL. This is to be used with your backend code. For a complete solution, you also need to use the [auth-website](https://github.com/supertokens/auth-website) package on your frontend.
 
-It has the following features:
+This library has the following features:
 - It uses short lived access tokens (JWT) and long lived refresh tokens (Opaque)
 - The protocol it follows is described in detail in this blog. <TODO: link to blog part 2 at [this]>
 - Token theft detection: This library is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works. For a more technical understanding, please contact us at team@supertokens.io. We will also be writing the Wiki on this repo soon.
@@ -16,6 +16,7 @@ It has the following features:
 - Efficient in terms of time complexity - Minimises number of DB lookups:  most requests do not need a database call to authenticate at all!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security concequences.
 - In built support for handling multiple devices per user.
+- In built synchronisation in case you are running multiple node processes.
 - Easy to use and test, with well documented, modularised code and helpful error messages!
 
 ## Installation
