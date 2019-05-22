@@ -23,7 +23,7 @@ The library has the following features:
 
 ## Installation
 ```bash
-npm i --save auth-node-mysql-ref-jwt
+npm i --save supertokens-node-mysql-ref-jwt
 ```
 Before you start using the package:
 You will need to create a database in MySQL to store session info. This database can be either your already created DB or a new DB. This database name should be given as a config param to the library [(See config section below)](https://github.com/supertokens/auth-node-mysql-ref-jwt#config).
