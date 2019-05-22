@@ -182,7 +182,7 @@ This is thrown in many of the functions that are mentioned above. There are thre
 ```
 - In a GET API which returns a rendered html page (for example when using server side rendered ReactJS):
   - If you get an UNAUTHORISED error, redirect to a login page.
-  - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again.
+  - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again, else redirect to a login page.
 - In all other APIs
   - If you get an UNAUTHORISED or TRY_REFRESH_TOKEN error, send a status code that represents session expiry
   
