@@ -24,9 +24,9 @@ This library has the following features:
 npm i --save auth-node-mysql-ref-jwt
 ```
 Before you start using the package:
-You will need to create a database in MySQL to store session info. This database can be either your name db, or a new db. Ideally keep it in a new db since that allows for good modularisation. This database name should be given as a config to the library (See config section below)
+You will need to create a database in MySQL to store session info. This database can be either your already created db, or a new db. This database name should be given as a config param to the library (See config section below).
 
-There will be two tables created in the provided database for you automatically when you first use this library. Instead, if you want to create them yourself, you can do so with the following commands:
+There will be two tables created automatically for you in the provided database when you first use this library - if they don't already exist. If you want to create them yourself, you can do so with the following commands:
 ```SQL
 CREATE TABLE signing_key (
   key_name VARCHAR(128),
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 You can call these tables whatever you want, but be sure to send those to the library via the config params (see below).
 
 ## Accompanying library
-As of now, this library will only work if you frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) as your frontend code. This library is a drop in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [auth-website](https://github.com/supertokens/auth-website) in your frontend code. This library is a drop in replacement for your axios/ajax calls on the frontend.
 
 Together this library and the auth-website library take into account all the various failures and race conditions that can occur when implementing session management.
 
@@ -113,7 +113,7 @@ Auth.refreshSession(req, res).then(session => {
 });
 ```
 #### Auth.revokeAllSessionsForUser(userId)
-- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate logout for this user. The actual time they would be logged out is when their access token expires, and since these are short lived, that should be soon after calling this function
+- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate logout for this user. The actual time they would be logged out is when their access token expires, and since these are short lived, that should be soon after calling this function.
 ```js
 // @params userId: string - a unique ID identifying this user. This ID should be the same as what was passed when calling Auth.createNewSession
 // @returns a Promise
@@ -124,7 +124,7 @@ Auth.revokeAllSessionsForUser("User1").then(() => {
 });
 ```
 #### Auth.revokeSessionUsingSessionHandle(sessionHandle)
-- To be called when token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session only. This enables you to keep other devices of this userId still logged in.
+- To be called when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in.
 ```js
 // @params sessionHandle: string - a unique ID identifying this session.
 // @returns a Promise
@@ -149,7 +149,7 @@ let userId = session.getUserId()
 let payloadInfo = session.getJWTPayload()
 ```
 #### session.revokeSession()
-- To be called when you want to logout a user once they are authenticated in an API.
+- To be called when you want to logout a user.
 ```js
 // @returns a promise
 session.revokeSession().then(() => {
@@ -210,8 +210,6 @@ This is thrown in many of the functions that are mentioned above. There are thre
   - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the auth-website package and if that is successful, call the current API again, else redirect to a login page.
 - In all other APIs
   - If you get an UNAUTHORISED or TRY_REFRESH_TOKEN error, send a status code that represents session expiry
-  
-Please see the auth-demo project (https://github.com/supertokens/auth-demo) code to see how to handle these errors in a simple way :grinning:
 
 ### Config
 The config object has the following shape:
@@ -254,7 +252,7 @@ config = {
     onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just logout this particular "stolen session".
 }
 ```
-To change the default values or ranges, please see /lib/ts/config.ts file. After making changes, please be sure to compile to JS.
+To change the default values or ranges, please see /lib/ts/config.ts file.
 
 ## Making changes
 This library is written in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
@@ -265,7 +263,6 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- Other packages that provide non JWT based implementations for NodeJS and MySQL
 
 ## Authors
 - Written with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
