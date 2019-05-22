@@ -20,7 +20,30 @@ It has the following features:
 ```bash
 npm i --save auth-node-mysql-ref-jwt
 ```
-TODO: create database and tables optionally
+Before you start using the package:
+You will need to create a database in MySQL to store session info. This database can be either your name db, or a new db. Ideally keep it in a new db since that allows for good modularisation. This database name should be given as a config to the library (See config section below)
+
+There will be two tables created in the provided database for you automatically when you first use this library. Instead, if you want to create them yourself, you can do so with the following command:
+```SQL
+CREATE TABLE signing_key (
+  key_name VARCHAR(128),
+  key_value VARCHAR(255),
+  created_at_time BIGINT UNSIGNED,
+  PRIMARY KEY(key_name)
+);
+
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+  session_handle_hash_1 VARCHAR(255) NOT NULL,
+  user_id VARCHAR(128) NOT NULL,
+  refresh_token_hash_2 VARCHAR(128) NOT NULL,
+  session_info TEXT,
+  expires_at BIGINT UNSIGNED NOT NULL,
+  jwt_user_payload TEXT,
+  PRIMARY KEY(session_handle_hash_1)
+);    
+```
+You can call these tables whatever you want, but be sure to send those to the library via the config params (See below).
+
 ## Accompanying library
 As of now, this library will only work if you frontend is a website. To use this library, you will need to use the following library in your frontend code: https://github.com/supertokens/auth-website. This library is a drop in replacement for your axios/ajax calls on the frontend.
 
