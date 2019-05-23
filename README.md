@@ -47,7 +47,13 @@ CREATE TABLE refresh_tokens (
   PRIMARY KEY(session_handle_hash_1)
 );    
 ```
-You can call these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config).
+You can name these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config).
+
+You will also need to use the cookie-parser npm module as a middleware for this library to work:
+```js
+import * as cookieParser from 'cookie-parser';
+app.use(cookieParser());
+```
 
 ## Accompanying library
 As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
