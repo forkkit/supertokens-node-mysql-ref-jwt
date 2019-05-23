@@ -284,5 +284,8 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 - Enable this to work with mobile apps as well.
 - Create a WiKi
 
+## Support, questions and bugs
+For now, we are most reachable via team@supertokens.io and via the GitHub issues feature
+
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
