@@ -21,6 +21,16 @@ The library has the following features:
 
 #### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. For a more technical understanding, please contact us at team@supertokens.io.
 
+## Index
+1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
+2) [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
+3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
+4) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
+5) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
+6) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+7) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+8) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+
 ## Installation
 ```bash
 npm i --save supertokens-node-mysql-ref-jwt
