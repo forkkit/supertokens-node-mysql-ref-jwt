@@ -294,7 +294,6 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- While detection of stolen long-lived refresh tokens works, we also need to implement detection of stolen short-lived access tokens.
 - Create a WiKi
 
 ## Support, questions and bugs
