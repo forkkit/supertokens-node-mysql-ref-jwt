@@ -278,7 +278,7 @@ config = {
     onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just log out this particular "stolen session".
 }
 ```
-To change the default values or ranges, please see /lib/ts/config.ts file.
+To change the default values or ranges, please see [/lib/ts/config.ts](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/config.ts) file.
 
 ## Example code & Demo
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
