@@ -290,6 +290,8 @@ tsc -p tsconfig.json
 ```
 If you make any changes to index.ts in the root of this repo, once you compile it to .js, remember to change the import/export path from /lib/ts/* to /lib/build/* in the .js file.
 
+To change the name of the cookies used, please find them in /lib/ts/cookie.ts
+
 ## Future work
 - Enable this to work with mobile apps as well.
 - Create a WiKi
