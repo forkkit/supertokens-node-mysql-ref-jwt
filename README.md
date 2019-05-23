@@ -5,7 +5,7 @@
 
 This is a library written in TypeScript that implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
-#### The protocol SuperTokens uses is described in detail in this article.<TODO: link to blog part 2 at [this article]>
+#### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque)
