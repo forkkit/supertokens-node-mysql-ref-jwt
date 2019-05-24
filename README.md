@@ -12,7 +12,7 @@ The library has the following features:
 - Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works.
 - Complete auth token management - It only stores the hashed version of refresh tokens in the database.
 - Automatic JWT signing key generation, management and rotation
-- Complete cookie management - Takes care of making them secure and HttpOnly.
+- Complete cookie management - Takes care of making them secure and HttpOnly. Also removes/adds and edits them wherever needed.
 - Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
 - Efficient in terms of time complexity - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
 - Built-in support for handling multiple devices per user.
