@@ -294,7 +294,6 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- Create a WiKi explaining the logic behind how sessions in this library are managed.
 - Add unit testing.
 
 ## Support, questions and bugs
