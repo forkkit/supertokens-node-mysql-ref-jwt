@@ -312,7 +312,7 @@ Dedicated support includes the following:
 - Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
 - Very high avaiability.
 
-To show some love to our early adopters, we’re offering to give them free dedicated support until 1st of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month of dedicated support post the 1st of July, 2019. A referral will be counted when a person does any of the following:
+To show some love to our early adopters, we’re offering to give them free dedicated support until 1st of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (upto 6 months) of dedicated support post the 1st of July, 2019. A referral will be counted when a person/company does any of the following:
 - Raises a reasonable issue.
 - Issues a pull request that gets accepted.
 - Uses this repo in their project.
