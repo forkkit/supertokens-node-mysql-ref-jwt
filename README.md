@@ -297,7 +297,18 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 - Add unit testing.
 
 ## Support, questions and bugs
-For now, we are most reachable via team@supertokens.io and via the GitHub issues feature. We will even help you evaluate alternate session management solutions you may be thinking about - so that you end up with the best solution for your use case!
+We are most reachable via team@supertokens.io and via the GitHub issues feature. We will actively be solving issues and mainting SuperTokens for a long time :grinning:
+
+To show some love to our early adopters, we’re offering the following:
+- Free consultations on your current session management flow including identifying vulnerabilities and suggesting improvements for your particular use case.
+- Free **personal** support for the SuperTokens library. If you have any issues with implementations or want any minor, personal customisations — we’ll be available.
+
+The above is valid only till the 1st of July, 2019!
+
+But that’s not it. For every referral, we will give you and your referral an additional free month of **personal** support post the 1st of July, 2019. A referral will be counted when a person does any of the following:
+- Raises a reasonable issue
+- Issues a pull request that gets accepted
+- Uses this repo in their project.
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
