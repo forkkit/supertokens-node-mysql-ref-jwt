@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
 
 
-This is a library written in TypeScript that implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
+This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
 #### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
 
@@ -284,7 +284,7 @@ To change the default values or ranges, please see [/lib/ts/config.ts](https://g
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Making changes
-This library is written completely in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
+This library is written in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
 ```bash
 tsc -p tsconfig.json
 ```
