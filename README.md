@@ -294,7 +294,7 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- Create a WiKi
+- Create a WiKi explaining the logic behind how sessions in this library are managed
 
 ## Support, questions and bugs
 For now, we are most reachable via team@supertokens.io and via the GitHub issues feature
