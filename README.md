@@ -297,18 +297,27 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 - Add unit testing.
 
 ## Support, questions and bugs
-We are most reachable via team@supertokens.io and via the GitHub issues feature. We will actively be solving issues and mainting SuperTokens for a long time :grinning:
+We are most reachable via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
 
-To show some love to our early adopters, we’re offering the following:
-- Free consultations on your current session management flow including identifying vulnerabilities and suggesting improvements for your particular use case.
-- Free **personal** support for the SuperTokens library. If you have any issues with implementations or want any minor, personal customisations — we’ll be available.
+General support includes the following (freely available from us forever! :grinning:):
+- fixing bugs and catering to issues that apply to most users of this library.
+- keeping docs and the code up to date.
+- answering questions that apply to most users via Stack Overflow, Email, Quora etc.
+- expanding the feature set of this library in a way that is helpful to most users.
+- catering to pull requests.
 
-The above is valid only till the 1st of July, 2019!
+Dedicated support includes the following:
+- Help in custom implementation of this library into your existing project / infrastructure.
+- Implementation of custom flows or features for your session management needs.
+- Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
+- Very high avaiability.
 
-But that’s not it. For every referral, we will give you and your referral an additional free month of **personal** support post the 1st of July, 2019. A referral will be counted when a person does any of the following:
-- Raises a reasonable issue
-- Issues a pull request that gets accepted
+To show some love to our early adopters, we’re offering to give them free dedicated support until 1st of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month of dedicated support post the 1st of July, 2019. A referral will be counted when a person does any of the following:
+- Raises a reasonable issue.
+- Issues a pull request that gets accepted.
 - Uses this repo in their project.
+
+Referrals will be accepted only until this text is in the latest version of the README.md file
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
