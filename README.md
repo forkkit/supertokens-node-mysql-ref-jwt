@@ -9,15 +9,15 @@ This is a library written in TypeScript that implements user session management 
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque)
-- Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the link mentioned above for more details on how this works.
+- Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
 - Complete auth token management - It only stores the hashed version of refresh tokens in the database.
-- Automatic JWT signing key generation, management and rotation
-- Complete cookie management - Takes care of making them secure and HttpOnly. Also removes/adds and edits them wherever needed.
+- Automatic JWT signing key generation, management and rotation.
+- Complete cookie management - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
 - Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
 - Efficient in terms of time complexity - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
 - Built-in support for handling multiple devices per user.
 - Built-in synchronisation in case you are running multiple node processes.
-- Easy to use and test, with well documented, modularised code and helpful error messages!
+- Easy to use (see [auth-demo](https://github.com/supertokens/auth-demo)) and test, with well documented, modularised code and helpful error messages!
 
 #### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. For a more technical understanding, please contact us at team@supertokens.io.
 
@@ -294,10 +294,11 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- Create a WiKi explaining the logic behind how sessions in this library are managed
+- Create a WiKi explaining the logic behind how sessions in this library are managed.
+- Add unit testing.
 
 ## Support, questions and bugs
-For now, we are most reachable via team@supertokens.io and via the GitHub issues feature
+For now, we are most reachable via team@supertokens.io and via the GitHub issues feature. We will even help you evaluate alternate session management solutions you may be thinking about - so that you end up with the best solution for your use case!
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
