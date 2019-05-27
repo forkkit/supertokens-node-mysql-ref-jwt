@@ -300,14 +300,14 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 - To implement info, debug and error logs in a better way.
 
 ## Support, questions and bugs
-We are most reachable via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
+We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
 
-General support includes the following (freely available from us forever! :grinning:):
-- fixing bugs and catering to issues that apply to most users of this library.
-- keeping docs and the code up to date.
-- answering questions that apply to most users via Stack Overflow, Email, Quora etc.
-- expanding the feature set of this library in a way that is helpful to most users.
-- catering to pull requests.
+General support includes the following (freely available from us forever):
+- Fixing bugs and catering to issues that apply to most users of this library.
+- Keeping docs and the code up to date.
+- Answering questions that apply to most users via Stack Overflow, Email, Quora etc.
+- Expanding the feature set of this library in a way that is helpful to most users.
+- Catering to pull requests.
 
 Dedicated support includes the following:
 - Help in custom implementation of this library into your existing project / infrastructure.
@@ -315,7 +315,7 @@ Dedicated support includes the following:
 - Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
 - Very high avaiability.
 
-To show some love to our early adopters, we’re offering to give them free dedicated support until 1st of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (upto 6 months) of dedicated support post the 1st of July, 2019. A referral will be counted when a person/company does any of the following:
+To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (upto 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
 - Raises a reasonable issue.
 - Issues a pull request that gets accepted.
 - Uses this repo in their project.
