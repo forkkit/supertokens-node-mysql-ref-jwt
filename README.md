@@ -20,7 +20,7 @@ The library has the following features:
 - Built-in synchronisation in case you are running multiple node processes.
 - Easy to use (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
 
-#### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. For a thorough technical understanding, please contact us at team@supertokens.io.
+#### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. If you like this project and want to use it, but for a different tech stack, please contact us at team@supertokens.io.
 
 ## Index
 1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
