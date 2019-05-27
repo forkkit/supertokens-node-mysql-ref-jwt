@@ -8,7 +8,8 @@ This library implements user session management for websites that run on **NodeJ
 #### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
 
 The library has the following features:
-- It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque)
+- It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
+- Minimises probability of token theft - follows all the best practices for handling auth tokens across all attack surfaces: the frontend, backend and during transit
 - Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
 - Complete auth token management - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session. Furthermore, the tokens sent over to the client have a long length and high entropy - so brute force attack is out of the question.
 - Automatic JWT signing key generation (if you don't provide one), management and rotation - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
@@ -295,6 +296,7 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 ## Future work
 - Enable this to work with mobile apps as well.
 - Add unit testing.
+- To implement info, debug and error logs in a better way.
 
 ## Support, questions and bugs
 We are most reachable via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
