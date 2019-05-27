@@ -30,7 +30,8 @@ The library has the following features:
 5) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
 6) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
 7) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-8) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+8) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+9) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -320,6 +321,13 @@ To show some love to our early adopters, we’re offering to give them free dedi
 - Uses this repo in their project.
 
 Referrals will be accepted only until this text is in the latest version of the README.md file
+
+## Further reading and understanding
+We have written a blog post about sessions in general:
+- [Part 1](https://medium.com/@supertokens.io/ee5245e6bdad): Introduction to session management, analysis of most commonly used session flows, and best practices
+- [Part 2](https://medium.com/@supertokens.io/91f27eeef460): Analysis of the session flow used by SuperTokens.
+
+To understand the logic behind how sessions are created, managed and destroyed, please refer to the [WiKi section](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/wiki/Implementation-logic)
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
