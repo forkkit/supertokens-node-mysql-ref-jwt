@@ -19,8 +19,11 @@ The library has the following features:
 - Built-in support for handling multiple devices per user.
 - Built-in synchronisation in case you are running multiple node processes.
 - Easy to use (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
+- Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. 
 
-#### Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. If you like this project and want to use it, but for a different tech stack, please contact us at team@supertokens.io.
+#### If you like this project and want to use it, but for a different tech stack:
+- Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack. This is on a first come, first serve basis.
+- We will soon be making this into a standalone process as well. So you could then use this package with any tech stack.
 
 ## Index
 1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
@@ -298,6 +301,7 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 - Enable this to work with mobile apps as well.
 - Add unit testing.
 - To implement info, debug and error logs in a better way.
+- Making this a standalone process that has an http interface to it.
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
