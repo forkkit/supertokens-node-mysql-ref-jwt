@@ -263,7 +263,7 @@ config = {
             signingKey?: {
                 dynamic?: boolean, // default true - if this is true, then the JWT signing key will change automatically ever updateInterval hours.
                 updateInterval?: number, // in hours - default 24 - should be >= 1 && <= 720. How often to change the signing key 
-                get?: () => Promise<string> // default undefined - If you want to give your own JWT signing key, please give a function here.
+                get?: () => Promise<string> // default undefined - If you want to give your own JWT signing key, please give a function here. If this is given, then the dynamic boolean will be ignored as key management will be up to you. This function will be called everytime we generate or verify any JWT. 
             },
             validity?: number // in seconds, default is 3600 seconds. should be >= 10 && <= 86400000 seconds. This determines the lifetime of an access token.
         },
