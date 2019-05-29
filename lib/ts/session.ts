@@ -228,7 +228,6 @@ async function refreshSessionHelper(refreshToken: string, refreshTokenInfo: {
         if (sessionInfo.refreshTokenHash2 === hash(hash(refreshToken))) {
             // at this point, the input refresh token is the parent one.
             await connection.commit();
-
             // we create children token for this refresh token. The child tokens have a refrence to the current refresh token which will enable them to become parents when they are used.
             // notice that we do not need to store them in the database since their parent (current refresh token) is already stored.
             let newRefreshToken = await createNewRefreshToken(sessionHandle, refreshTokenInfo.userId, hash(refreshToken));
