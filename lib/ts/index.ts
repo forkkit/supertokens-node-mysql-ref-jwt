@@ -95,7 +95,7 @@ export async function refreshSession(req: express.Request, res: express.Response
     try {
         let response = await SessionFunctions.refreshSession(idRefreshToken, refreshToken);
         if (response.sessionTheftDetected) {
-            clearSessionFromCookie(res);
+            // cookies clearing happens when catching unauthorised error
             config.onTokenTheftDetection(response.session.userId, response.session.handle);
             throw generateError(AuthError.UNAUTHORISED, new Error("session theft detected"));
         } else {
