@@ -92,13 +92,13 @@ SuperTokens.init(config).then(() => {
   // type of err is SuperTokens.Error Will be GENERAL_ERROR
 });
 ```
-#### SuperTokens.createNewSession(res, userId, jwtPayload, sessionData)
+#### SuperTokens.createNewSession(res, userId, jwtPayload?, sessionData?)
 - To be called when you want to login a user, after verifying their credentials.
 ```js
 // @params res: express response object
 // @params userId: string - some unique ID for this user for you to retrieve in your APIs
-// @params: jwtPayload - any js object/array/primitive type to store in the JWT's payload. Once set, it cannot be changed for this session. Also, this should not contain any sensitive data. The advantage of this is that for any API call, you do not need a database lookup to retrieve the information stored here.
-// @params: sessionData - any js object/array/primitive type to store in the DB for this session. This is changeable throughout the lifetime of this session
+// @params: jwtPayload - default is undefined. any js object/array/primitive type to store in the JWT's payload. Once set, it cannot be changed for this session. Also, this should not contain any sensitive data. The advantage of this is that for any API call, you do not need a database lookup to retrieve the information stored here.
+// @params: sessionData - default is undefined. any js object/array/primitive type to store in the DB for this session. This is changeable throughout the lifetime of this session
 // @returns a Promise
 SuperTokens.createNewSession(res, "User1", {info: "Data in JWT"}, {info: "Data stored in DB"}).then(session => {
   // session is of type Session class - See below.
