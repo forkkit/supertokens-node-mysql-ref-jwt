@@ -2,7 +2,6 @@ import * as express from 'express';
 
 import Config from './config';
 import { AuthError, generateError } from './error';
-import { generateUUID } from './helpers/utils';
 
 const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
@@ -27,45 +26,29 @@ export function attachAccessTokenToCookie(res: express.Response, token: string, 
         config.cookie.secure, true, expiry, "/");
 }
 
-/**
- * @sideEffect also attach id refresh token
- * */
+
 export function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
-    setCookie(res, idRefreshTokenCookieKey, generateUUID(), config.cookie.domain,
-        false, false, expiry, "/");
     setCookie(res, refreshTokenCookieKey, token, config.cookie.domain,
         config.cookie.secure, true, expiry, config.tokens.refreshToken.renewTokenPath);
 }
 
-/**
- * @description if this returns true, then there is a chance that the session may still be alive
- * because the user may have the refresh token.
- */
-export function requestHasSessionCookies(req: express.Request): boolean {
-    return getCookieValue(req, idRefreshTokenCookieKey) !== undefined;
+export function attachIdRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
+    let config = Config.get();
+    setCookie(res, idRefreshTokenCookieKey, token, config.cookie.domain,
+        false, false, expiry, "/");
 }
 
-/**
- * @throws AuthError TRY_REFRESH_TOKEN
- */
-export function getAccessTokenFromCookie(req: express.Request): string {
-    let value = getCookieValue(req, accessTokenCookieKey);
-    if (value === undefined) {
-        throw generateError(AuthError.TRY_REFRESH_TOKEN, new Error("No access token found in cookies"));
-    }
-    return value;
+export function getAccessTokenFromCookie(req: express.Request): string | undefined {
+    return getCookieValue(req, accessTokenCookieKey);
 }
 
-/**
- * @throws AuthError UNAUTHORISED
- */
-export function getRefreshTokenFromCookie(req: express.Request): string {
-    let value = getCookieValue(req, refreshTokenCookieKey);
-    if (value === undefined) {
-        throw generateError(AuthError.UNAUTHORISED, new Error("No refresh token found in cookies"));
-    }
-    return value;
+export function getRefreshTokenFromCookie(req: express.Request): string | undefined {
+    return getCookieValue(req, refreshTokenCookieKey);
+}
+
+export function getIdRefreshTokenFromCookie(req: express.Request): string | undefined {
+    return getCookieValue(req, idRefreshTokenCookieKey);
 }
 
 /**

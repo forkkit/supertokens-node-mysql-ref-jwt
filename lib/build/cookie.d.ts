@@ -5,23 +5,11 @@ import * as express from 'express';
  */
 export declare function clearSessionFromCookie(res: express.Response): void;
 export declare function attachAccessTokenToCookie(res: express.Response, token: string, expiry: number): void;
-/**
- * @sideEffect also attach id refresh token
- * */
 export declare function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number): void;
-/**
- * @description if this returns true, then there is a chance that the session may still be alive
- * because the user may have the refresh token.
- */
-export declare function requestHasSessionCookies(req: express.Request): boolean;
-/**
- * @throws AuthError TRY_REFRESH_TOKEN
- */
-export declare function getAccessTokenFromCookie(req: express.Request): string;
-/**
- * @throws AuthError UNAUTHORISED
- */
-export declare function getRefreshTokenFromCookie(req: express.Request): string;
+export declare function attachIdRefreshTokenToCookie(res: express.Response, token: string, expiry: number): void;
+export declare function getAccessTokenFromCookie(req: express.Request): string | undefined;
+export declare function getRefreshTokenFromCookie(req: express.Request): string | undefined;
+export declare function getIdRefreshTokenFromCookie(req: express.Request): string | undefined;
 /**
  * @param res
  * @param key
