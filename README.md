@@ -5,6 +5,8 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
+#### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice)
+
 #### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
 
 The library has the following features:
@@ -301,7 +303,6 @@ To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](
 - Enable this to work with mobile apps as well.
 - Add unit testing.
 - To implement info, debug and error logs in a better way.
-- Making this a standalone process that has an http interface to it.
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
