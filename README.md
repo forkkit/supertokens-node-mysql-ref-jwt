@@ -25,7 +25,7 @@ The library has the following features:
 
 #### If you like this project and want to use it, but for a different tech stack:
 - Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack. This is on a first come, first serve basis.
-- We have made this into a standalone http service as well: [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice).
+- We have made this into a standalone http service as well which you can use with any backend language of your choice: [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice).
 
 ## Index
 1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
