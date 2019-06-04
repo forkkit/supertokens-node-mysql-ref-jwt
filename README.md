@@ -271,6 +271,7 @@ config = {
         },
         refreshToken: {
             validity?: number, // in hours, default is 2400 (100 days). This determines how long a refresh token is alive for. So if your user is inactive for these many hours, they will be logged out.
+            removalCronjobInterval?: string, // in the same style as of crontab, but with an extra seconds field as well. Default is "0 0 0 1-31/7 * *" - every 7th day of the month from 1 through 31. Defines how often the cronjob that removes expired sessions from the db should run.
             renewTokenPath: string // this is the API path that needs to be called for refreshing a session. This needs to be a POST API. An example value is "/api/refreshtoken". This will also be the path of the refresh token cookie.
         }
     },
