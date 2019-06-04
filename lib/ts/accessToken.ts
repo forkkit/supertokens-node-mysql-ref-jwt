@@ -15,8 +15,6 @@ export async function init() {
     await SigningKey.init(config);
 }
 
-let a = 1;
-
 /**
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
