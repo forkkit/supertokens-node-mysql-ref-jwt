@@ -22,6 +22,7 @@ export declare type TypeInputConfig = {
         };
         refreshToken: {
             validity?: number;
+            removalCronjobInterval?: string;
             renewTokenPath: string;
         };
     };
@@ -59,6 +60,7 @@ export declare type TypeConfig = {
         };
         refreshToken: {
             validity: number;
+            removalCronjobInterval: string;
             renewTokenPath: string;
         };
     };

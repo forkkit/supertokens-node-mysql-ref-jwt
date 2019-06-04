@@ -1,6 +1,8 @@
 import { CronJob } from "cron";
 
+import Config from "../config";
 import { errorLogging, infoLogging } from "../helpers/logging";
+import { TypeConfig } from "../helpers/types";
 import oldRefreshTokenRemoval from "./oldRefreshTokenRemoval";
 
 /**
@@ -18,15 +20,23 @@ import oldRefreshTokenRemoval from "./oldRefreshTokenRemoval";
 export default class Cronjob {
     private static instance: Cronjob | undefined;
 
-    private constructor() {
+    private constructor(config: TypeConfig) {
+        const jobs = [
+            {
+                jobFunction: oldRefreshTokenRemoval,
+                interval: config.tokens.refreshToken.removalCronjobInterval,
+                description: "remove old expired refresh tokens"
+            }
+        ];
         jobs.forEach(job => {
             createNewJob(job.jobFunction, job.interval, job.description).start();
         });
     }
 
     static init() {
+        const config = Config.get();
         if (Cronjob.instance === undefined) {
-            Cronjob.instance = new Cronjob();
+            Cronjob.instance = new Cronjob(config);
         }
     }
 }
@@ -55,11 +65,3 @@ function createNewJob(job: Function, interval: string, jobDescription: string): 
         start: false
     });
 }
-
-const jobs = [
-    {
-        jobFunction: oldRefreshTokenRemoval,
-        interval: "0 0 0 1-31/7 * *", // run once every week starting from when this process starts. Feel free to change this as per your needs.
-        description: "remove old expired refresh tokens"
-    }
-];
