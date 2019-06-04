@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2019-05-31
+### Changed
+- Moved the cronjob timing param to the input config object
+
 ## [1.0.12] - 2019-05-31
 ### Changed
 - Update readme.
