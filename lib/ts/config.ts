@@ -208,10 +208,11 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenPath not passed"), false);
     }
     const removalCronjobInterval = sanitizeStringInput(refreshTokenInputConfig.removalCronjobInterval);
-    if (removalCronjobInterval === undefined) {
+    if (removalCronjobInterval !== undefined && typeof removalCronjobInterval !== "string") {
         throw generateError(
             AuthError.GENERAL_ERROR,
-            new Error("removalCronjobInterval does not have the correct type")
+            new Error("removalCronjobInterval does not have the correct type"),
+            false
         );
     }
     const refreshToken = {
@@ -393,7 +394,7 @@ const defaultConfig = {
                 max: 365 * 24,
                 default: 100 * 24
             },
-            removalCronjobInterval: "0 0 0 1-31/7 * *"
+            removalCronjobInterval: "0 0 0 1-31/7 * *" // every 7th day of a month starting from the 1st until the 31st
         }
     },
     cookie: {
