@@ -15,17 +15,9 @@ DIR=$( echo $_DIR | sed 's/\/.git\/hooks$//' )
 
 echo ""
 echo "$(tput setaf 3)Running pre-commit hook ... (you can omit this with --no-verify, but don't)$(tput sgr 0)"
-git diff --quiet
-hadNoNonStagedChanges=$?
 
-if ! [ $hadNoNonStagedChanges -eq 0 ]
-then
-   echo "$(tput setaf 3)* Stashing non-staged changes$(tput sgr 0)"
-   git stash --keep-index -u > /dev/null
-else
-   echo "No difference from previous commit. Proceeding to commit"
-   exit 0
-fi
+echo "$(tput setaf 3)* Stashing non-staged changes if any$(tput sgr 0)"
+stashed=$(git stash --keep-index -u)
 
 (cd $DIR/lib/; tsc -p tsconfig.json --noEmit > /dev/null)
 compiles=$?
@@ -55,9 +47,12 @@ else
     echo ""
 fi
 
-echo "$(tput setaf 3)* Undoing stashing$(tput sgr 0)"
-git stash apply > /dev/null
-git stash drop > /dev/null
+if [[ $stashed -eq "No local changes to save" ]]
+then
+   echo "$(tput setaf 3)* Undoing stashing$(tput sgr 0)"
+   git stash apply > /dev/null
+   git stash drop > /dev/null
+fi
 
 if [ $compiles -eq 0 ] && [ $formattedTs -eq 0 ] && [ $formattedJs -eq 0 ]
 then
