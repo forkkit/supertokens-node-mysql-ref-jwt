@@ -1,9 +1,12 @@
-import * as mysql from 'mysql';
+import * as mysql from "mysql";
 
-import Config from '../config';
-import { AuthError, generateError } from '../error';
-import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from './dbQueries';
-import { MySQLParamTypes, TypeConfig } from './types';
+import Config from "../config";
+import { AuthError, generateError } from "../error";
+import {
+    checkIfTableExists,
+    createTablesIfNotExists as createTablesIfNotExistsQueries
+} from "./dbQueries";
+import { MySQLParamTypes, TypeConfig } from "./types";
 
 /**
  * @description This is a singleton class since we need just one MySQL pool per node process.
@@ -34,7 +37,12 @@ export class Mysql {
     static getConnection(): Promise<mysql.PoolConnection> {
         return new Promise<mysql.PoolConnection>((resolve, reject) => {
             if (Mysql.instance === undefined) {
-                reject(generateError(AuthError.GENERAL_ERROR, new Error("mysql not initiated")));
+                reject(
+                    generateError(
+                        AuthError.GENERAL_ERROR,
+                        new Error("mysql not initiated")
+                    )
+                );
                 return;
             }
             Mysql.instance.pool.getConnection((err, connection) => {
@@ -53,7 +61,10 @@ export async function getConnection(): Promise<Connection> {
         const mysqlConnection = await Mysql.getConnection();
         return new Connection(mysqlConnection);
     } catch (err) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("error in connecting to mysql"));
+        throw generateError(
+            AuthError.GENERAL_ERROR,
+            new Error("error in connecting to mysql")
+        );
     }
 }
 
@@ -65,7 +76,7 @@ export class Connection {
     private isClosed = false;
     private destroyConnnection = false;
     private mysqlConnection: mysql.PoolConnection;
-    private currTransactionCount = 0;   // used to keep track of live transactions. so that in case a connection is closed prematurely, we can destroy it.
+    private currTransactionCount = 0; // used to keep track of live transactions. so that in case a connection is closed prematurely, we can destroy it.
 
     constructor(mysqlConnection: mysql.PoolConnection) {
         this.mysqlConnection = mysqlConnection;
@@ -73,35 +84,39 @@ export class Connection {
 
     executeQuery = (query: string, params: MySQLParamTypes[]): Promise<any> => {
         return new Promise<any>(async (resolve, reject) => {
-            this.mysqlConnection.query(query, params, (err, results, fields) => {
-                if (err) {
-                    reject(generateError(AuthError.GENERAL_ERROR, err));
-                    return;
+            this.mysqlConnection.query(
+                query,
+                params,
+                (err, results, fields) => {
+                    if (err) {
+                        reject(generateError(AuthError.GENERAL_ERROR, err));
+                        return;
+                    }
+                    resolve(results);
                 }
-                resolve(results);
-            });
+            );
         });
-    }
+    };
 
     private setDestroyConnection = () => {
         this.destroyConnnection = true;
-    }
+    };
 
     throwIfTransactionIsNotStarted = (message: string) => {
         if (this.currTransactionCount === 0) {
             throw generateError(AuthError.GENERAL_ERROR, new Error(message));
         }
-    }
+    };
 
     startTransaction = async () => {
         await this.executeQuery("START TRANSACTION", []);
         this.currTransactionCount += 1;
-    }
+    };
 
     commit = async () => {
         await this.executeQuery("COMMIT", []);
         this.currTransactionCount -= 1;
-    }
+    };
 
     closeConnection = () => {
         if (this.isClosed) {
@@ -124,7 +139,7 @@ export class Connection {
             // we intentially do not throw here.. but we log it.
             generateError(AuthError.GENERAL_ERROR, err);
         }
-    }
+    };
 }
 
 async function createTablesIfNotExists() {
@@ -133,7 +148,7 @@ async function createTablesIfNotExists() {
     let refreshTokensTableName = config.mysql.tables.refreshTokens;
     let connection = await getConnection();
     try {
-        // first we check if the tables exist so that if the given mysql user does not have the privilege of creatingt them, then it won't throw an error. 
+        // first we check if the tables exist so that if the given mysql user does not have the privilege of creatingt them, then it won't throw an error.
         try {
             await checkIfTableExists(connection, signingKeyTableName);
             await checkIfTableExists(connection, refreshTokensTableName);
@@ -142,7 +157,11 @@ async function createTablesIfNotExists() {
         } catch (err) {
             // tables probably don't exist. so we will continue..
         }
-        await createTablesIfNotExistsQueries(connection, signingKeyTableName, refreshTokensTableName);
+        await createTablesIfNotExistsQueries(
+            connection,
+            signingKeyTableName,
+            refreshTokensTableName
+        );
     } finally {
         connection.closeConnection();
     }

@@ -1,19 +1,33 @@
-import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from 'crypto';
-import * as uuid from 'uuid';
-import * as validator from 'validator';
+import {
+    createCipheriv,
+    createDecipheriv,
+    createHash,
+    createHmac,
+    pbkdf2,
+    randomBytes
+} from "crypto";
+import * as uuid from "uuid";
+import * as validator from "validator";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
  */
 export async function generateNewSigningKey(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
-        pbkdf2(randomBytes(64), randomBytes(64), 100, 32, "sha512", (err, key) => {
-            if (err) {
-                reject(err);
-                return;
+        pbkdf2(
+            randomBytes(64),
+            randomBytes(64),
+            100,
+            32,
+            "sha512",
+            (err, key) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(key.toString("base64"));
             }
-            resolve(key.toString("base64"));
-        });
+        );
     });
 }
 
@@ -22,7 +36,9 @@ export function generateUUID(): string {
 }
 
 export function hash(toHash: string): string {
-    return createHash("sha256").update(toHash).digest("hex");
+    return createHash("sha256")
+        .update(toHash)
+        .digest("hex");
 }
 
 export function hmac(text: string, key: string) {
@@ -36,7 +52,10 @@ export function hmac(text: string, key: string) {
  * @param masterKey key used to encrypt
  * @returns String encrypted text, base64 encoded
  */
-export async function encrypt(text: string, masterkey: string): Promise<string> {
+export async function encrypt(
+    text: string,
+    masterkey: string
+): Promise<string> {
     // random initialization vector
     const iv = randomBytes(16);
 
@@ -58,16 +77,19 @@ export async function encrypt(text: string, masterkey: string): Promise<string> 
     });
 
     // AES 256 GCM Mode
-    const cipher = createCipheriv('aes-256-gcm', key, iv);
+    const cipher = createCipheriv("aes-256-gcm", key, iv);
 
     // encrypt the given text
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+    const encrypted = Buffer.concat([
+        cipher.update(text, "utf8"),
+        cipher.final()
+    ]);
 
     // extract the auth tag
     const tag = cipher.getAuthTag();
 
     // generate output
-    return Buffer.concat([salt, iv, tag, encrypted]).toString('base64');
+    return Buffer.concat([salt, iv, tag, encrypted]).toString("base64");
 }
 
 /**
@@ -78,7 +100,7 @@ export async function encrypt(text: string, masterkey: string): Promise<string> 
  */
 export async function decrypt(encdata: string, masterkey: string) {
     // base64 decoding
-    const bData = Buffer.from(encdata, 'base64');
+    const bData = Buffer.from(encdata, "base64");
 
     // convert data to buffers
     const salt = bData.slice(0, 64);
@@ -88,7 +110,7 @@ export async function decrypt(encdata: string, masterkey: string) {
 
     // derive key using; 32 byte key length
     const key = await new Promise<Buffer>((resolve, reject) => {
-        pbkdf2(masterkey, salt, 100, 32, 'sha512', (err, key) => {
+        pbkdf2(masterkey, salt, 100, 32, "sha512", (err, key) => {
             if (err) {
                 reject(err);
                 return;
@@ -98,18 +120,19 @@ export async function decrypt(encdata: string, masterkey: string) {
     });
 
     // AES 256 GCM Mode
-    const decipher = createDecipheriv('aes-256-gcm', key, iv);
+    const decipher = createDecipheriv("aes-256-gcm", key, iv);
     decipher.setAuthTag(tag);
 
     // encrypt the given text
-    const decrypted = decipher.update(text, 'binary', 'utf8') + decipher.final('utf8');
+    const decrypted =
+        decipher.update(text, "binary", "utf8") + decipher.final("utf8");
 
     return decrypted;
 }
 
 /**
- * 
- * @param field 
+ *
+ * @param field
  */
 export function sanitizeStringInput(field: any): string | undefined {
     if (field === "") {
@@ -121,13 +144,13 @@ export function sanitizeStringInput(field: any): string | undefined {
     try {
         let result = validator.trim(field);
         return result;
-    } catch (err) { }
+    } catch (err) {}
     return undefined;
 }
 
 /**
- * 
- * @param field 
+ *
+ * @param field
  */
 export function sanitizeNumberInput(field: any): number | undefined {
     if (typeof field === "number") {
@@ -142,13 +165,13 @@ export function sanitizeNumberInput(field: any): number | undefined {
             return undefined;
         }
         return result;
-    } catch (err) { }
+    } catch (err) {}
     return undefined;
 }
 
 /**
- * 
- * @param field 
+ *
+ * @param field
  */
 export function sanitizeBooleanInput(field: any): boolean | undefined {
     if (field === true || field === false) {

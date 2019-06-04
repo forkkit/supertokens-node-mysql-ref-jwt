@@ -1,5 +1,5 @@
-import { errorLogging } from './helpers/logging';
-import { TypeAuthError } from './helpers/types';
+import { errorLogging } from "./helpers/logging";
+import { TypeAuthError } from "./helpers/types";
 
 const ERROR_MAGIC = "ndskajfasndlfkj435234krjdsa";
 
@@ -24,5 +24,5 @@ export class AuthError {
 
     static isErrorFromAuth = (err: any): err is TypeAuthError => {
         return err.errMagic === ERROR_MAGIC;
-    }
+    };
 }

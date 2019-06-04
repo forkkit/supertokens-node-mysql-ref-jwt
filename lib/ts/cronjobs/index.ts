@@ -1,7 +1,7 @@
-import { CronJob } from 'cron';
+import { CronJob } from "cron";
 
-import { errorLogging, infoLogging } from '../helpers/logging';
-import oldRefreshTokenRemoval from './oldRefreshTokenRemoval';
+import { errorLogging, infoLogging } from "../helpers/logging";
+import oldRefreshTokenRemoval from "./oldRefreshTokenRemoval";
 
 /**
  *  Seconds: 0-59
@@ -20,7 +20,11 @@ export default class Cronjob {
 
     private constructor() {
         jobs.forEach(job => {
-            createNewJob(job.jobFunction, job.interval, job.description).start();
+            createNewJob(
+                job.jobFunction,
+                job.interval,
+                job.description
+            ).start();
         });
     }
 
@@ -32,12 +36,16 @@ export default class Cronjob {
 }
 
 /**
- * 
- * @param job 
- * @param interval 
- * @param jobDescription 
+ *
+ * @param job
+ * @param interval
+ * @param jobDescription
  */
-function createNewJob(job: Function, interval: string, jobDescription: string): CronJob {
+function createNewJob(
+    job: Function,
+    interval: string,
+    jobDescription: string
+): CronJob {
     return new CronJob({
         cronTime: interval,
         onTick: async () => {
@@ -46,7 +54,8 @@ function createNewJob(job: Function, interval: string, jobDescription: string): 
                 const startLog = `cron job started : ${jobDescription}`;
                 infoLogging(startLog);
                 await job();
-                const endLog = `cron job ended : ${jobDescription}. time taken : ${Date.now() - startTime}ms`;
+                const endLog = `cron job ended : ${jobDescription}. time taken : ${Date.now() -
+                    startTime}ms`;
                 infoLogging(endLog);
             } catch (err) {
                 errorLogging(err);
@@ -56,8 +65,10 @@ function createNewJob(job: Function, interval: string, jobDescription: string): 
     });
 }
 
-const jobs = [{
-    jobFunction: oldRefreshTokenRemoval,
-    interval: "0 0 0 1-31/7 * *",   // run once every week starting from when this process starts. Feel free to change this as per your needs.
-    description: "remove old expired refresh tokens"
-}];
+const jobs = [
+    {
+        jobFunction: oldRefreshTokenRemoval,
+        interval: "0 0 0 1-31/7 * *", // run once every week starting from when this process starts. Feel free to change this as per your needs.
+        description: "remove old expired refresh tokens"
+    }
+];

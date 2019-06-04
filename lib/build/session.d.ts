@@ -1,4 +1,4 @@
-import { TypeInputConfig } from './helpers/types';
+import { TypeInputConfig } from "./helpers/types";
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
  * Please create a database in your mysql instance before calling this function
@@ -86,13 +86,13 @@ export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
  */
 export declare function revokeSessionUsingSessionHandle(sessionHandle: string): Promise<boolean>;
 /**
-    * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself.
-    * @returns session data as provided by the user earlier
-    * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
-    */
+ * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself.
+ * @returns session data as provided by the user earlier
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
 export declare function getSessionData(sessionHandle: string): Promise<any>;
 /**
-     * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
-    * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
-    */
+ * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
 export declare function updateSessionData(sessionHandle: string, newSessionData: any): Promise<void>;

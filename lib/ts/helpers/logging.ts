@@ -1,7 +1,7 @@
-import Config from '../config';
+import Config from "../config";
 
 /**
- * @param err 
+ * @param err
  * @throws AuthError GENERAL_ERROR
  */
 export function errorLogging(err: any) {
@@ -12,7 +12,7 @@ export function errorLogging(err: any) {
 }
 
 /**
- * @param info 
+ * @param info
  * @throws AuthError GENERAL_ERROR
  */
 export function infoLogging(info: any) {
