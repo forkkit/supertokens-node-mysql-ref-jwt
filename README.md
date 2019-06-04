@@ -295,7 +295,12 @@ This library is written in TypeScript (TS). When you make any changes to the .ts
 ```bash
 tsc -p tsconfig.json
 ```
-If you make any changes to index.ts in the root of this repo, once you compile it to .js, remember to change the import/export path from /lib/ts/* to /lib/build/* in the .js file.
+If you make any changes to index.ts in the root of this repo, once you compile it to .js, remember to change the import/export path from /lib/ts/* to /lib/build/* in the generated .js file (index.js in the root folder).
+
+Before commiting, please install the [pre-commit hooks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/hooks/README.md) that ensure consistent formatting and no TS errors.
+```bash
+cd hooks && ./pre-commit-hook-install.sh
+```
 
 To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/cookie.ts)
 
