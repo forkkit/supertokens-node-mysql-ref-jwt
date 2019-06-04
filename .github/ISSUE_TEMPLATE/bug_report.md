@@ -4,7 +4,7 @@ about: Create a report to help us improve
 
 ---
 
-Hey! Thanks for contributing to this project. Before you report this issue, we would like you to quickly fill up this template with as much info as you can provide so that we can have clear idea what we are dealing with. Remember, this is _not_ a place to ask question. For that email us at team@supertokens.io
+Hey! Thanks for contributing to this project. Before you report this issue, we would like you to quickly fill up this template with as much info as you can provide so that we can have clear idea what we are dealing with. Remember, this is _not_ a place to ask question. For that, email us at team@supertokens.io
 
 ### Subject of the issue
 A clear and concise description of what the issue is about.
@@ -31,4 +31,4 @@ Tell us what happens instead
 
 ### Other information:
 ### Error
-``paste the relevent error that you got``
+``paste the error that you got, if any``
