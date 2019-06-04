@@ -47,7 +47,7 @@ else
     echo ""
 fi
 
-if [ $stashed == 'No local changes to save' ]
+if [[ $stashed -eq "No local changes to save" ]]
 then
    echo "$(tput setaf 3)* Undoing stashing$(tput sgr 0)"
    git stash apply > /dev/null
