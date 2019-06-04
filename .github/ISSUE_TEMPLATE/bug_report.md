@@ -1,3 +1,9 @@
+---
+name: Bug report
+about: Create a report to help us improve
+
+---
+
 Hey! Thanks for contributing to this project. Before you report this issue, we would like you to quickly fill up this template
 with as much info as you can provide so that we can have clear idea what we are dealing with. Remember, this is _not_ a place 
 to ask question. For that email us at team@supertokens.io
