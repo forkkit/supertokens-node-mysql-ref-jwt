@@ -8,11 +8,11 @@ Describe the big picture of your changes here to communicate to the maintainers 
 ### Types of changes
 
 What types of changes does your code introduce to supertokens-node-mysql-ref-jwt?
-_Put an `x` in the boxes that apply_
+_Put an `x` in the boxes that apply and add the issue number in # (if applicable)_
 
-- [ ] Bugfix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Bugfix (non-breaking change which fixes an issue) Fixes #
+- [ ] New feature (non-breaking change which adds functionality) Fixes #
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected) Fixes #
 
 ### Checklist
 
@@ -28,4 +28,4 @@ _Put an `x` in the boxes that apply. You can also fill these out after creating 
 If this is a relatively large or complex change, kick off the discussion by explaining why you chose the solution you did and what alternatives you considered, etc...
 
 
-:heart: Thank you!
+Thank you! :heart:
