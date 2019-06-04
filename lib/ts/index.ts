@@ -37,35 +37,14 @@ export async function createNewSession(
     jwtPayload?: any,
     sessionData?: any
 ): Promise<Session> {
-    let response = await SessionFunctions.createNewSession(
-        userId,
-        jwtPayload,
-        sessionData
-    );
+    let response = await SessionFunctions.createNewSession(userId, jwtPayload, sessionData);
 
     // attach tokens to cookies
-    attachAccessTokenToCookie(
-        res,
-        response.accessToken.value,
-        response.accessToken.expires
-    );
-    attachRefreshTokenToCookie(
-        res,
-        response.refreshToken.value,
-        response.refreshToken.expires
-    );
-    attachIdRefreshTokenToCookie(
-        res,
-        response.idRefreshToken.value,
-        response.idRefreshToken.expires
-    );
+    attachAccessTokenToCookie(res, response.accessToken.value, response.accessToken.expires);
+    attachRefreshTokenToCookie(res, response.refreshToken.value, response.refreshToken.expires);
+    attachIdRefreshTokenToCookie(res, response.idRefreshToken.value, response.idRefreshToken.expires);
 
-    return new Session(
-        response.session.handle,
-        response.session.userId,
-        response.session.jwtPayload,
-        res
-    );
+    return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
 }
 
 /**
@@ -73,52 +52,28 @@ export async function createNewSession(
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  * @sideEffects may remove cookies, or change the accessToken.
  */
-export async function getSession(
-    req: express.Request,
-    res: express.Response
-): Promise<Session> {
+export async function getSession(req: express.Request, res: express.Response): Promise<Session> {
     let idRefreshToken = getIdRefreshTokenFromCookie(req);
     if (idRefreshToken === undefined) {
         // This means refresh token is not going to be there either, so the session does not exist.
         clearSessionFromCookie(res);
-        throw generateError(
-            AuthError.UNAUTHORISED,
-            new Error("missing auth tokens in cookies")
-        );
+        throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
     }
 
     let accessToken = getAccessTokenFromCookie(req);
     if (accessToken === undefined) {
         // maybe the access token has expired.
-        throw generateError(
-            AuthError.TRY_REFRESH_TOKEN,
-            new Error("access token missing in cookies")
-        );
+        throw generateError(AuthError.TRY_REFRESH_TOKEN, new Error("access token missing in cookies"));
     }
 
     try {
-        let response = await SessionFunctions.getSession(
-            idRefreshToken,
-            accessToken
-        );
+        let response = await SessionFunctions.getSession(idRefreshToken, accessToken);
         if (response.newAccessToken !== undefined) {
-            attachAccessTokenToCookie(
-                res,
-                response.newAccessToken.value,
-                response.newAccessToken.expires
-            );
+            attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
         }
-        return new Session(
-            response.session.handle,
-            response.session.userId,
-            response.session.jwtPayload,
-            res
-        );
+        return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
     } catch (err) {
-        if (
-            AuthError.isErrorFromAuth(err) &&
-            err.errType === AuthError.UNAUTHORISED
-        ) {
+        if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
             clearSessionFromCookie(res);
         }
         throw err;
@@ -130,67 +85,32 @@ export async function getSession(
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
  * @sideEffects may remove cookies, or change the accessToken and refreshToken.
  */
-export async function refreshSession(
-    req: express.Request,
-    res: express.Response
-): Promise<Session> {
+export async function refreshSession(req: express.Request, res: express.Response): Promise<Session> {
     let config = Config.get();
 
     let refreshToken = getRefreshTokenFromCookie(req);
     let idRefreshToken = getIdRefreshTokenFromCookie(req);
     if (refreshToken === undefined || idRefreshToken === undefined) {
         clearSessionFromCookie(res);
-        throw generateError(
-            AuthError.UNAUTHORISED,
-            new Error("missing auth tokens in cookies")
-        );
+        throw generateError(AuthError.UNAUTHORISED, new Error("missing auth tokens in cookies"));
     }
 
     try {
-        let response = await SessionFunctions.refreshSession(
-            idRefreshToken,
-            refreshToken
-        );
+        let response = await SessionFunctions.refreshSession(idRefreshToken, refreshToken);
         if (response.sessionTheftDetected) {
             // cookies clearing happens when catching unauthorised error
-            config.onTokenTheftDetection(
-                response.session.userId,
-                response.session.handle
-            );
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("session theft detected")
-            );
+            config.onTokenTheftDetection(response.session.userId, response.session.handle);
+            throw generateError(AuthError.UNAUTHORISED, new Error("session theft detected"));
         } else {
             // attach tokens to cookies
-            attachAccessTokenToCookie(
-                res,
-                response.newAccessToken.value,
-                response.newAccessToken.expires
-            );
-            attachRefreshTokenToCookie(
-                res,
-                response.newRefreshToken.value,
-                response.newRefreshToken.expires
-            );
-            attachIdRefreshTokenToCookie(
-                res,
-                response.newIdRefreshToken.value,
-                response.newIdRefreshToken.expires
-            );
+            attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
+            attachRefreshTokenToCookie(res, response.newRefreshToken.value, response.newRefreshToken.expires);
+            attachIdRefreshTokenToCookie(res, response.newIdRefreshToken.value, response.newIdRefreshToken.expires);
 
-            return new Session(
-                response.session.handle,
-                response.session.userId,
-                response.session.jwtPayload,
-                res
-            );
+            return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
         }
     } catch (err) {
-        if (
-            AuthError.isErrorFromAuth(err) &&
-            err.errType === AuthError.UNAUTHORISED
-        ) {
+        if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
             clearSessionFromCookie(res);
         }
         throw err;
@@ -224,12 +144,7 @@ export class Session {
     private jwtUserPayload: any;
     private res: express.Response;
 
-    constructor(
-        sessionHandle: string,
-        userId: string,
-        jwtUserPayload: any,
-        res: express.Response
-    ) {
+    constructor(sessionHandle: string, userId: string, jwtUserPayload: any, res: express.Response) {
         this.sessionHandle = sessionHandle;
         this.userId = userId;
         this.jwtUserPayload = jwtUserPayload;
@@ -243,11 +158,7 @@ export class Session {
      * @throw AuthError GENERAL_ERROR
      */
     revokeSession = async () => {
-        if (
-            await SessionFunctions.revokeSessionUsingSessionHandle(
-                this.sessionHandle
-            )
-        ) {
+        if (await SessionFunctions.revokeSessionUsingSessionHandle(this.sessionHandle)) {
             clearSessionFromCookie(this.res);
         }
     };
@@ -262,10 +173,7 @@ export class Session {
         try {
             return await SessionFunctions.getSessionData(this.sessionHandle);
         } catch (err) {
-            if (
-                AuthError.isErrorFromAuth(err) &&
-                err.errType === AuthError.UNAUTHORISED
-            ) {
+            if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
                 clearSessionFromCookie(this.res);
             }
             throw err;
@@ -280,15 +188,9 @@ export class Session {
      */
     updateSessionData = async (newSessionData: any) => {
         try {
-            await SessionFunctions.updateSessionData(
-                this.sessionHandle,
-                newSessionData
-            );
+            await SessionFunctions.updateSessionData(this.sessionHandle, newSessionData);
         } catch (err) {
-            if (
-                AuthError.isErrorFromAuth(err) &&
-                err.errType === AuthError.UNAUTHORISED
-            ) {
+            if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
                 clearSessionFromCookie(this.res);
             }
             throw err;

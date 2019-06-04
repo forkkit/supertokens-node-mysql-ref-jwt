@@ -1,11 +1,4 @@
-import {
-    createCipheriv,
-    createDecipheriv,
-    createHash,
-    createHmac,
-    pbkdf2,
-    randomBytes
-} from "crypto";
+import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from "crypto";
 import * as uuid from "uuid";
 import * as validator from "validator";
 
@@ -14,20 +7,13 @@ import * as validator from "validator";
  */
 export async function generateNewSigningKey(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
-        pbkdf2(
-            randomBytes(64),
-            randomBytes(64),
-            100,
-            32,
-            "sha512",
-            (err, key) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve(key.toString("base64"));
+        pbkdf2(randomBytes(64), randomBytes(64), 100, 32, "sha512", (err, key) => {
+            if (err) {
+                reject(err);
+                return;
             }
-        );
+            resolve(key.toString("base64"));
+        });
     });
 }
 
@@ -52,10 +38,7 @@ export function hmac(text: string, key: string) {
  * @param masterKey key used to encrypt
  * @returns String encrypted text, base64 encoded
  */
-export async function encrypt(
-    text: string,
-    masterkey: string
-): Promise<string> {
+export async function encrypt(text: string, masterkey: string): Promise<string> {
     // random initialization vector
     const iv = randomBytes(16);
 
@@ -80,10 +63,7 @@ export async function encrypt(
     const cipher = createCipheriv("aes-256-gcm", key, iv);
 
     // encrypt the given text
-    const encrypted = Buffer.concat([
-        cipher.update(text, "utf8"),
-        cipher.final()
-    ]);
+    const encrypted = Buffer.concat([cipher.update(text, "utf8"), cipher.final()]);
 
     // extract the auth tag
     const tag = cipher.getAuthTag();
@@ -124,8 +104,7 @@ export async function decrypt(encdata: string, masterkey: string) {
     decipher.setAuthTag(tag);
 
     // encrypt the given text
-    const decrypted =
-        decipher.update(text, "binary", "utf8") + decipher.final("utf8");
+    const decrypted = decipher.update(text, "binary", "utf8") + decipher.final("utf8");
 
     return decrypted;
 }

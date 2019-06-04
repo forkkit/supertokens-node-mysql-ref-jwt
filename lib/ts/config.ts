@@ -1,14 +1,6 @@
 import { AuthError, generateError } from "./error";
-import {
-    TypeConfig,
-    TypeGetSigningKeyUserFunction,
-    TypeInputConfig
-} from "./helpers/types";
-import {
-    sanitizeBooleanInput,
-    sanitizeNumberInput,
-    sanitizeStringInput
-} from "./helpers/utils";
+import { TypeConfig, TypeGetSigningKeyUserFunction, TypeInputConfig } from "./helpers/types";
+import { sanitizeBooleanInput, sanitizeNumberInput, sanitizeStringInput } from "./helpers/utils";
 
 /**
  * @class Config
@@ -28,9 +20,7 @@ export default class Config {
      */
     static init(config: TypeInputConfig) {
         if (Config.instance === undefined) {
-            Config.instance = new Config(
-                setDefaults(validateAndNormalise(config))
-            );
+            Config.instance = new Config(setDefaults(validateAndNormalise(config)));
         }
     }
 
@@ -38,9 +28,7 @@ export default class Config {
         if (Config.instance === undefined) {
             throw generateError(
                 AuthError.GENERAL_ERROR,
-                new Error(
-                    "configs not set. Please call the init function before using this library"
-                ),
+                new Error("configs not set. Please call the init function before using this library"),
                 false
             );
         }
@@ -54,19 +42,13 @@ export default class Config {
  */
 const validateAndNormalise = (config: any): TypeInputConfig => {
     if (config === null || typeof config !== "object") {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("passed config is not an object"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("passed config is not an object"), false);
     }
     const mysqlInputConfig = config.mysql;
     if (typeof mysqlInputConfig !== "object") {
         throw generateError(
             AuthError.GENERAL_ERROR,
-            new Error(
-                "mysql config not passed. user, password and database are required"
-            ),
+            new Error("mysql config not passed. user, password and database are required"),
             false
         );
     }
@@ -74,30 +56,16 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     const port = sanitizeNumberInput(mysqlInputConfig.port);
     const user = sanitizeStringInput(mysqlInputConfig.user);
     if (user === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("mysql config error. user not passed"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. user not passed"), false);
     }
     const password = sanitizeStringInput(mysqlInputConfig.password);
     if (password === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("mysql config error. password not passed"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. password not passed"), false);
     }
-    const connectionLimit = sanitizeNumberInput(
-        mysqlInputConfig.connectionLimit
-    );
+    const connectionLimit = sanitizeNumberInput(mysqlInputConfig.connectionLimit);
     const database = sanitizeStringInput(mysqlInputConfig.database);
     if (database === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("mysql config error. database not passed"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("mysql config error. database not passed"), false);
     }
     let tables:
         | {
@@ -107,12 +75,8 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         | undefined;
     const tablesMysqlInputConfig = mysqlInputConfig.tables;
     if (tablesMysqlInputConfig !== undefined) {
-        const signingKey = sanitizeStringInput(
-            tablesMysqlInputConfig.signingKey
-        );
-        const refreshTokens = sanitizeStringInput(
-            tablesMysqlInputConfig.refreshTokens
-        );
+        const signingKey = sanitizeStringInput(tablesMysqlInputConfig.signingKey);
+        const refreshTokens = sanitizeStringInput(tablesMysqlInputConfig.refreshTokens);
         tables = {
             signingKey,
             refreshTokens
@@ -152,15 +116,9 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             | undefined;
         if (signingKeyInputConfig !== undefined) {
             const dynamic = sanitizeBooleanInput(signingKeyInputConfig.dynamic);
-            let updateInterval = sanitizeNumberInput(
-                signingKeyInputConfig.updateInterval
-            );
+            let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
             if (updateInterval !== undefined) {
-                if (
-                    updateInterval >
-                    defaultConfig.tokens.accessToken.signingKey.updateInterval
-                        .max
-                ) {
+                if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
                     throw generateError(
                         AuthError.GENERAL_ERROR,
                         new Error(
@@ -168,11 +126,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                         ),
                         false
                     );
-                } else if (
-                    updateInterval <
-                    defaultConfig.tokens.accessToken.signingKey.updateInterval
-                        .min
-                ) {
+                } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
                     throw generateError(
                         AuthError.GENERAL_ERROR,
                         new Error(
@@ -186,9 +140,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             if (get !== undefined && typeof get !== "function") {
                 throw generateError(
                     AuthError.GENERAL_ERROR,
-                    new Error(
-                        "config > tokens > accessToken > get must be a function"
-                    ),
+                    new Error("config > tokens > accessToken > get must be a function"),
                     false
                 );
             }
@@ -208,9 +160,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                     ),
                     false
                 );
-            } else if (
-                validity < defaultConfig.tokens.accessToken.validity.min
-            ) {
+            } else if (validity < defaultConfig.tokens.accessToken.validity.min) {
                 throw generateError(
                     AuthError.GENERAL_ERROR,
                     new Error(
@@ -229,9 +179,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     if (typeof refreshTokenInputConfig !== "object") {
         throw generateError(
             AuthError.GENERAL_ERROR,
-            new Error(
-                "refreshToken config not passed. renewTokenPath is required"
-            ),
+            new Error("refreshToken config not passed. renewTokenPath is required"),
             false
         );
     }
@@ -255,15 +203,9 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             );
         }
     }
-    const renewTokenPath = sanitizeStringInput(
-        refreshTokenInputConfig.renewTokenPath
-    );
+    const renewTokenPath = sanitizeStringInput(refreshTokenInputConfig.renewTokenPath);
     if (renewTokenPath === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("renewTokenPath not passed"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("renewTokenPath not passed"), false);
     }
     const refreshToken = {
         renewTokenPath,
@@ -281,18 +223,14 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         if (info !== undefined && typeof info !== "function") {
             throw generateError(
                 AuthError.GENERAL_ERROR,
-                new Error(
-                    "logging config error. info option passed must be a function"
-                ),
+                new Error("logging config error. info option passed must be a function"),
                 false
             );
         }
         if (error !== undefined && typeof error !== "function") {
             throw generateError(
                 AuthError.GENERAL_ERROR,
-                new Error(
-                    "logging config error. error option passed must be a function"
-                ),
+                new Error("logging config error. error option passed must be a function"),
                 false
             );
         }
@@ -305,11 +243,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     const domain = sanitizeStringInput(cookieInputConfig.domain);
     const secure = sanitizeBooleanInput(cookieInputConfig.secure);
     if (domain === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("domain parameter for cookie not passed"),
-            false
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("domain parameter for cookie not passed"), false);
     }
     const cookie = {
         domain,
@@ -319,11 +253,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     let onTokenTheftDetection;
     if (onTokenTheftDetectionFromUser !== undefined) {
         if (typeof onTokenTheftDetectionFromUser !== "function") {
-            throw generateError(
-                AuthError.GENERAL_ERROR,
-                new Error("onTokenTheftDetection must be a function"),
-                false
-            );
+            throw generateError(AuthError.GENERAL_ERROR, new Error("onTokenTheftDetection must be a function"), false);
         }
         onTokenTheftDetection = onTokenTheftDetectionFromUser;
     }
@@ -344,20 +274,14 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
             port: config.mysql.port || defaultConfig.mysql.port,
             user: config.mysql.user,
             password: config.mysql.password,
-            connectionLimit:
-                config.mysql.connectionLimit ||
-                defaultConfig.mysql.connectionLimit,
+            connectionLimit: config.mysql.connectionLimit || defaultConfig.mysql.connectionLimit,
             database: config.mysql.database,
             tables:
                 config.mysql.tables === undefined
                     ? defaultConfig.mysql.tables
                     : {
-                          refreshTokens:
-                              config.mysql.tables.refreshTokens ||
-                              defaultConfig.mysql.tables.refreshTokens,
-                          signingKey:
-                              config.mysql.tables.signingKey ||
-                              defaultConfig.mysql.tables.signingKey
+                          refreshTokens: config.mysql.tables.refreshTokens || defaultConfig.mysql.tables.refreshTokens,
+                          signingKey: config.mysql.tables.signingKey || defaultConfig.mysql.tables.signingKey
                       }
         },
         tokens: {
@@ -365,32 +289,20 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                 config.tokens.accessToken === undefined
                     ? {
                           signingKey: {
-                              dynamic:
-                                  defaultConfig.tokens.accessToken.signingKey
-                                      .dynamic,
+                              dynamic: defaultConfig.tokens.accessToken.signingKey.dynamic,
                               updateInterval:
-                                  defaultConfig.tokens.accessToken.signingKey
-                                      .updateInterval.default *
-                                  60 *
-                                  60 *
-                                  1000,
+                                  defaultConfig.tokens.accessToken.signingKey.updateInterval.default * 60 * 60 * 1000,
                               get: undefined
                           },
-                          validity:
-                              defaultConfig.tokens.accessToken.validity
-                                  .default * 1000
+                          validity: defaultConfig.tokens.accessToken.validity.default * 1000
                       }
                     : {
                           signingKey:
                               config.tokens.accessToken.signingKey === undefined
                                   ? {
-                                        dynamic:
-                                            defaultConfig.tokens.accessToken
-                                                .signingKey.dynamic,
+                                        dynamic: defaultConfig.tokens.accessToken.signingKey.dynamic,
                                         updateInterval:
-                                            defaultConfig.tokens.accessToken
-                                                .signingKey.updateInterval
-                                                .default *
+                                            defaultConfig.tokens.accessToken.signingKey.updateInterval.default *
                                             60 *
                                             60 *
                                             1000,
@@ -398,35 +310,24 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                                     }
                                   : {
                                         dynamic:
-                                            config.tokens.accessToken.signingKey
-                                                .dynamic === undefined
-                                                ? defaultConfig.tokens
-                                                      .accessToken.signingKey
-                                                      .dynamic
-                                                : config.tokens.accessToken
-                                                      .signingKey.dynamic,
+                                            config.tokens.accessToken.signingKey.dynamic === undefined
+                                                ? defaultConfig.tokens.accessToken.signingKey.dynamic
+                                                : config.tokens.accessToken.signingKey.dynamic,
                                         updateInterval:
-                                            (config.tokens.accessToken
-                                                .signingKey.updateInterval ||
-                                                defaultConfig.tokens.accessToken
-                                                    .signingKey.updateInterval
-                                                    .default) *
+                                            (config.tokens.accessToken.signingKey.updateInterval ||
+                                                defaultConfig.tokens.accessToken.signingKey.updateInterval.default) *
                                             60 *
                                             60 *
                                             1000,
-                                        get:
-                                            config.tokens.accessToken.signingKey
-                                                .get
+                                        get: config.tokens.accessToken.signingKey.get
                                     },
                           validity:
                               (config.tokens.accessToken.validity ||
-                                  defaultConfig.tokens.accessToken.validity
-                                      .default) * 1000
+                                  defaultConfig.tokens.accessToken.validity.default) * 1000
                       },
             refreshToken: {
                 validity:
-                    (config.tokens.refreshToken.validity ||
-                        defaultConfig.tokens.refreshToken.validity.default) *
+                    (config.tokens.refreshToken.validity || defaultConfig.tokens.refreshToken.validity.default) *
                     60 *
                     60 *
                     1000,
@@ -434,22 +335,14 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
             }
         },
         cookie: {
-            secure:
-                config.cookie.secure === undefined
-                    ? defaultConfig.cookie.secure
-                    : config.cookie.secure,
+            secure: config.cookie.secure === undefined ? defaultConfig.cookie.secure : config.cookie.secure,
             domain: config.cookie.domain
         },
         logging: {
-            info:
-                config.logging !== undefined ? config.logging.info : undefined,
-            error:
-                config.logging !== undefined ? config.logging.error : undefined
+            info: config.logging !== undefined ? config.logging.info : undefined,
+            error: config.logging !== undefined ? config.logging.error : undefined
         },
-        onTokenTheftDetection:
-            config.onTokenTheftDetection === undefined
-                ? () => {}
-                : config.onTokenTheftDetection
+        onTokenTheftDetection: config.onTokenTheftDetection === undefined ? () => {} : config.onTokenTheftDetection
     };
 };
 

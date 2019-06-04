@@ -12,26 +12,8 @@ const idRefreshTokenCookieKey = "sIdRefreshToken";
  */
 export function clearSessionFromCookie(res: express.Response) {
     let config = Config.get();
-    setCookie(
-        res,
-        accessTokenCookieKey,
-        "",
-        config.cookie.domain,
-        config.cookie.secure,
-        true,
-        0,
-        "/"
-    );
-    setCookie(
-        res,
-        idRefreshTokenCookieKey,
-        "",
-        config.cookie.domain,
-        false,
-        false,
-        0,
-        "/"
-    );
+    setCookie(res, accessTokenCookieKey, "", config.cookie.domain, config.cookie.secure, true, 0, "/");
+    setCookie(res, idRefreshTokenCookieKey, "", config.cookie.domain, false, false, 0, "/");
     setCookie(
         res,
         refreshTokenCookieKey,
@@ -44,29 +26,12 @@ export function clearSessionFromCookie(res: express.Response) {
     );
 }
 
-export function attachAccessTokenToCookie(
-    res: express.Response,
-    token: string,
-    expiry: number
-) {
+export function attachAccessTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
-    setCookie(
-        res,
-        accessTokenCookieKey,
-        token,
-        config.cookie.domain,
-        config.cookie.secure,
-        true,
-        expiry,
-        "/"
-    );
+    setCookie(res, accessTokenCookieKey, token, config.cookie.domain, config.cookie.secure, true, expiry, "/");
 }
 
-export function attachRefreshTokenToCookie(
-    res: express.Response,
-    token: string,
-    expiry: number
-) {
+export function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(
         res,
@@ -80,39 +45,20 @@ export function attachRefreshTokenToCookie(
     );
 }
 
-export function attachIdRefreshTokenToCookie(
-    res: express.Response,
-    token: string,
-    expiry: number
-) {
+export function attachIdRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
-    setCookie(
-        res,
-        idRefreshTokenCookieKey,
-        token,
-        config.cookie.domain,
-        false,
-        false,
-        expiry,
-        "/"
-    );
+    setCookie(res, idRefreshTokenCookieKey, token, config.cookie.domain, false, false, expiry, "/");
 }
 
-export function getAccessTokenFromCookie(
-    req: express.Request
-): string | undefined {
+export function getAccessTokenFromCookie(req: express.Request): string | undefined {
     return getCookieValue(req, accessTokenCookieKey);
 }
 
-export function getRefreshTokenFromCookie(
-    req: express.Request
-): string | undefined {
+export function getRefreshTokenFromCookie(req: express.Request): string | undefined {
     return getCookieValue(req, refreshTokenCookieKey);
 }
 
-export function getIdRefreshTokenFromCookie(
-    req: express.Request
-): string | undefined {
+export function getIdRefreshTokenFromCookie(req: express.Request): string | undefined {
     return getCookieValue(req, idRefreshTokenCookieKey);
 }
 
@@ -153,15 +99,9 @@ export function setCookie(
  *
  * @param throws AuthError GENERAL_ERROR
  */
-export function getCookieValue(
-    req: express.Request,
-    key: string
-): string | undefined {
+export function getCookieValue(req: express.Request, key: string): string | undefined {
     if (req.cookies === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("did you forget to use cookie-parser middleware?")
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("did you forget to use cookie-parser middleware?"));
     }
     return req.cookies[key];
 }

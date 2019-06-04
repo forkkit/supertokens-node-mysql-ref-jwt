@@ -11,13 +11,8 @@ const HEADER = Buffer.from(
     })
 ).toString("base64");
 
-export function createJWT(
-    plainTextPayload: { [key: string]: any },
-    signingKey: string
-): string {
-    const payload = Buffer.from(JSON.stringify(plainTextPayload)).toString(
-        "base64"
-    );
+export function createJWT(plainTextPayload: { [key: string]: any }, signingKey: string): string {
+    const payload = Buffer.from(JSON.stringify(plainTextPayload)).toString("base64");
     const signature = hmac(HEADER + "." + payload, signingKey);
     return `${HEADER}.${payload}.${signature}`;
 }
@@ -26,10 +21,7 @@ export function createJWT(
  *
  * @throws Error if verifications fail.. or anything goes wrong.
  */
-export function verifyJWTAndGetPayload(
-    jwt: string,
-    signingKey: string
-): { [key: string]: any } {
+export function verifyJWTAndGetPayload(jwt: string, signingKey: string): { [key: string]: any } {
     const splittedInput = jwt.split(".");
     if (splittedInput.length !== 3) {
         throw new Error("invalid jwt");
@@ -42,10 +34,7 @@ export function verifyJWTAndGetPayload(
 
     // verifying signature
     let payload = splittedInput[1];
-    const signatureFromHeaderAndPayload = hmac(
-        HEADER + "." + payload,
-        signingKey
-    );
+    const signatureFromHeaderAndPayload = hmac(HEADER + "." + payload, signingKey);
     if (signatureFromHeaderAndPayload !== splittedInput[2]) {
         throw new Error("jwt verification failed");
     }

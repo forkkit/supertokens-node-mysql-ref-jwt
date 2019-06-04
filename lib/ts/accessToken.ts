@@ -1,17 +1,10 @@
 import Config from "./config";
 import { AuthError, generateError } from "./error";
-import {
-    getKeyValueFromKeyName_Transaction,
-    insertKeyValueForKeyName_Transaction
-} from "./helpers/dbQueries";
+import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from "./helpers/dbQueries";
 import * as JWT from "./helpers/jwt";
 import { getConnection } from "./helpers/mysql";
 import { TypeConfig, TypeGetSigningKeyUserFunction } from "./helpers/types";
-import {
-    generateNewSigningKey,
-    sanitizeNumberInput,
-    sanitizeStringInput
-} from "./helpers/utils";
+import { generateNewSigningKey, sanitizeNumberInput, sanitizeStringInput } from "./helpers/utils";
 
 /**
  * @description called during library init. Should be called after initing Config and MySQL.
@@ -117,8 +110,7 @@ class SigningKey {
 
     private constructor(config: TypeConfig) {
         this.dynamic = config.tokens.accessToken.signingKey.dynamic;
-        this.updateInterval =
-            config.tokens.accessToken.signingKey.updateInterval;
+        this.updateInterval = config.tokens.accessToken.signingKey.updateInterval;
         this.getKeyFromUser = config.tokens.accessToken.signingKey.get;
     }
 
@@ -144,10 +136,7 @@ class SigningKey {
         if (this.key === undefined) {
             this.key = await this.generateNewKeyAndUpdateInDb();
         }
-        if (
-            this.dynamic &&
-            Date.now() > this.key.createdAtTime + this.updateInterval
-        ) {
+        if (this.dynamic && Date.now() > this.key.createdAtTime + this.updateInterval) {
             // key has expired, we need to change it.
             this.key = await this.generateNewKeyAndUpdateInDb();
         }
@@ -164,17 +153,11 @@ class SigningKey {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let key = await getKeyValueFromKeyName_Transaction(
-                connection,
-                ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB
-            );
+            let key = await getKeyValueFromKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
             let generateNewKey = false;
             if (key !== undefined) {
                 // read key may have expired. Or if we called this function to change an expired key, then some other process may have already done so.
-                if (
-                    this.dynamic &&
-                    Date.now() > key.createdAtTime + this.updateInterval
-                ) {
+                if (this.dynamic && Date.now() > key.createdAtTime + this.updateInterval) {
                     generateNewKey = true;
                 }
             }
@@ -202,9 +185,7 @@ class SigningKey {
         if (SigningKey.instance === undefined) {
             throw generateError(
                 AuthError.GENERAL_ERROR,
-                new Error(
-                    "please call init function of access token signing key"
-                )
+                new Error("please call init function of access token signing key")
             );
         }
         return await SigningKey.instance.getKeyFromInstance();

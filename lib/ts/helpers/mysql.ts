@@ -2,10 +2,7 @@ import * as mysql from "mysql";
 
 import Config from "../config";
 import { AuthError, generateError } from "../error";
-import {
-    checkIfTableExists,
-    createTablesIfNotExists as createTablesIfNotExistsQueries
-} from "./dbQueries";
+import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from "./dbQueries";
 import { MySQLParamTypes, TypeConfig } from "./types";
 
 /**
@@ -37,12 +34,7 @@ export class Mysql {
     static getConnection(): Promise<mysql.PoolConnection> {
         return new Promise<mysql.PoolConnection>((resolve, reject) => {
             if (Mysql.instance === undefined) {
-                reject(
-                    generateError(
-                        AuthError.GENERAL_ERROR,
-                        new Error("mysql not initiated")
-                    )
-                );
+                reject(generateError(AuthError.GENERAL_ERROR, new Error("mysql not initiated")));
                 return;
             }
             Mysql.instance.pool.getConnection((err, connection) => {
@@ -61,10 +53,7 @@ export async function getConnection(): Promise<Connection> {
         const mysqlConnection = await Mysql.getConnection();
         return new Connection(mysqlConnection);
     } catch (err) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("error in connecting to mysql")
-        );
+        throw generateError(AuthError.GENERAL_ERROR, new Error("error in connecting to mysql"));
     }
 }
 
@@ -84,17 +73,13 @@ export class Connection {
 
     executeQuery = (query: string, params: MySQLParamTypes[]): Promise<any> => {
         return new Promise<any>(async (resolve, reject) => {
-            this.mysqlConnection.query(
-                query,
-                params,
-                (err, results, fields) => {
-                    if (err) {
-                        reject(generateError(AuthError.GENERAL_ERROR, err));
-                        return;
-                    }
-                    resolve(results);
+            this.mysqlConnection.query(query, params, (err, results, fields) => {
+                if (err) {
+                    reject(generateError(AuthError.GENERAL_ERROR, err));
+                    return;
                 }
-            );
+                resolve(results);
+            });
         });
     };
 
@@ -157,11 +142,7 @@ async function createTablesIfNotExists() {
         } catch (err) {
             // tables probably don't exist. so we will continue..
         }
-        await createTablesIfNotExistsQueries(
-            connection,
-            signingKeyTableName,
-            refreshTokensTableName
-        );
+        await createTablesIfNotExistsQueries(connection, signingKeyTableName, refreshTokensTableName);
     } finally {
         connection.closeConnection();
     }

@@ -1,8 +1,4 @@
-import {
-    createNewAccessToken,
-    getInfoFromAccessToken,
-    init as accessTokenInit
-} from "./accessToken";
+import { createNewAccessToken, getInfoFromAccessToken, init as accessTokenInit } from "./accessToken";
 import Config from "./config";
 import CronJob from "./cronjobs";
 import { AuthError, generateError } from "./error";
@@ -18,11 +14,7 @@ import {
 import { getConnection, Mysql } from "./helpers/mysql";
 import { TypeInputConfig } from "./helpers/types";
 import { generateUUID, hash } from "./helpers/utils";
-import {
-    createNewRefreshToken,
-    getInfoFromRefreshToken,
-    init as refreshTokenInit
-} from "./refreshToken";
+import { createNewRefreshToken, getInfoFromRefreshToken, init as refreshTokenInit } from "./refreshToken";
 
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
@@ -61,11 +53,7 @@ export async function createNewSession(
     let sessionHandle = generateUUID();
 
     // generate tokens:
-    let refreshToken = await createNewRefreshToken(
-        sessionHandle,
-        userId,
-        undefined
-    );
+    let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
     let accessToken = await createNewAccessToken(
         sessionHandle,
         userId,
@@ -144,28 +132,16 @@ export async function getSession(
         // we start a transaction so that we can later lock that particular row for updating.
         await connection.startTransaction();
         let sessionHandle = accessTokenInfo.sessionHandle;
-        let sessionInfo = await getSessionInfo_Transaction(
-            connection,
-            hash(sessionHandle)
-        );
+        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
 
         if (sessionInfo === undefined) {
             // this session no longer exists in db
             await connection.commit();
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("missing session in db")
-            );
+            throw generateError(AuthError.UNAUTHORISED, new Error("missing session in db"));
         }
 
-        let promote =
-            sessionInfo.refreshTokenHash2 ===
-            hash(accessTokenInfo.parentRefreshTokenHash1);
-        if (
-            promote ||
-            sessionInfo.refreshTokenHash2 ===
-                hash(accessTokenInfo.refreshTokenHash1)
-        ) {
+        let promote = sessionInfo.refreshTokenHash2 === hash(accessTokenInfo.parentRefreshTokenHash1);
+        if (promote || sessionInfo.refreshTokenHash2 === hash(accessTokenInfo.refreshTokenHash1)) {
             // at this point, the sent access token's refresh token is either a parent or child
             if (promote) {
                 // we now have to promote to make the child a parent since we now know that the frontend has these tokens for sure.
@@ -204,10 +180,7 @@ export async function getSession(
         // here it means that this access token's refresh token is old and not in the db at the moment.
         // maybe here we can call token theft too.
         await connection.commit();
-        throw generateError(
-            AuthError.UNAUTHORISED,
-            new Error("using access token whose refresh token is no more.")
-        );
+        throw generateError(AuthError.UNAUTHORISED, new Error("using access token whose refresh token is no more."));
     } finally {
         connection.closeConnection(); // this will also make sure to destroy connection if not commited.
     }
@@ -286,17 +259,11 @@ async function refreshSessionHelper(
         // we start a transaction so that we can later lock that particular row for updating.
         await connection.startTransaction();
 
-        let sessionInfo = await getSessionInfo_Transaction(
-            connection,
-            hash(sessionHandle)
-        );
+        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
 
         if (sessionInfo === undefined || sessionInfo.expiresAt < Date.now()) {
             await connection.commit();
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("session does not exist or has expired")
-            );
+            throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist or has expired"));
         }
 
         if (sessionInfo.userId !== refreshTokenInfo.userId) {
@@ -305,9 +272,7 @@ async function refreshSessionHelper(
             await connection.commit();
             throw generateError(
                 AuthError.UNAUTHORISED,
-                new Error(
-                    "userId for session does not match the userId in the refresh token"
-                )
+                new Error("userId for session does not match the userId in the refresh token")
             );
         }
 
@@ -352,8 +317,7 @@ async function refreshSessionHelper(
 
         if (
             refreshTokenInfo.parentRefreshTokenHash1 !== undefined &&
-            hash(refreshTokenInfo.parentRefreshTokenHash1) ===
-                sessionInfo.refreshTokenHash2
+            hash(refreshTokenInfo.parentRefreshTokenHash1) === sessionInfo.refreshTokenHash2
         ) {
             // At this point, the input refresh token is a child and its parent is in the database. Normally, this part of the code
             // will be reached only when the client uses a refresh token to request a new refresh token before
@@ -403,14 +367,9 @@ async function refreshSessionHelper(
 export async function revokeAllSessionsForUser(userId: string) {
     let connection = await getConnection();
     try {
-        let sessionHandleHash1List = await getAllHash1SessionHandlesForUser(
-            connection,
-            userId
-        );
+        let sessionHandleHash1List = await getAllHash1SessionHandlesForUser(connection, userId);
         for (let i = 0; i < sessionHandleHash1List.length; i++) {
-            await revokeSessionUsingSessionHandleHelper(
-                sessionHandleHash1List[i]
-            );
+            await revokeSessionUsingSessionHandleHelper(sessionHandleHash1List[i]);
         }
     } finally {
         connection.closeConnection();
@@ -422,21 +381,14 @@ export async function revokeAllSessionsForUser(userId: string) {
  * @returns true if session was deleted from db. Else false in case there was nothing to delete
  * @throws AuthError, GENERAL_ERROR
  */
-export async function revokeSessionUsingSessionHandle(
-    sessionHandle: string
-): Promise<boolean> {
+export async function revokeSessionUsingSessionHandle(sessionHandle: string): Promise<boolean> {
     return await revokeSessionUsingSessionHandleHelper(hash(sessionHandle));
 }
 
-async function revokeSessionUsingSessionHandleHelper(
-    sessionHandleHash1: string
-): Promise<boolean> {
+async function revokeSessionUsingSessionHandleHelper(sessionHandleHash1: string): Promise<boolean> {
     let connection = await getConnection();
     try {
-        let numberOfAffectedRows = await deleteSession(
-            connection,
-            sessionHandleHash1
-        );
+        let numberOfAffectedRows = await deleteSession(connection, sessionHandleHash1);
         return numberOfAffectedRows === 1;
     } finally {
         connection.closeConnection();
@@ -451,15 +403,9 @@ async function revokeSessionUsingSessionHandleHelper(
 export async function getSessionData(sessionHandle: string): Promise<any> {
     let connection = await getConnection();
     try {
-        let result = await getSessionDataFromDB(
-            connection,
-            hash(sessionHandle)
-        );
+        let result = await getSessionDataFromDB(connection, hash(sessionHandle));
         if (!result.found) {
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("session does not exist anymore")
-            );
+            throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
         } else {
             return result.data;
         }
@@ -472,23 +418,13 @@ export async function getSessionData(sessionHandle: string): Promise<any> {
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
-export async function updateSessionData(
-    sessionHandle: string,
-    newSessionData: any
-) {
+export async function updateSessionData(sessionHandle: string, newSessionData: any) {
     let connection = await getConnection();
     try {
-        let numberOfAffectedRows = await updateSessionDataInDB(
-            connection,
-            hash(sessionHandle),
-            newSessionData
-        );
+        let numberOfAffectedRows = await updateSessionDataInDB(connection, hash(sessionHandle), newSessionData);
         if (numberOfAffectedRows !== 1) {
             // did not update anything, which means there was nothing to update, which means the session does not exist.
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("session does not exist anymore")
-            );
+            throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
         }
     } finally {
         connection.closeConnection();

@@ -1,18 +1,8 @@
 import Config from "./config";
 import { AuthError, generateError } from "./error";
-import {
-    getKeyValueFromKeyName_Transaction,
-    insertKeyValueForKeyName_Transaction
-} from "./helpers/dbQueries";
+import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from "./helpers/dbQueries";
 import { getConnection } from "./helpers/mysql";
-import {
-    decrypt,
-    encrypt,
-    generateNewSigningKey,
-    generateUUID,
-    hash,
-    sanitizeStringInput
-} from "./helpers/utils";
+import { decrypt, encrypt, generateNewSigningKey, generateUUID, hash, sanitizeStringInput } from "./helpers/utils";
 
 /**
  * @description: called during library init. Should be called after initing Config and MySQL.
@@ -45,11 +35,7 @@ export async function getInfoFromRefreshToken(
         let userId = sanitizeStringInput(payload.userId);
         let prt = sanitizeStringInput(payload.prt);
         let nonceFromEnc = sanitizeStringInput(payload.nonce);
-        if (
-            sessionHandle === undefined ||
-            userId === undefined ||
-            nonceFromEnc !== nonce
-        ) {
+        if (sessionHandle === undefined || userId === undefined || nonceFromEnc !== nonce) {
             throw Error("invalid refresh token");
         }
         return {
@@ -127,10 +113,7 @@ class Key {
         let connection = await getConnection();
         try {
             await connection.startTransaction();
-            let key = await getKeyValueFromKeyName_Transaction(
-                connection,
-                REFRESH_TOKEN_KEY_NAME_IN_DB
-            );
+            let key = await getKeyValueFromKeyName_Transaction(connection, REFRESH_TOKEN_KEY_NAME_IN_DB);
             if (key === undefined) {
                 let keyValue = await generateNewSigningKey();
                 key = {
@@ -153,10 +136,7 @@ class Key {
 
     static getKey = async (): Promise<string> => {
         if (Key.instance === undefined) {
-            throw generateError(
-                AuthError.GENERAL_ERROR,
-                new Error("please call init function of refresh token key")
-            );
+            throw generateError(AuthError.GENERAL_ERROR, new Error("please call init function of refresh token key"));
         }
         return await Key.instance.getKeyFromInstance();
     };
