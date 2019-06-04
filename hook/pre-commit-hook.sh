@@ -68,6 +68,6 @@ then
 else
    echo "$(tput setaf 1)... done.$(tput sgr 0)"
    echo "$(tput setaf 1)CANCELLING commit due to COMPILE ERROR.$(tput sgr 0)"
-    echo ""
+   echo ""
    exit 2
 fi
