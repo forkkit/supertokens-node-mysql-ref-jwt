@@ -1,10 +1,10 @@
-import Config from "./config";
-import { AuthError, generateError } from "./error";
-import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from "./helpers/dbQueries";
-import * as JWT from "./helpers/jwt";
-import { getConnection } from "./helpers/mysql";
-import { TypeConfig, TypeGetSigningKeyUserFunction } from "./helpers/types";
-import { generateNewSigningKey, sanitizeNumberInput, sanitizeStringInput } from "./helpers/utils";
+import Config from './config';
+import { AuthError, generateError } from './error';
+import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from './helpers/dbQueries';
+import * as JWT from './helpers/jwt';
+import { getConnection } from './helpers/mysql';
+import { TypeConfig, TypeGetSigningKeyUserFunction } from './helpers/types';
+import { generateNewSigningKey, sanitizeNumberInput, sanitizeStringInput } from './helpers/utils';
 
 /**
  * @description called during library init. Should be called after initing Config and MySQL.
@@ -102,11 +102,11 @@ class SigningKey {
     private updateInterval: number;
     private getKeyFromUser: TypeGetSigningKeyUserFunction | undefined;
     private key:
-        | {
-              keyValue: string;
-              createdAtTime: number;
-          }
-        | undefined;
+    | {
+        keyValue: string;
+        createdAtTime: number;
+    }
+    | undefined;
 
     private constructor(config: TypeConfig) {
         this.dynamic = config.tokens.accessToken.signingKey.dynamic;
