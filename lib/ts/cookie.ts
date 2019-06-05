@@ -26,11 +26,17 @@ export function clearSessionFromCookie(res: express.Response) {
     );
 }
 
+/**
+ * @param expiry: must be time in milliseconds from epoch time.
+ */
 export function attachAccessTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(res, accessTokenCookieKey, token, config.cookie.domain, config.cookie.secure, true, expiry, "/");
 }
 
+/**
+ * @param expiry: must be time in milliseconds from epoch time.
+ */
 export function attachRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(
@@ -45,6 +51,9 @@ export function attachRefreshTokenToCookie(res: express.Response, token: string,
     );
 }
 
+/**
+ * @param expiry: must be time in milliseconds from epoch time.
+ */
 export function attachIdRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
     setCookie(res, idRefreshTokenCookieKey, token, config.cookie.domain, false, false, expiry, "/");

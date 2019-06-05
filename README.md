@@ -2,6 +2,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
 
+**Master**
+[![CircleCI](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt.svg?style=svg)](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt)
+**Dev**
+[![CircleCI](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/dev.svg?style=svg)](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/dev)
+
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
@@ -292,19 +297,7 @@ To change the default values or ranges, please see [/lib/ts/config.ts](https://g
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Making changes
-This library is written in TypeScript (TS). When you make any changes to the .ts files in the /lib/ts/* folder, run the following command in the /lib folder to compile to .js:
-```bash
-tsc -p tsconfig.json
-```
-If you make any changes to index.ts in the root of this repo, once you compile it to .js, remember to change the import/export path from /lib/ts/* to /lib/build/* in the generated .js file (index.js in the root folder).
-
-Before commiting, please install the [pre-commit hooks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/hooks/README.md) that ensure consistent formatting and no TS errors.
-```bash
-sudo -s # required because the installer below installs prettier in global context
-cd hooks && ./pre-commit-hook-install.sh
-```
-
-To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/cookie.ts)
+Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/testing/CONTRIBUTING.md) guide
 
 ## Future work
 - Enable this to work with mobile apps as well.

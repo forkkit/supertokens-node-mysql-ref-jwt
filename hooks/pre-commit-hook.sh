@@ -35,10 +35,12 @@ fi
 formattedTs=$?
 (cd $DIR/lib/; prettier --check --config .prettierrc "build/**/*.js" > /dev/null)
 formattedJs=$?
+(cd $DIR/lib/; prettier --check --config .prettierrc "../test/**/*.js" > /dev/null)
+formattedTests=$?
 
 echo "$(tput setaf 3)* Properly formatted?$(tput sgr 0)"
 
-if [ $formattedTs -eq 0 ] && [ $formattedJs -eq 0 ]
+if [ $formattedTs -eq 0 ] && [ $formattedJs -eq 0 ] && [ $formattedTests -eq 0 ]
 then
    echo "$(tput setaf 2)* Yes$(tput sgr 0)"
 else
@@ -54,7 +56,7 @@ then
    git stash drop > /dev/null
 fi
 
-if [ $compiles -eq 0 ] && [ $formattedTs -eq 0 ] && [ $formattedJs -eq 0 ]
+if [ $compiles -eq 0 ] && [ $formattedTs -eq 0 ] && [ $formattedJs -eq 0 ] && [ $formattedTests -eq 0 ]
 then
    echo "$(tput setaf 2)... done. Proceeding with commit.$(tput sgr 0)"
    echo ""
