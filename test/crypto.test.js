@@ -9,6 +9,6 @@ describe("Crypto", function () {
         const masterKey = "master"
         const cipherText = await utils.encrypt(plainText, masterKey);
         const decipheredText = await utils.decrypt(cipherText, masterKey);
-        assert.notDeepStrictEqual(plainText, decipheredText);
+        assert.deepStrictEqual(plainText, decipheredText);
     });
 })
