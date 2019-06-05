@@ -1,7 +1,7 @@
 ![SuperTokens banner](https://raw.githubusercontent.com/supertokens/supertokens-logo/master/images/Artboard%20%E2%80%93%2027%402x.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
-[![CircleCI](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/testing.svg?style=svg)](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/testing)
+[![CircleCI](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/testing.svg?style=shield)](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt/tree/testing)
 
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
