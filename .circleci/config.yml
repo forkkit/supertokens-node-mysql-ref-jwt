@@ -13,6 +13,8 @@ jobs:
     steps:
       - run: (cd / && ./runMySQL.sh)
       - checkout
+      - run: npm install -d
+      - run: npm test
 
 workflows:
   version: 2
