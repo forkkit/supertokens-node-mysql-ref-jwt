@@ -12,6 +12,7 @@ jobs:
       - image: rishabhpoddar/node-mysql-git
     steps:
       - run: pwd
+      - run: ls /
 
 workflows:
   version: 2
