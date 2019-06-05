@@ -3,9 +3,9 @@ module.exports = {
         host: undefined,
         port: undefined,
         user: "root",
-        password: "bhumil2621995",
+        password: process.env.MYSQL_PASSWORD || "root",
         connectionLimit: undefined,
-        database: "auth_session",
+        database: process.env.MYSQL_DB || "auth_session",
         tables: {
             refreshTokens: "refresh_token_test",
             signingKey: "signing_key_test"
