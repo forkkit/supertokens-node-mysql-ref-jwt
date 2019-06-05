@@ -48,8 +48,9 @@
     "validator": "10.11.0"
   },
   "devDependencies": {
-    "cookie-parser": "^1.4.4",
+    "cookie-parser": "1.4.4",
+    "express": "4.17.1",
     "mocha": "6.1.4",
-    "supertest": "^4.0.2"
+    "supertest": "4.0.2"
   }
 }
