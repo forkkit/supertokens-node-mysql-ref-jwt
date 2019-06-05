@@ -297,11 +297,10 @@ To change the default values or ranges, please see [/lib/ts/config.ts](https://g
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
 
 ## Making changes
-Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/testing/CONTRIBUTING.md) guide
+Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide
 
 ## Future work
 - Enable this to work with mobile apps as well.
-- Add unit testing.
 - To implement info, debug and error logs in a better way.
 
 ## Support, questions and bugs
