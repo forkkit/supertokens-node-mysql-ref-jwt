@@ -300,6 +300,7 @@ If you make any changes to index.ts in the root of this repo, once you compile i
 
 Before commiting, please install the [pre-commit hooks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/hooks/README.md) that ensure consistent formatting and no TS errors.
 ```bash
+sudo -s # required because the installer below installs prettier in global context
 cd hooks && ./pre-commit-hook-install.sh
 ```
 
