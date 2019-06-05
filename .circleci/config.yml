@@ -11,7 +11,7 @@ jobs:
     docker:
       - image: rishabhpoddar/node-mysql-git
     steps:
-      - ls
+      - run: ls
 
 workflows:
   version: 2
