@@ -29,4 +29,7 @@ workflows:
       - test:
           filters:
             branches:
-              only: testing
+              only: 
+                - testing
+                - dev
+                - master
