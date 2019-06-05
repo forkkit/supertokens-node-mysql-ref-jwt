@@ -13,7 +13,7 @@ jobs:
     steps:
       - run: (cd / && ./runMySQL.sh)
       - checkout
-      - run: ls
+      - run: git status
 
 workflows:
   version: 2
