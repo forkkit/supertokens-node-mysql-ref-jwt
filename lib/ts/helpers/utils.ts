@@ -78,7 +78,7 @@ export async function encrypt(text: string, masterkey: string): Promise<string> 
  * @param masterkey key used to decrypt
  * @returns String decrypted (original) text
  */
-export async function decrypt(encdata: string, masterkey: string) {
+export async function decrypt(encdata: string, masterkey: string): Promise<string> {
     // base64 decoding
     const bData = Buffer.from(encdata, "base64");
 
