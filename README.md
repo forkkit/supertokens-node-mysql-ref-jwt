@@ -295,8 +295,6 @@ You can play around with the [demo project](https://github.com/supertokens/auth-
 ## Making changes
 Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/testing/CONTRIBUTING.md) guide
 
-To change the name of the cookies used, please find them in [/lib/ts/cookie.ts](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/cookie.ts)
-
 ## Future work
 - Enable this to work with mobile apps as well.
 - Add unit testing.
