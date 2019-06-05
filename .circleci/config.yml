@@ -11,8 +11,9 @@ jobs:
     docker:
       - image: rishabhpoddar/node-mysql-git
     steps:
-      - run: pwd
-      - run: ls /
+      - run: (cd / && ./runMySQL.sh)
+      - checkout
+      - run: ls
 
 workflows:
   version: 2
