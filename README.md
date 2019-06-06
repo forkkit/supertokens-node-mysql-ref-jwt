@@ -285,7 +285,7 @@ config = {
         error?: (err: any) => void // default undefined. This function, if provided, will be called for error logging purposes
     },
     cookie: {
-        domain: string, // this is the domain to set for all the cookies. The path for all cookies except the refresh token will be "/"
+        domain: string, // this is the domain to set for all the cookies. For example, "supertokens.io" The path for all cookies except the refresh token will be "/"
         secure?: boolean // default true. Sets if the cookies are secure or not. Ideally, this value should be true in production mode.
     },
     onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just log out this particular "stolen session".
