@@ -158,7 +158,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             };
         }
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
-        if (validity !== undefined) {
+        if (validity !== undefined && process.env.TEST_MODE !== "testing") {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
                 throw generateError(
                     AuthError.GENERAL_ERROR,

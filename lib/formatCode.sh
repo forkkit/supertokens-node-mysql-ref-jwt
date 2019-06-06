@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 _DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DIR=$( echo $_DIR | sed 's/\/lib//' )

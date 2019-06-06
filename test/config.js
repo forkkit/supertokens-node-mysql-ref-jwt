@@ -19,7 +19,7 @@ module.exports.minConfigTest = {
         }
     },
     cookie: {
-        domain: "http://supertoken.io"
+        domain: "supertoken.io"
     }
 };
 
@@ -46,11 +46,11 @@ module.exports.configWithSigningKeyFunction = {
         }
     },
     cookie: {
-        domain: "http://supertoken.io"
+        domain: "supertoken.io"
     }
 };
 
-module.exports.configWithSmallSigningKeyUpdateInterval = {
+module.exports.configWithShortSigningKeyUpdateInterval = {
     mysql: {
         user: process.env.MYSQL_USER || "root",
         password: process.env.MYSQL_PASSWORD || "root",
@@ -71,6 +71,29 @@ module.exports.configWithSmallSigningKeyUpdateInterval = {
         }
     },
     cookie: {
-        domain: "http://supertoken.io"
+        domain: "supertoken.io"
+    }
+};
+
+module.exports.configWithShortValidityForAccessToken = {
+    mysql: {
+        user: process.env.MYSQL_USER || "root",
+        password: process.env.MYSQL_PASSWORD || "root",
+        database: process.env.MYSQL_DB || "auth_session",
+        tables: {
+            refreshTokens: "refresh_token_test",
+            signingKey: "signing_key_test"
+        }
+    },
+    tokens: {
+        accessToken: {
+            validity: 1
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh"
+        }
+    },
+    cookie: {
+        domain: "supertoken.io"
     }
 };
