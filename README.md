@@ -301,11 +301,12 @@ You can play around with the [demo project](https://github.com/supertokens/auth-
 Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide
 
 ## Tests
-To test this library, please run:
+To test this library, you need Node and MySQL running on your system.
 ```bash
 npm install -d
 npm test
 ```
+See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide for more information.
 
 ## Future work
 - Enable this to work with mobile apps as well.
