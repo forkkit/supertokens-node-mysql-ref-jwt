@@ -12,20 +12,20 @@ This library implements user session management for websites that run on **NodeJ
 
 #### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice)
 
-#### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
+#### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
-- Minimises probability of token theft - follows all the best practices for handling auth tokens across all attack surfaces: the frontend, backend and during transit
-- Token theft detection: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
-- Complete auth token management - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session. Furthermore, the tokens sent over to the client have a long length and high entropy - so brute force attack is out of the question.
-- Automatic JWT signing key generation (if you don't provide one), management and rotation - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
-- Complete cookie management - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
-- Efficient in terms of space complexity - Needs to store just one row in a SQL table per logged in user per device.
-- Efficient in terms of time complexity - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
-- Built-in support for handling multiple devices per user.
-- Built-in synchronisation in case you are running multiple node processes.
-- Easy to use (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
+- **Minimises probability of token theft** - follows all the best practices for handling auth tokens across all attack surfaces: the frontend, backend and during transit
+- **Token theft detection**: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
+- **Complete auth token management** - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session. Furthermore, the tokens sent over to the client have a long length and high entropy - so brute force attack is out of the question.
+- **Automatic JWT signing key generation** (if you don't provide one), management and **rotation** - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
+- **Complete cookie management** - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
+- **Efficient** in terms of **space complexity** - Needs to store just one row in a SQL table per logged in user per device.
+- **Efficient** in terms of **time complexity** - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
+- Built-in support for **handling multiple devices per user**.
+- **Built-in synchronisation** in case you are running multiple node processes.
+- **Easy to use** (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. 
 
 #### If you like this project and want to use it, but for a different tech stack:
@@ -38,10 +38,11 @@ The library has the following features:
 3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
 4) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
 5) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-6) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-7) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-8) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-9) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+6) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+7) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+8) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+9) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+10) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -285,7 +286,7 @@ config = {
         error?: (err: any) => void // default undefined. This function, if provided, will be called for error logging purposes
     },
     cookie: {
-        domain: string, // this is the domain to set for all the cookies. The path for all cookies except the refresh token will be "/"
+        domain: string, // this is the domain to set for all the cookies. For example, "supertokens.io" The path for all cookies except the refresh token will be "/"
         secure?: boolean // default true. Sets if the cookies are secure or not. Ideally, this value should be true in production mode.
     },
     onTokenTheftDetection?: (userId: string, sessionHandle: string) => void; // default undefined. This function is called when a refresh token theft is detected. The userId can be used to log out all devices that have this user signed in. Or the sessionHandle can be used to just log out this particular "stolen session".
@@ -299,9 +300,18 @@ You can play around with the [demo project](https://github.com/supertokens/auth-
 ## Making changes
 Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide
 
+## Tests
+To test this library, you need Node and MySQL running on your system.
+```bash
+npm install -d
+npm test
+```
+See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide for more information.
+
 ## Future work
 - Enable this to work with mobile apps as well.
 - To implement info, debug and error logs in a better way.
+- Add scaling metrics
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
@@ -328,8 +338,8 @@ Referrals will be accepted only until this text is in the latest version of the 
 
 ## Further reading and understanding
 We have written a blog post about sessions in general:
-- [Part 1](https://medium.com/@supertokens.io/ee5245e6bdad): Introduction to session management, analysis of most commonly used session flows, and best practices
-- [Part 2](https://medium.com/@supertokens.io/91f27eeef460): Analysis of the session flow used by SuperTokens.
+- [Part 1](https://hackernoon.com/all-you-need-to-know-about-user-session-security-ee5245e6bdad): Introduction to session management, analysis of most commonly used session flows, and best practices
+- [Part 2](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460): Analysis of the session flow used by SuperTokens.
 
 To understand the logic behind how sessions are created, managed and destroyed, please refer to the [WiKi section](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/wiki/Implementation-logic)
 

@@ -29,7 +29,7 @@ Please only issue pull requests to the dev branch.
 4) Also run the pre commit installer (This will install prettier as a global npm package):
     ```bash
     sudo -s
-    cd hooks && ./pre-commit-hook-install.sh
+    (cd hooks && ./pre-commit-hook-install.sh)
     ```
 
 ## Coding standards
@@ -56,12 +56,12 @@ All other issues like quote styles, spacing etc.. will be taken care of by the f
 
 1) Run the typescript compiler
     ```bash
-    cd lib && tsc -p tsconfig.json
+    (cd lib && tsc -p tsconfig.json)
     ```
 
 2) Run the formatter
     ```bash
-    cd lib && ./formatCode
+    (cd lib && ./formatCode.sh)
     ```
 
 4) If you have edited ```/index.ts``` or ```/indexRaw.ts```, please make the corresponding changes to ```/index.js``` or ```indexRaw.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
@@ -72,6 +72,17 @@ All other issues like quote styles, spacing etc.. will be taken care of by the f
 Run unit tests and make sure all tests are passing.
 ```bash
 npm test
+```
+You can change the following MySQL params while testing:
+```bash
+host: process.env.MYSQL_HOST, # default is localhost
+port: process.env.MYSQL_PORT, # default is 3306
+user: process.env.MYSQL_USER, # default is "root"
+password: process.env.MYSQL_PASSWORD, # default is "root"
+database: process.env.MYSQL_DB # default is "auth_session"
+
+# For example
+MYSQL_HOST=somehost MYSQL_PORT=9999 npm test
 ```
 If you have docker, we have a container that has node, mysql and git installed in it
 ````bash
