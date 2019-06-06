@@ -15,6 +15,9 @@ export async function init() {
     await SigningKey.init(config);
 }
 
+/**
+ * @description called during testing only
+ */
 export function reset() {
     SigningKey.reset();
 }
@@ -127,6 +130,10 @@ class SigningKey {
         }
     };
 
+    /**
+     * @description used during testing only
+     * The key in the database will be removed by the /helpers/utils - reset
+     */
     static reset = () => {
         SigningKey.instance = undefined;
     };

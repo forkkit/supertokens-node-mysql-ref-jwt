@@ -2,6 +2,7 @@ const assert = require("assert");
 const config = require("./config");
 const refreshToken = require("../lib/build/refreshToken");
 const { reset } = require("../lib/build/helpers/utils");
+let SuperTokens = require("..");
 
 describe("Refresh Token", function() {
     it("testing create and get refresh token function", async function() {
@@ -9,14 +10,14 @@ describe("Refresh Token", function() {
         assert.strictEqual(typeof refreshToken.createNewRefreshToken, "function");
         assert.strictEqual(typeof refreshToken.getInfoFromRefreshToken, "function");
         const sessionHandle = "sessionHandle";
-        const parentKey = "parentKey";
+        const parentRefreshTokenHash1 = "parentRefreshTokenHash1";
         const userId = "superToken";
-        const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentKey);
+        const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentRefreshTokenHash1);
         const infoFromToken = await refreshToken.getInfoFromRefreshToken(token.token);
         assert.deepStrictEqual(infoFromToken, {
             sessionHandle: "sessionHandle",
             userId: "superToken",
-            parentRefreshTokenHash1: "parentKey"
+            parentRefreshTokenHash1: "parentRefreshTokenHash1"
         });
     });
 
@@ -25,15 +26,16 @@ describe("Refresh Token", function() {
         assert.strictEqual(typeof refreshToken.createNewRefreshToken, "function");
         assert.strictEqual(typeof refreshToken.getInfoFromRefreshToken, "function");
         const sessionHandle = "sessionHandle";
-        const parentKey = "parentKey";
+        const parentRefreshTokenHash1 = "parentRefreshTokenHash1";
         const userId = "superToken";
-        const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentKey);
-        await reset(config.minConfigTest);
+        const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentRefreshTokenHash1);
+        await reset(config.minConfigTest); // changes refresh token in db
+        // TODO: verify that refresh token in db has changed!
         try {
             const infoFromToken = await refreshToken.getInfoFromRefreshToken(token.token);
             throw Error("test failed");
         } catch (err) {
-            if (err.errType !== 2000) {
+            if (err.errType !== SuperTokens.Error.UNAUTHORISED) {
                 throw err;
             }
         }

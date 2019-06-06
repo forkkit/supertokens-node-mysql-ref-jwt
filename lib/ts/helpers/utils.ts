@@ -1,13 +1,14 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from "crypto";
 import * as uuid from "uuid";
 import * as validator from "validator";
-import { Mysql, getConnection } from "./mysql";
+
 import { reset as accessTokenReset } from "../accessToken";
-import { reset as refreshTokenReset } from "../refreshToken";
 import Config from "../config";
-import { resetTables_Transaction } from "./dbQueries";
-import { TypeInputConfig } from "./types";
+import { reset as refreshTokenReset } from "../refreshToken";
 import { init } from "../session";
+import { resetTables } from "./dbQueries";
+import { getConnection, Mysql } from "./mysql";
+import { TypeInputConfig } from "./types";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
@@ -172,13 +173,15 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
     return undefined;
 }
 
+/**
+ * @description used in testing to reset all the singletons. Please do not use this outside of testing
+ * @param newConfig this can be undefined because if you actually want to test the init function itself after reset.
+ */
 export async function reset(newConfig?: TypeInputConfig) {
     try {
         let connection = await getConnection();
         try {
-            await connection.startTransaction();
-            await resetTables_Transaction(connection);
-            await connection.commit();
+            await resetTables(connection);
         } finally {
             connection.closeConnection();
         }

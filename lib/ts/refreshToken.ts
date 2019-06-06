@@ -12,6 +12,9 @@ export async function init() {
     await Key.init();
 }
 
+/**
+ * @description used during testing only.
+ */
 export async function reset() {
     Key.reset();
 }
@@ -102,6 +105,10 @@ class Key {
         }
     };
 
+    /**
+     * @description used during testing only
+     * The key in the database will be removed by the /helpers/utils - reset
+     */
     static reset = () => {
         Key.instance = undefined;
     };
