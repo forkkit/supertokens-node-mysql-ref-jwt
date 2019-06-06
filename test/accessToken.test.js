@@ -4,7 +4,7 @@ const { reset, delay } = require("../lib/build/helpers/utils");
 const accessToken = require("../lib/build/accessToken");
 
 describe("Access Token", function() {
-    it("testing create and get access token function", async function() {
+    it("testing create and get info access token function", async function() {
         await reset(config.minConfigTest);
         assert.strictEqual(typeof accessToken.createNewAccessToken, "function");
         assert.strictEqual(typeof accessToken.getInfoFromAccessToken, "function");

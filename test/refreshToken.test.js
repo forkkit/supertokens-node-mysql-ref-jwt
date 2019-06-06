@@ -5,7 +5,7 @@ const { reset } = require("../lib/build/helpers/utils");
 let SuperTokens = require("..");
 
 describe("Refresh Token", function() {
-    it("testing create and get refresh token function", async function() {
+    it("testing create and get info refresh token function", async function() {
         await reset(config.minConfigTest);
         assert.strictEqual(typeof refreshToken.createNewRefreshToken, "function");
         assert.strictEqual(typeof refreshToken.getInfoFromRefreshToken, "function");
