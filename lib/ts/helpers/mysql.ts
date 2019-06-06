@@ -48,6 +48,9 @@ export class Mysql {
     }
 
     static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
         Mysql.instance = undefined;
     };
 }

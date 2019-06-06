@@ -1,5 +1,5 @@
-import * as mysql from "mysql";
-import { MySQLParamTypes } from "./types";
+import * as mysql from 'mysql';
+import { MySQLParamTypes } from './types';
 /**
  * @description This is a singleton class since we need just one MySQL pool per node process.
  */

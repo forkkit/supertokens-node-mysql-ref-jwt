@@ -19,13 +19,19 @@ export async function init() {
  * @description called during testing only
  */
 export function reset() {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     SigningKey.reset();
 }
 
 /**
  * @description called during testing only
  */
-export async function getKey(): Promise<string> {
+export async function getKeyForTesting(): Promise<string> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     return await SigningKey.getKey();
 }
 
@@ -143,6 +149,9 @@ class SigningKey {
      * The key in the database will be removed by the /helpers/utils - reset
      */
     static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
         SigningKey.instance = undefined;
     };
 

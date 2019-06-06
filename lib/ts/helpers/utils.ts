@@ -178,6 +178,9 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
  * @param newConfig this can be undefined because if you actually want to test the init function itself after reset.
  */
 export async function reset(newConfig?: TypeInputConfig) {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     try {
         let connection = await getConnection();
         try {

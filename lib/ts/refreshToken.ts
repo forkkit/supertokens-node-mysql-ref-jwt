@@ -16,13 +16,19 @@ export async function init() {
  * @description used during testing only.
  */
 export async function reset() {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     Key.reset();
 }
 
 /**
  * @description used during testing only.
  */
-export async function getKey(): Promise<string> {
+export async function getKeyForTesting(): Promise<string> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     return await Key.getKey();
 }
 
@@ -118,6 +124,9 @@ class Key {
      * The key in the database will be removed by the /helpers/utils - reset
      */
     static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
         Key.instance = undefined;
     };
 

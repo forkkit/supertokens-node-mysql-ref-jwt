@@ -226,6 +226,9 @@ function unserialiseSessionData(data: string): any {
 }
 
 export async function resetTables(connection: Connection) {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
     const config = Config.get();
     let query = `TRUNCATE TABLE ${config.mysql.tables.refreshTokens};`;
     await connection.executeQuery(query, []);

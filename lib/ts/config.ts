@@ -36,6 +36,9 @@ export default class Config {
     }
 
     static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
         Config.instance = undefined;
     };
 }

@@ -33,15 +33,15 @@ describe("Access Token", function() {
 
     it("testing with custom signing key function", async function() {
         await reset(config.configWithSigningKeyFunction);
-        const signingKey = await accessToken.getKey();
+        const signingKey = await accessToken.getKeyForTesting();
         assert.deepStrictEqual(signingKey, config.configWithSigningKeyFunction.tokens.accessToken.signingKey.get());
     });
 
     it("testing very short update interval for signing key", async function() {
         await reset(config.configWithSmallSigningKeyUpdateInterval);
-        const signingKey1 = await accessToken.getKey();
+        const signingKey1 = await accessToken.getKeyForTesting();
         await delay(2000);
-        const signingKey2 = await accessToken.getKey();
+        const signingKey2 = await accessToken.getKeyForTesting();
         assert.notDeepStrictEqual(signingKey1, signingKey2);
     });
 });
