@@ -34,6 +34,10 @@ export default class Config {
         }
         return Config.instance.config;
     }
+
+    static reset = () => {
+        Config.instance = undefined;
+    };
 }
 
 /**

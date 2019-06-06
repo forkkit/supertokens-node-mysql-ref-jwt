@@ -15,6 +15,9 @@ export async function init() {
     await SigningKey.init(config);
 }
 
+export function reset() {
+    SigningKey.reset();
+}
 /**
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
@@ -122,6 +125,10 @@ class SigningKey {
             SigningKey.instance = new SigningKey(config);
             await SigningKey.getKey();
         }
+    };
+
+    static reset = () => {
+        SigningKey.instance = undefined;
     };
 
     private getKeyFromInstance = async (): Promise<string> => {

@@ -46,6 +46,10 @@ export class Mysql {
             });
         });
     }
+
+    static reset = () => {
+        Mysql.instance = undefined;
+    };
 }
 
 export async function getConnection(): Promise<Connection> {

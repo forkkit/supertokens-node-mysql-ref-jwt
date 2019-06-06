@@ -9,6 +9,7 @@ export declare class Mysql {
     private constructor();
     static init(): Promise<void>;
     static getConnection(): Promise<mysql.PoolConnection>;
+    static reset: () => void;
 }
 export declare function getConnection(): Promise<Connection>;
 /**

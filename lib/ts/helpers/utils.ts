@@ -1,6 +1,13 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, randomBytes } from "crypto";
 import * as uuid from "uuid";
 import * as validator from "validator";
+import { Mysql, getConnection } from "./mysql";
+import { reset as accessTokenReset } from "../accessToken";
+import { reset as refreshTokenReset } from "../refreshToken";
+import Config from "../config";
+import { resetTables_Transaction } from "./dbQueries";
+import { TypeInputConfig } from "./types";
+import { init } from "../session";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
@@ -163,4 +170,27 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
         return true;
     }
     return undefined;
+}
+
+export async function reset(newConfig?: TypeInputConfig) {
+    try {
+        let connection = await getConnection();
+        try {
+            await connection.startTransaction();
+            await resetTables_Transaction(connection);
+            await connection.commit();
+        } finally {
+            connection.closeConnection();
+        }
+    } catch (err) {
+        // if reset function is called before init, this part will throw error
+    } finally {
+        Config.reset();
+        Mysql.reset();
+        refreshTokenReset();
+        accessTokenReset();
+        if (newConfig !== undefined) {
+            await init(newConfig);
+        }
+    }
 }

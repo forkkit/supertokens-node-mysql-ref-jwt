@@ -1,3 +1,4 @@
+import { TypeInputConfig } from "./types";
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
  */
@@ -34,3 +35,4 @@ export declare function sanitizeNumberInput(field: any): number | undefined;
  * @param field
  */
 export declare function sanitizeBooleanInput(field: any): boolean | undefined;
+export declare function reset(newConfig?: TypeInputConfig): Promise<void>;

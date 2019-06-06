@@ -12,6 +12,9 @@ export async function init() {
     await Key.init();
 }
 
+export async function reset() {
+    Key.reset();
+}
 /**
  * @description given a token, it verifies it with the stored signature and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR UNAUTHORISED
@@ -97,6 +100,10 @@ class Key {
             Key.instance = new Key();
             await Key.getKey();
         }
+    };
+
+    static reset = () => {
+        Key.instance = undefined;
     };
 
     private getKeyFromInstance = async (): Promise<string> => {

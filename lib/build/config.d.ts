@@ -13,4 +13,5 @@ export default class Config {
      */
     static init(config: TypeInputConfig): void;
     static get(): TypeConfig;
+    static reset: () => void;
 }
