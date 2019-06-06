@@ -12,7 +12,7 @@ This library implements user session management for websites that run on **NodeJ
 
 #### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice)
 
-#### The protocol SuperTokens uses is described in detail in [this article](https://medium.com/@supertokens.io/91f27eeef460)
+#### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
@@ -328,8 +328,8 @@ Referrals will be accepted only until this text is in the latest version of the 
 
 ## Further reading and understanding
 We have written a blog post about sessions in general:
-- [Part 1](https://medium.com/@supertokens.io/ee5245e6bdad): Introduction to session management, analysis of most commonly used session flows, and best practices
-- [Part 2](https://medium.com/@supertokens.io/91f27eeef460): Analysis of the session flow used by SuperTokens.
+- [Part 1](https://hackernoon.com/all-you-need-to-know-about-user-session-security-ee5245e6bdad): Introduction to session management, analysis of most commonly used session flows, and best practices
+- [Part 2](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460): Analysis of the session flow used by SuperTokens.
 
 To understand the logic behind how sessions are created, managed and destroyed, please refer to the [WiKi section](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/wiki/Implementation-logic)
 
