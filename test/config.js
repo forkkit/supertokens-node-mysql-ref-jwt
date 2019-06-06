@@ -1,13 +1,17 @@
+const mysqlCommonConfig = {
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER || "root",
+    password: process.env.MYSQL_PASSWORD || "root",
+    database: process.env.MYSQL_DB || "auth_session",
+    tables: {
+        refreshTokens: "refresh_token_test",
+        signingKey: "signing_key_test"
+    }
+};
+
 module.exports.minConfigTest = {
-    mysql: {
-        user: process.env.MYSQL_USER || "root",
-        password: process.env.MYSQL_PASSWORD || "root",
-        database: process.env.MYSQL_DB || "auth_session",
-        tables: {
-            refreshTokens: "refresh_token_test",
-            signingKey: "signing_key_test"
-        }
-    },
+    mysql: mysqlCommonConfig,
     tokens: {
         accessToken: {
             signingKey: {
@@ -24,15 +28,7 @@ module.exports.minConfigTest = {
 };
 
 module.exports.configWithSigningKeyFunction = {
-    mysql: {
-        user: process.env.MYSQL_USER || "root",
-        password: process.env.MYSQL_PASSWORD || "root",
-        database: process.env.MYSQL_DB || "auth_session",
-        tables: {
-            refreshTokens: "refresh_token_test",
-            signingKey: "signing_key_test"
-        }
-    },
+    mysql: mysqlCommonConfig,
     tokens: {
         accessToken: {
             signingKey: {
@@ -51,15 +47,7 @@ module.exports.configWithSigningKeyFunction = {
 };
 
 module.exports.configWithShortSigningKeyUpdateInterval = {
-    mysql: {
-        user: process.env.MYSQL_USER || "root",
-        password: process.env.MYSQL_PASSWORD || "root",
-        database: process.env.MYSQL_DB || "auth_session",
-        tables: {
-            refreshTokens: "refresh_token_test",
-            signingKey: "signing_key_test"
-        }
-    },
+    mysql: mysqlCommonConfig,
     tokens: {
         accessToken: {
             signingKey: {
@@ -76,15 +64,7 @@ module.exports.configWithShortSigningKeyUpdateInterval = {
 };
 
 module.exports.configWithShortValidityForAccessToken = {
-    mysql: {
-        user: process.env.MYSQL_USER || "root",
-        password: process.env.MYSQL_PASSWORD || "root",
-        database: process.env.MYSQL_DB || "auth_session",
-        tables: {
-            refreshTokens: "refresh_token_test",
-            signingKey: "signing_key_test"
-        }
-    },
+    mysql: mysqlCommonConfig,
     tokens: {
         accessToken: {
             validity: 1
