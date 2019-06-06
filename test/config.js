@@ -1,11 +1,8 @@
 module.exports = {
     minConfigTest: {
         mysql: {
-            host: undefined,
-            port: undefined,
-            user: "root",
+            user: process.env.MYSQL_USER || "root",
             password: process.env.MYSQL_PASSWORD || "root",
-            connectionLimit: undefined,
             database: process.env.MYSQL_DB || "auth_session",
             tables: {
                 refreshTokens: "refresh_token_test",
@@ -19,11 +16,11 @@ module.exports = {
                 }
             },
             refreshToken: {
-                renewTokenPath: "http://localhost/refersh"
+                renewTokenPath: "/refersh"
             }
         },
         cookie: {
-            domain: "config.cookie.domain"
+            domain: "http://supertoken.io"
         }
     }
 };
