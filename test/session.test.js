@@ -2,6 +2,7 @@ const session = require("../lib/build/session");
 const assert = require("assert");
 const { reset } = require("..//lib/build/helpers/utils");
 const config = require("./config");
+const { getNumberOfRowsInRefreshTokensTable } = require("../lib/build/helpers/dbQueries");
 
 describe("Session", function() {
     it("create and get session", async function() {
@@ -28,6 +29,8 @@ describe("Session", function() {
         assert.deepStrictEqual(newSession.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof newSession.session.userId, "string");
         assert.deepStrictEqual(newSession.session.userId, userId);
+        const noOfRows = await getNumberOfRowsInRefreshTokensTable();
+        assert.deepStrictEqual(noOfRows, 1);
         const sessionInfo = await session.getSession(newSession.idRefreshToken.value, newSession.accessToken.value);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);

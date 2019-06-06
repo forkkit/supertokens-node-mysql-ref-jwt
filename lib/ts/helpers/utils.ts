@@ -181,6 +181,9 @@ export async function reset(newConfig?: TypeInputConfig) {
     if (process.env.TEST_MODE !== "testing") {
         throw Error("call this function only during testing");
     }
+    if (newConfig !== undefined) {
+        await init(newConfig);
+    }
     try {
         let connection = await getConnection();
         try {

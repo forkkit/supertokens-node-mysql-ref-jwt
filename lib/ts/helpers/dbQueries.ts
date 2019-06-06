@@ -1,6 +1,6 @@
 import Config from "../config";
 import { AuthError, generateError } from "../error";
-import { Connection } from "./mysql";
+import { Connection, getConnection } from "./mysql";
 
 /**
  * @description contains all the mysql queries.
@@ -234,12 +234,17 @@ export async function resetTables(connection: Connection) {
     await connection.executeQuery(query, []);
 }
 
-export async function getNumberOfRowsInRefreshTokensTable(connection: Connection): Promise<number> {
+export async function getNumberOfRowsInRefreshTokensTable(): Promise<number> {
     if (process.env.TEST_MODE !== "testing") {
         throw Error("call this function only during testing");
     }
-    const config = Config.get();
-    let query = `SELECT COUNT(*) FROM ${config.mysql.tables.refreshTokens};`;
-    let response = await connection.executeQuery(query, []);
-    return 1;
+    let connection = await getConnection();
+    try {
+        const config = Config.get();
+        let query = `SELECT COUNT(*) AS rowsCount FROM ${config.mysql.tables.refreshTokens};`;
+        let result = await connection.executeQuery(query, []);
+        return Number(result[0].rowsCount);
+    } finally {
+        connection.closeConnection();
+    }
 }
