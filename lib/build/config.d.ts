@@ -1,4 +1,4 @@
-import { TypeConfig, TypeInputConfig } from "./helpers/types";
+import { TypeConfig, TypeInputConfig } from './helpers/types';
 /**
  * @class Config
  * @description this is a singleton class since we need just one Config for this node process.
@@ -14,4 +14,5 @@ export default class Config {
     static init(config: TypeInputConfig): void;
     static get(): TypeConfig;
     static reset: () => void;
+    static isInitialised: () => boolean;
 }

@@ -41,6 +41,13 @@ export default class Config {
         }
         Config.instance = undefined;
     };
+
+    static isInitialised = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        return Config.instance !== undefined;
+    };
 }
 
 /**

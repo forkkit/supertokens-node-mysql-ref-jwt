@@ -1,3 +1,4 @@
+/// <reference types="express" />
 import * as express from "express";
 import { TypeInputConfig } from "./helpers/types";
 export { AuthError as Error } from "./error";

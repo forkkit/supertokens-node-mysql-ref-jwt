@@ -181,7 +181,7 @@ export async function reset(newConfig?: TypeInputConfig) {
     if (process.env.TEST_MODE !== "testing") {
         throw Error("call this function only during testing");
     }
-    if (newConfig !== undefined) {
+    if (newConfig !== undefined && !Config.isInitialised()) {
         await init(newConfig);
     }
     try {
