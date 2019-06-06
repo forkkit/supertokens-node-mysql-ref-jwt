@@ -230,8 +230,6 @@ export async function resetTables(connection: Connection) {
         throw Error("call this function only during testing");
     }
     const config = Config.get();
-    let query = `TRUNCATE TABLE ${config.mysql.tables.refreshTokens};`;
-    await connection.executeQuery(query, []);
-    query = `TRUNCATE TABLE ${config.mysql.tables.signingKey};`;
+    let query = `DROP TABLE IF EXISTS ${config.mysql.tables.refreshTokens}, ${config.mysql.tables.signingKey};`;
     await connection.executeQuery(query, []);
 }

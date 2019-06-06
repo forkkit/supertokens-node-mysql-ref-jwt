@@ -11,6 +11,8 @@ describe("Config", function() {
     it("testing init with minimum required config", async function() {
         assert.strictEqual(typeof SuperTokens.init, "function");
         await SuperTokens.init(config.minConfigTest);
+        await checkIfSigningKeyTableExists();
+        await checkIfRefreshTokensTableExists();
     });
 
     it("testing if table signing key table is created", async function() {
