@@ -56,12 +56,12 @@ All other issues like quote styles, spacing etc.. will be taken care of by the f
 
 1) Run the typescript compiler
     ```bash
-    cd lib && tsc -p tsconfig.json
+    (cd lib && tsc -p tsconfig.json)
     ```
 
 2) Run the formatter
     ```bash
-    cd lib && ./formatCode
+    (cd lib && ./formatCode.sh)
     ```
 
 4) If you have edited ```/index.ts``` or ```/indexRaw.ts```, please make the corresponding changes to ```/index.js``` or ```indexRaw.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
