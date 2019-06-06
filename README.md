@@ -38,10 +38,11 @@ The library has the following features:
 3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
 4) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
 5) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-6) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-7) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-8) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-9) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+6) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+7) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+8) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+9) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+10) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -299,9 +300,17 @@ You can play around with the [demo project](https://github.com/supertokens/auth-
 ## Making changes
 Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide
 
+## Tests
+To test this library, please run:
+```bash
+npm install -d
+npm test
+```
+
 ## Future work
 - Enable this to work with mobile apps as well.
 - To implement info, debug and error logs in a better way.
+- Add scaling metrics
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
