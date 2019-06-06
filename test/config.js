@@ -23,7 +23,7 @@ module.exports.minConfigTest = {
         }
     },
     cookie: {
-        domain: "supertoken.io"
+        domain: "supertokens.io"
     }
 };
 
@@ -42,7 +42,7 @@ module.exports.configWithSigningKeyFunction = {
         }
     },
     cookie: {
-        domain: "supertoken.io"
+        domain: "supertokens.io"
     }
 };
 
@@ -59,7 +59,7 @@ module.exports.configWithShortSigningKeyUpdateInterval = {
         }
     },
     cookie: {
-        domain: "supertoken.io"
+        domain: "supertokens.io"
     }
 };
 
@@ -74,6 +74,6 @@ module.exports.configWithShortValidityForAccessToken = {
         }
     },
     cookie: {
-        domain: "supertoken.io"
+        domain: "supertokens.io"
     }
 };
