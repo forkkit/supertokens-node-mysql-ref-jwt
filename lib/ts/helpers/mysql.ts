@@ -46,6 +46,13 @@ export class Mysql {
             });
         });
     }
+
+    static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        Mysql.instance = undefined;
+    };
 }
 
 export async function getConnection(): Promise<Connection> {
@@ -128,21 +135,46 @@ export class Connection {
 }
 
 async function createTablesIfNotExists() {
+    // first we check if the tables exist so that if the given mysql user does not have the privilege of creating them, then it won't throw an error.
+    if ((await checkIfSigningKeyTableExists()) && (await checkIfRefreshTokensTableExists())) {
+        return;
+    }
     const config = Config.get();
     let signingKeyTableName = config.mysql.tables.signingKey;
     let refreshTokensTableName = config.mysql.tables.refreshTokens;
     let connection = await getConnection();
     try {
-        // first we check if the tables exist so that if the given mysql user does not have the privilege of creatingt them, then it won't throw an error.
-        try {
-            await checkIfTableExists(connection, signingKeyTableName);
-            await checkIfTableExists(connection, refreshTokensTableName);
-            // at this point, both tables exist, so we return;
-            return;
-        } catch (err) {
-            // tables probably don't exist. so we will continue..
-        }
         await createTablesIfNotExistsQueries(connection, signingKeyTableName, refreshTokensTableName);
+    } finally {
+        connection.closeConnection();
+    }
+}
+
+export async function checkIfSigningKeyTableExists(): Promise<boolean> {
+    const config = Config.get();
+    let signingKeyTableName = config.mysql.tables.signingKey;
+    let connection = await getConnection();
+    try {
+        await checkIfTableExists(connection, signingKeyTableName);
+        return true;
+    } catch (err) {
+        // i.e. tables don't exist
+        return false;
+    } finally {
+        connection.closeConnection();
+    }
+}
+
+export async function checkIfRefreshTokensTableExists(): Promise<boolean> {
+    const config = Config.get();
+    let refreshTokensTableName = config.mysql.tables.refreshTokens;
+    let connection = await getConnection();
+    try {
+        await checkIfTableExists(connection, refreshTokensTableName);
+        return true;
+    } catch (err) {
+        // i.e. tables don't exist
+        return false;
     } finally {
         connection.closeConnection();
     }

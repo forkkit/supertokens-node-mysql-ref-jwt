@@ -12,6 +12,7 @@ jobs:
       - image: rishabhpoddar/node-mysql-git
     steps:
       - run: (cd / && ./runMySQL.sh)
+      - run: mysql -u root --password=root -e "CREATE DATABASE auth_session;"
       - checkout
       - run: npm install -d
       - run: npm test

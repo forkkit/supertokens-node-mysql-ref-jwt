@@ -39,3 +39,5 @@ export declare function getSessionInfo_Transaction(connection: Connection, sessi
 export declare function updateSessionInfo_Transaction(connection: Connection, sessionHandleHash1: string, refreshTokenHash2: string, sessionData: any, expiresAt: number): Promise<number>;
 export declare function getAllHash1SessionHandlesForUser(connection: Connection, userId: string): Promise<string[]>;
 export declare function deleteAllExpiredSessions(connection: Connection): Promise<void>;
+export declare function resetTables(connection: Connection): Promise<void>;
+export declare function getNumberOfRowsInRefreshTokensTable(): Promise<number>;

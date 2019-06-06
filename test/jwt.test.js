@@ -21,9 +21,9 @@ describe("JWT test", function() {
         const token = jwt.createJWT(payload, signingKeyA);
         try {
             const verifiedPayload = jwt.verifyJWTAndGetPayload(token, signingKeyB);
+            throw Error("jwt verfied with wrong signing key");
         } catch (err) {
             done();
         }
-        throw Error("jwt verfied with wrong signing key");
     });
 });

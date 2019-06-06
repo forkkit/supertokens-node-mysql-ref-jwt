@@ -16,6 +16,26 @@ export async function init() {
 }
 
 /**
+ * @description called during testing only
+ */
+export function reset() {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    SigningKey.reset();
+}
+
+/**
+ * @description called during testing only
+ */
+export async function getKeyForTesting(): Promise<string> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    return await SigningKey.getKey();
+}
+
+/**
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
  */
@@ -122,6 +142,17 @@ class SigningKey {
             SigningKey.instance = new SigningKey(config);
             await SigningKey.getKey();
         }
+    };
+
+    /**
+     * @description used during testing only
+     * The key in the database will be removed by the /helpers/utils - reset
+     */
+    static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        SigningKey.instance = undefined;
     };
 
     private getKeyFromInstance = async (): Promise<string> => {

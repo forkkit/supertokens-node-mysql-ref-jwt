@@ -90,6 +90,7 @@ docker pull rishabhpoddar/node-mysql-git
 
 # open a shell in the container, checkout your repo and run:
 (cd / && ./runMySQL.sh)
+mysql -u root --password=root -e "CREATE DATABASE auth_session;"
 npm install -d
 npm test
 ````

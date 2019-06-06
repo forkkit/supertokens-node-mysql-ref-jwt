@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha \" test/**/*.test.js\" --exit"
+    "test": "TEST_MODE=testing node_modules/.bin/mocha \" test/**/*.test.js\" --exit --slow=10000 --timeout=20000"
   },
   "repository": {
     "type": "git",
@@ -48,6 +48,9 @@
     "validator": "10.11.0"
   },
   "devDependencies": {
-    "mocha": "6.1.4"
+    "cookie-parser": "1.4.4",
+    "express": "4.17.1",
+    "mocha": "6.1.4",
+    "supertest": "4.0.2"
   }
 }
