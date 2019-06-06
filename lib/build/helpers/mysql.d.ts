@@ -9,6 +9,7 @@ export declare class Mysql {
     private constructor();
     static init(): Promise<void>;
     static getConnection(): Promise<mysql.PoolConnection>;
+    static reset: () => void;
 }
 export declare function getConnection(): Promise<Connection>;
 /**
@@ -28,3 +29,5 @@ export declare class Connection {
     commit: () => Promise<void>;
     closeConnection: () => void;
 }
+export declare function checkIfSigningKeyTableExists(): Promise<boolean>;
+export declare function checkIfRefreshTokensTableExists(): Promise<boolean>;

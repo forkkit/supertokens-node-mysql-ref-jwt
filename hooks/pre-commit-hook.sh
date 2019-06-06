@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # checks if locally staged changes are
 # formatted properly. Ignores non-staged

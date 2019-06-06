@@ -13,6 +13,26 @@ export async function init() {
 }
 
 /**
+ * @description used during testing only.
+ */
+export async function reset() {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    Key.reset();
+}
+
+/**
+ * @description used during testing only.
+ */
+export async function getKeyForTesting(): Promise<string> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    return await Key.getKey();
+}
+
+/**
  * @description given a token, it verifies it with the stored signature and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR UNAUTHORISED
  */
@@ -97,6 +117,17 @@ class Key {
             Key.instance = new Key();
             await Key.getKey();
         }
+    };
+
+    /**
+     * @description used during testing only
+     * The key in the database will be removed by the /helpers/utils - reset
+     */
+    static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        Key.instance = undefined;
     };
 
     private getKeyFromInstance = async (): Promise<string> => {

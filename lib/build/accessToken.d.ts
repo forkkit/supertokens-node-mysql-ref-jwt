@@ -4,6 +4,14 @@
  */
 export declare function init(): Promise<void>;
 /**
+ * @description called during testing only
+ */
+export declare function reset(): void;
+/**
+ * @description called during testing only
+ */
+export declare function getKeyForTesting(): Promise<string>;
+/**
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
  */

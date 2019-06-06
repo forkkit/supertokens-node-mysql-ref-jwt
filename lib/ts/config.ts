@@ -34,6 +34,20 @@ export default class Config {
         }
         return Config.instance.config;
     }
+
+    static reset = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        Config.instance = undefined;
+    };
+
+    static isInitialised = () => {
+        if (process.env.TEST_MODE !== "testing") {
+            throw Error("call this function only during testing");
+        }
+        return Config.instance !== undefined;
+    };
 }
 
 /**
@@ -117,7 +131,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         if (signingKeyInputConfig !== undefined) {
             const dynamic = sanitizeBooleanInput(signingKeyInputConfig.dynamic);
             let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
-            if (updateInterval !== undefined) {
+            if (updateInterval !== undefined && process.env.TEST_MODE !== "testing") {
                 if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
                     throw generateError(
                         AuthError.GENERAL_ERROR,
@@ -151,7 +165,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             };
         }
         let validity = sanitizeNumberInput(accessTokenInputConfig.validity);
-        if (validity !== undefined) {
+        if (validity !== undefined && process.env.TEST_MODE !== "testing") {
             if (validity > defaultConfig.tokens.accessToken.validity.max) {
                 throw generateError(
                     AuthError.GENERAL_ERROR,

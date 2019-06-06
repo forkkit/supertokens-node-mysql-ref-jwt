@@ -1,3 +1,4 @@
+import { TypeInputConfig } from './types';
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
  */
@@ -34,3 +35,13 @@ export declare function sanitizeNumberInput(field: any): number | undefined;
  * @param field
  */
 export declare function sanitizeBooleanInput(field: any): boolean | undefined;
+/**
+ * @description used in testing to reset all the singletons. Please do not use this outside of testing
+ * @param newConfig this can be undefined because if you actually want to test the init function itself after reset.
+ */
+export declare function reset(newConfig?: TypeInputConfig): Promise<void>;
+/**
+ *
+ * @param timeInMilliseconds
+ */
+export declare function delay(timeInMilliseconds: number): Promise<{}>;

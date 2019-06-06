@@ -1,6 +1,6 @@
 import Config from "../config";
 import { AuthError, generateError } from "../error";
-import { Connection } from "./mysql";
+import { Connection, getConnection } from "./mysql";
 
 /**
  * @description contains all the mysql queries.
@@ -222,5 +222,29 @@ function unserialiseSessionData(data: string): any {
         } catch (err) {
             throw generateError(AuthError.GENERAL_ERROR, err);
         }
+    }
+}
+
+export async function resetTables(connection: Connection) {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    const config = Config.get();
+    let query = `DROP TABLE IF EXISTS ${config.mysql.tables.refreshTokens}, ${config.mysql.tables.signingKey};`;
+    await connection.executeQuery(query, []);
+}
+
+export async function getNumberOfRowsInRefreshTokensTable(): Promise<number> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    let connection = await getConnection();
+    try {
+        const config = Config.get();
+        let query = `SELECT COUNT(*) AS rowsCount FROM ${config.mysql.tables.refreshTokens};`;
+        let result = await connection.executeQuery(query, []);
+        return Number(result[0].rowsCount);
+    } finally {
+        connection.closeConnection();
     }
 }

@@ -2,6 +2,14 @@ import { createCipheriv, createDecipheriv, createHash, createHmac, pbkdf2, rando
 import * as uuid from "uuid";
 import * as validator from "validator";
 
+import { reset as accessTokenReset } from "../accessToken";
+import Config from "../config";
+import { reset as refreshTokenReset } from "../refreshToken";
+import { init } from "../session";
+import { resetTables } from "./dbQueries";
+import { getConnection, Mysql } from "./mysql";
+import { TypeInputConfig } from "./types";
+
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
  */
@@ -163,4 +171,43 @@ export function sanitizeBooleanInput(field: any): boolean | undefined {
         return true;
     }
     return undefined;
+}
+
+/**
+ * @description used in testing to reset all the singletons. Please do not use this outside of testing
+ * @param newConfig this can be undefined because if you actually want to test the init function itself after reset.
+ */
+export async function reset(newConfig?: TypeInputConfig) {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    if (newConfig !== undefined && !Config.isInitialised()) {
+        await init(newConfig);
+    }
+    try {
+        let connection = await getConnection();
+        try {
+            await resetTables(connection);
+        } finally {
+            connection.closeConnection();
+        }
+    } catch (err) {
+        // if reset function is called before init, this part will throw error
+    } finally {
+        Config.reset();
+        Mysql.reset();
+        refreshTokenReset();
+        accessTokenReset();
+        if (newConfig !== undefined) {
+            await init(newConfig);
+        }
+    }
+}
+
+/**
+ *
+ * @param timeInMilliseconds
+ */
+export function delay(timeInMilliseconds: number) {
+    return new Promise(res => setTimeout(res, timeInMilliseconds));
 }
