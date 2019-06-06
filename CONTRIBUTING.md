@@ -29,7 +29,7 @@ Please only issue pull requests to the dev branch.
 4) Also run the pre commit installer (This will install prettier as a global npm package):
     ```bash
     sudo -s
-    cd hooks && ./pre-commit-hook-install.sh
+    (cd hooks && ./pre-commit-hook-install.sh)
     ```
 
 ## Coding standards
