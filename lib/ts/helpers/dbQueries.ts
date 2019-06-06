@@ -233,3 +233,13 @@ export async function resetTables(connection: Connection) {
     let query = `DROP TABLE IF EXISTS ${config.mysql.tables.refreshTokens}, ${config.mysql.tables.signingKey};`;
     await connection.executeQuery(query, []);
 }
+
+export async function getNumberOfRowsInRefreshTokensTable(connection: Connection): Promise<number> {
+    if (process.env.TEST_MODE !== "testing") {
+        throw Error("call this function only during testing");
+    }
+    const config = Config.get();
+    let query = `SELECT COUNT(*) FROM ${config.mysql.tables.refreshTokens};`;
+    let response = await connection.executeQuery(query, []);
+    return 1;
+}
