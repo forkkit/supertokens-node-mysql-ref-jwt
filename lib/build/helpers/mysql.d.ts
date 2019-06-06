@@ -29,3 +29,5 @@ export declare class Connection {
     commit: () => Promise<void>;
     closeConnection: () => void;
 }
+export declare function checkIfSigningKeyTableExists(): Promise<boolean>;
+export declare function checkIfRefreshTokensTableExists(): Promise<boolean>;

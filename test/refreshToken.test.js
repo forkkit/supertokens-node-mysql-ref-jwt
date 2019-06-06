@@ -14,11 +14,7 @@ describe("Refresh Token", function() {
         const userId = "superToken";
         const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentRefreshTokenHash1);
         const infoFromToken = await refreshToken.getInfoFromRefreshToken(token.token);
-        assert.deepStrictEqual(infoFromToken, {
-            sessionHandle: "sessionHandle",
-            userId: "superToken",
-            parentRefreshTokenHash1: "parentRefreshTokenHash1"
-        });
+        assert.deepStrictEqual(infoFromToken, { sessionHandle, userId, parentRefreshTokenHash1 });
     });
 
     it("testing create token and verification with different signing keys", async function() {
@@ -30,7 +26,6 @@ describe("Refresh Token", function() {
         const userId = "superToken";
         const token = await refreshToken.createNewRefreshToken(sessionHandle, userId, parentRefreshTokenHash1);
         await reset(config.minConfigTest); // changes refresh token in db
-        // TODO: verify that refresh token in db has changed!
         try {
             const infoFromToken = await refreshToken.getInfoFromRefreshToken(token.token);
             throw Error("test failed");

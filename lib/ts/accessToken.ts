@@ -21,6 +21,14 @@ export async function init() {
 export function reset() {
     SigningKey.reset();
 }
+
+/**
+ * @description called during testing only
+ */
+export async function getKey(): Promise<string> {
+    return await SigningKey.getKey();
+}
+
 /**
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN

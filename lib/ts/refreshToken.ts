@@ -18,6 +18,14 @@ export async function init() {
 export async function reset() {
     Key.reset();
 }
+
+/**
+ * @description used during testing only.
+ */
+export async function getKey(): Promise<string> {
+    return await Key.getKey();
+}
+
 /**
  * @description given a token, it verifies it with the stored signature and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR UNAUTHORISED

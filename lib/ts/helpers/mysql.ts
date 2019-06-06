@@ -151,3 +151,29 @@ async function createTablesIfNotExists() {
         connection.closeConnection();
     }
 }
+
+export async function checkIfSigningKeyTableExists(): Promise<boolean> {
+    const config = Config.get();
+    let signingKeyTableName = config.mysql.tables.signingKey;
+    let connection = await getConnection();
+    try {
+        await checkIfTableExists(connection, signingKeyTableName);
+        return true;
+    } catch (err) {
+        // i.e. tables don't exist
+        return false;
+    }
+}
+
+export async function checkIfRefreshTokensTableExists(): Promise<boolean> {
+    const config = Config.get();
+    let refreshTokensTableName = config.mysql.tables.refreshTokens;
+    let connection = await getConnection();
+    try {
+        await checkIfTableExists(connection, refreshTokensTableName);
+        return true;
+    } catch (err) {
+        // i.e. tables don't exist
+        return false;
+    }
+}

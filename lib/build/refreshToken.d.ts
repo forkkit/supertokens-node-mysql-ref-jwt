@@ -2,7 +2,14 @@
  * @description: called during library init. Should be called after initing Config and MySQL.
  */
 export declare function init(): Promise<void>;
+/**
+ * @description used during testing only.
+ */
 export declare function reset(): Promise<void>;
+/**
+ * @description used during testing only.
+ */
+export declare function getKey(): Promise<string>;
 /**
  * @description given a token, it verifies it with the stored signature and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR UNAUTHORISED

@@ -197,3 +197,11 @@ export async function reset(newConfig?: TypeInputConfig) {
         }
     }
 }
+
+/**
+ *
+ * @param timeInMilliseconds
+ */
+export function delay(timeInMilliseconds: number) {
+    return new Promise(res => setTimeout(res, timeInMilliseconds));
+}
