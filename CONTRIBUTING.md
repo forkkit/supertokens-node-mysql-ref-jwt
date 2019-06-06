@@ -73,6 +73,17 @@ Run unit tests and make sure all tests are passing.
 ```bash
 npm test
 ```
+You can change the following MySQL params while testing:
+```bash
+host: process.env.MYSQL_HOST, # default is localhost
+port: process.env.MYSQL_PORT, # default is 3306
+user: process.env.MYSQL_USER, # default is "root"
+password: process.env.MYSQL_PASSWORD, # default is "root"
+database: process.env.MYSQL_DB # default is "auth_session"
+
+# For example
+MYSQL_HOST=somehost MYSQL_PORT=9999 npm test
+```
 If you have docker, we have a container that has node, mysql and git installed in it
 ````bash
 docker pull rishabhpoddar/node-mysql-git
