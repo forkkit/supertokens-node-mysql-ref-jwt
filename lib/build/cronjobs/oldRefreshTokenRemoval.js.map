@@ -1,1 +1,0 @@
-{"version":3,"file":"oldRefreshTokenRemoval.js","sourceRoot":"","sources":["../../ts/cronjobs/oldRefreshTokenRemoval.ts"],"names":[],"mappings":";;;;;;;;;;AAAA,oDAAgE;AAChE,4CAAiD;AAEjD;;;GAGG;AACH,SAA8B,sBAAsB;;QAChD,MAAM,eAAe,GAAG,MAAM,qBAAa,EAAE,CAAC;QAC9C,IAAI;YACA,MAAM,oCAAwB,CAAC,eAAe,CAAC,CAAC;SACnD;gBAAS;YACN,eAAe,CAAC,eAAe,EAAE,CAAC;SACrC;IACL,CAAC;CAAA;AAPD,yCAOC"}
