@@ -42,6 +42,7 @@ describe("SuperToken", function() {
                     }
                     if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
                         reject();
+                        return;
                     }
                     resolve();
                 })
