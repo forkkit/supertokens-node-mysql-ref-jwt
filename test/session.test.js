@@ -59,7 +59,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
         await delay(1500);
         try {
-            await session.getSession(newSession.idRefreshToken.value, newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -83,7 +83,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
         await delay(2000);
         try {
-            await session.getSession(newSession.idRefreshToken.value, newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
