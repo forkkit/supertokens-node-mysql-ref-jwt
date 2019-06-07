@@ -324,12 +324,12 @@ General support includes the following (freely available from us forever):
 - Catering to pull requests.
 
 Dedicated support includes the following:
-- Help in custom implementation of this library into your existing project / infrastructure.
+- Help in a custom implementation of this library into your existing project/infrastructure.
 - Implementation of custom flows or features for your session management needs.
 - Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
-- Very high avaiability.
+- Very high availability.
 
-To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (upto 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
+To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (up to 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
 - Raises a reasonable and thoughtful issue.
 - Contributes meaningfully to this project.
 - Uses this repo in their project.
