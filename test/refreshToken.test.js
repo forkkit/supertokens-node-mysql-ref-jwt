@@ -3,8 +3,9 @@ const config = require("./config");
 const refreshToken = require("../lib/build/refreshToken");
 const { reset } = require("../lib/build/helpers/utils");
 let SuperTokens = require("..");
+const { printPath } = require("./utils");
 
-describe("Refresh Token", function() {
+describe(`Refresh Token: ${printPath("[test/refreshToken.test.js]")}`, function() {
     it("testing create and get info refresh token function", async function() {
         await reset(config.minConfigTest);
         assert.strictEqual(typeof refreshToken.createNewRefreshToken, "function");

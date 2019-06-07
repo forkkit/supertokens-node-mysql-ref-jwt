@@ -4,8 +4,9 @@ const { reset } = require("../../lib/build/helpers/utils");
 const config = require("../config");
 const supertest = require("supertest");
 let app = require("./app");
+const { printPath } = require("../utils");
 
-describe("SuperToken", function() {
+describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
     it("create new session function", async function() {
         await new Promise(async function(resolve, reject) {
             await reset(config.minConfigTest);

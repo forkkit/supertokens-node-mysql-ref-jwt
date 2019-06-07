@@ -3,8 +3,9 @@ const assert = require("assert");
 let cookieParser = require("cookie-parser");
 const supertest = require("supertest");
 const express = require("express");
+const { printPath } = require("./utils");
 
-describe("Cookie", () => {
+describe(`Cookie: ${printPath("[test/cookie.test.js]")}`, () => {
     it("testing setting cookie in response", function(done) {
         assert.strictEqual(typeof cookie.setCookie, "function");
         let app = express();

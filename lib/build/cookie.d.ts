@@ -1,4 +1,3 @@
-/// <reference types="express" />
 import * as express from "express";
 /**
  * @description clears all the auth cookies from the response

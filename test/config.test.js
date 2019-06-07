@@ -3,8 +3,9 @@ const config = require("./config");
 const assert = require("assert");
 const { reset } = require("../lib/build/helpers/utils");
 const { checkIfSigningKeyTableExists, checkIfRefreshTokensTableExists } = require("../lib/build/helpers/mysql");
+const { printPath } = require("./utils");
 
-describe("Config", function() {
+describe(`Config: ${printPath("[test/config.test.js]")}`, function() {
     before(async function() {
         await reset();
     });
