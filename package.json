@@ -1,6 +1,6 @@
 {
   "name": "supertokens-node-mysql-ref-jwt",
-  "version": "1.0.14",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "directories": {

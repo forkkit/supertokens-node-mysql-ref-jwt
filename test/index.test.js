@@ -1,7 +1,8 @@
 const SuperTokens = require("../");
 const assert = require("assert");
+const { printPath } = require("./utils");
 
-describe("checking for type of user functions", function() {
+describe(`checking for type of user functions: ${printPath("[test/index.test.js]")}`, function() {
     it("checking for init function", function() {
         assert.strictEqual(typeof SuperTokens.init, "function");
     });

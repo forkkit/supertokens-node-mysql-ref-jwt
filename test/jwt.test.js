@@ -1,7 +1,8 @@
 const jwt = require("../lib/build/helpers/jwt");
 const assert = require("assert");
+const { printPath } = require("./utils");
 
-describe("JWT test", function() {
+describe(`JWT: ${printPath("[test/jwt.test.js]")}`, function() {
     it("testing create token and verification with correct inputs", function() {
         const payload = { a: "a" };
         const signingKey = "testing";
