@@ -138,7 +138,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
         const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
         assert.strictEqual(typeof sessionInfo, "object");
-        assert.deepStrictEqual(typeof sessionInfo.newAccessToken, "object");
+        assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
         assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, sessionInfo.newAccessToken.value);
         assert.strictEqual(typeof sessionInfo.newAccessToken.expires, "number");
@@ -148,5 +148,14 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo.session.userId, "string");
         assert.deepStrictEqual(sessionInfo.session.userId, userId);
+        const newSessionInfo = await session.getSession(sessionInfo.newAccessToken.value);
+        assert.strictEqual(typeof newSessionInfo, "object");
+        assert.deepStrictEqual(newSessionInfo.newAccessToken, undefined);
+        assert.strictEqual(typeof newSessionInfo.session, "object");
+        assert.strictEqual(typeof newSessionInfo.session.handle, "string");
+        assert.strictEqual(typeof newSessionInfo.session.jwtPayload, "object");
+        assert.deepStrictEqual(newSessionInfo.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newSessionInfo.session.userId, "string");
+        assert.deepStrictEqual(newSessionInfo.session.userId, userId);
     });
 });
