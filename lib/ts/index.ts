@@ -67,7 +67,7 @@ export async function getSession(req: express.Request, res: express.Response): P
     }
 
     try {
-        let response = await SessionFunctions.getSession(idRefreshToken, accessToken);
+        let response = await SessionFunctions.getSession(accessToken);
         if (response.newAccessToken !== undefined) {
             attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
         }
@@ -96,7 +96,7 @@ export async function refreshSession(req: express.Request, res: express.Response
     }
 
     try {
-        let response = await SessionFunctions.refreshSession(idRefreshToken, refreshToken);
+        let response = await SessionFunctions.refreshSession(refreshToken);
         if (response.sessionTheftDetected) {
             // cookies clearing happens when catching unauthorised error
             config.onTokenTheftDetection(response.session.userId, response.session.handle);

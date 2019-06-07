@@ -33,7 +33,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newSession.session.userId, userId);
         const noOfRows = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRows, 1);
-        const sessionInfo = await session.getSession(newSession.idRefreshToken.value, newSession.accessToken.value);
+        const sessionInfo = await session.getSession(newSession.accessToken.value);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo.session, "object");
@@ -109,17 +109,14 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.refreshToken.value, "string");
         await delay(1500);
         try {
-            await session.getSession(newSession.idRefreshToken.value, newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
                 throw err;
             }
         }
-        const newRefreshedSession = await session.refreshSession(
-            newSession.idRefreshToken.value,
-            newSession.refreshToken.value
-        );
+        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
         assert.strictEqual(typeof newRefreshedSession, "object");
         assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
         assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
@@ -139,10 +136,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
         assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
-        const sessionInfo = await session.getSession(
-            newRefreshedSession.newIdRefreshToken.value,
-            newRefreshedSession.newAccessToken.value
-        );
+        const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(typeof sessionInfo.newAccessToken, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");

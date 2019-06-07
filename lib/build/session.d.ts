@@ -1,4 +1,4 @@
-import { TypeInputConfig } from "./helpers/types";
+import { TypeInputConfig } from './helpers/types';
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
  * Please create a database in your mysql instance before calling this function
@@ -32,7 +32,7 @@ export declare function createNewSession(userId: string, jwtPayload?: any, sessi
  * @description authenticates a session. To be used in APIs that require authentication
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  */
-export declare function getSession(idRefreshToken: string, accessToken: string): Promise<{
+export declare function getSession(accessToken: string): Promise<{
     session: {
         handle: string;
         userId: string;
@@ -47,7 +47,7 @@ export declare function getSession(idRefreshToken: string, accessToken: string):
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
  */
-export declare function refreshSession(idRefreshToken: string, refreshToken: string): Promise<{
+export declare function refreshSession(refreshToken: string): Promise<{
     sessionTheftDetected: false;
     session: {
         handle: string;

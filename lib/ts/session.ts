@@ -99,7 +99,6 @@ export async function createNewSession(
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  */
 export async function getSession(
-    idRefreshToken: string,
     accessToken: string
 ): Promise<{
     session: {
@@ -191,7 +190,6 @@ export async function getSession(
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
  */
 export async function refreshSession(
-    idRefreshToken: string,
     refreshToken: string
 ): Promise<
     | {
