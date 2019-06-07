@@ -152,7 +152,8 @@ SuperTokens.revokeAllSessionsForUser("User1").then(() => {
 });
 ```
 #### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
-- To be called when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in.
+- To be called **only** when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in.
+- **Do not call this function to logout a user in your logout API. This will not clear the cookies. Instead, call ```session.revokeSession()```**
 ```js
 // @params sessionHandle: string - a unique ID identifying this session.
 // @returns a Promise
