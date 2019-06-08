@@ -4,6 +4,7 @@ const { reset, delay } = require("../lib/build/helpers/utils");
 const config = require("./config");
 const { getNumberOfRowsInRefreshTokensTable } = require("../lib/build/helpers/dbQueries");
 const { printPath } = require("./utils");
+const jwt = require("../lib/build/helpers/jwt");
 const errors = require("../lib/build/error");
 
 describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
@@ -105,6 +106,37 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo.session.userId, "string");
         assert.deepStrictEqual(sessionInfo.session.userId, userId);
+    });
+
+    it("alter access token payload", async function() {
+        assert.strictEqual(typeof session.createNewSession, "function");
+        assert.strictEqual(typeof session.getSession, "function");
+        await reset(config.minConfigTest);
+        const userId = "testing";
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+        const newSession = await session.createNewSession(userId, jwtPayload, sessionData);
+        assert.strictEqual(typeof newSession, "object");
+        assert.strictEqual(typeof newSession.accessToken, "object");
+        assert.strictEqual(typeof newSession.accessToken.value, "string");
+        assert.strictEqual(typeof newSession.idRefreshToken, "object");
+        assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
+        await session.getSession(newSession.accessToken.value);
+        const alteredPayload = { a: "a" };
+        const alteredSigningKey = "testing";
+        assert(typeof jwt.createJWT, "function");
+        const newJWT = jwt.createJWT(alteredPayload, alteredSigningKey);
+        const alteredToken = `${newSession.accessToken.value.split(".")[0]}.${newJWT.split(".")[1]}.${
+            newSession.accessToken.value.split(".")[2]
+        }`;
+        try {
+            await session.getSession(alteredToken);
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
     });
 
     it("refresh session", async function() {
