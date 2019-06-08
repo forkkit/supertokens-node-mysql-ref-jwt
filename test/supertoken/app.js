@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const SuperTokens = require("../..");
+const errors = require("../../lib/build/error");
+const assert = require("assert");
 
 let urlencodedParser = bodyParser.urlencoded({ limit: "20mb", extended: true, parameterLimit: 20000 });
 let jsonParser = bodyParser.json({ limit: "20mb" });
@@ -17,6 +19,81 @@ app.post("/login", async (req, res, next) => {
     const sessionData = req.body.sessionData;
     await SuperTokens.createNewSession(res, userId, jwtPaylaod, sessionData);
     res.send("success");
+});
+
+app.get("/", async (req, res, next) => {
+    let errCode = 0;
+    let success = false;
+    try {
+        const sessionInfo = await SuperTokens.getSession(req, res);
+        success = true;
+    } catch (err) {
+        if (err.errType === undefined) {
+            throw Error();
+        }
+        errCode = err.errType;
+    }
+    res.send({
+        success,
+        errCode
+    });
+});
+
+app.post("/logout", async (req, res, next) => {
+    let errCode = 0;
+    let success = false;
+    try {
+        const sessionInfo = await SuperTokens.getSession(req, res);
+        await sessionInfo.revokeSession();
+        success = true;
+    } catch (err) {
+        if (err.errType === undefined) {
+            throw Error();
+        }
+        errCode = err.errType;
+    }
+    res.send({
+        success,
+        errCode
+    });
+});
+
+app.post("/revokeAll", async (req, res, next) => {
+    let errCode = 0;
+    let success = false;
+    try {
+        const sessionInfo = await SuperTokens.getSession(req, res);
+        const userId = sessionInfo.userId;
+        await SuperTokens.revokeAllSessionsForUser(userId);
+        success = true;
+    } catch (err) {
+        if (err.errType === undefined) {
+            throw Error();
+        }
+        errCode = err.errType;
+    }
+    res.send({
+        success,
+        errCode
+    });
+});
+
+app.post("/refresh", async (req, res, next) => {
+    let errCode = 0;
+    let success = false;
+    try {
+        const sessionInfo = await SuperTokens.refreshSession(req, res);
+        success = true;
+    } catch (err) {
+        if (err.errType === undefined) {
+            throw Error();
+        }
+        errCode = err.errType;
+    }
+    res.send({
+        success,
+        errCode
+    });
 });
 
 module.exports = app;
