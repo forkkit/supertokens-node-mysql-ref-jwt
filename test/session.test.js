@@ -4,7 +4,6 @@ const { reset, delay } = require("../lib/build/helpers/utils");
 const config = require("./config");
 const { getNumberOfRowsInRefreshTokensTable } = require("../lib/build/helpers/dbQueries");
 const { printPath } = require("./utils");
-const jwt = require("../lib/build/helpers/jwt");
 const errors = require("../lib/build/error");
 
 describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
@@ -120,11 +119,8 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.accessToken, "object");
         assert.strictEqual(typeof newSession.accessToken.value, "string");
         await session.getSession(newSession.accessToken.value);
-        const alteredPayload = { a: "a" };
-        const alteredSigningKey = "testing";
-        assert(typeof jwt.createJWT, "function");
-        const newJWT = jwt.createJWT(alteredPayload, alteredSigningKey);
-        const alteredToken = `${newSession.accessToken.value.split(".")[0]}.${newJWT.split(".")[1]}.${
+        const alteredPayload = Buffer.from(JSON.stringify({ ...jwtPayload, b: "new field" })).toString("base64");
+        const alteredToken = `${newSession.accessToken.value.split(".")[0]}.${alteredPayload}.${
             newSession.accessToken.value.split(".")[2]
         }`;
         try {
