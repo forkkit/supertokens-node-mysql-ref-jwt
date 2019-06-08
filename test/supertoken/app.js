@@ -44,8 +44,7 @@ app.post("/logout", async (req, res, next) => {
     let success = false;
     try {
         const sessionInfo = await SuperTokens.getSession(req, res);
-        const sessionHandle = sessionInfo.sessionHandle;
-        await SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
+        await sessionInfo.revokeSession();
         success = true;
     } catch (err) {
         if (err.errType === undefined) {

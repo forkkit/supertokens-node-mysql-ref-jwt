@@ -7,9 +7,10 @@ let app = require("./app");
 const { printPath } = require("../utils");
 const errors = require("../../lib/build/error");
 
+const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
     it("create, get and refresh session", async function() {
-        await reset(config.configWithShortValidityForAccessToken);
+        await reset(config.configWithShortValidityForAccessTokenWithTokenTheft);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
@@ -90,7 +91,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
                 if (cookies[i] === sRefreshTokenCookie) {
                     throw Error("refresh token still same as last refresh token");
                 }
-                oldRefreshTokenCookie = sRefreshTokenCookieFound;
+                oldRefreshTokenCookie = sRefreshTokenCookie;
                 sRefreshTokenCookie = cookies[i];
             } else if (cookies[i].includes("sIdRefreshToken")) {
                 sIdRefreshTokenCookieFound = true;
@@ -117,6 +118,26 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .post("/refresh")
             .set("Cookie", [oldRefreshTokenCookie, oldAccessTokenCookie, oldIdRefreshTokenCookie])
             .expect(200);
+        cookies = response.headers["set-cookie"];
+        sAccessTokenCookieFound = false;
+        sRefreshTokenCookieFound = false;
+        sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(Array.isArray(cookies), true);
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
+                sAccessTokenCookieFound = true;
+                sAccessTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sRefreshTokenCookieFound = true;
+                sRefreshTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sIdRefreshTokenCookieFound = true;
+                sIdRefreshTokenCookie2 = cookies[i];
+            }
+        }
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
         }
@@ -174,15 +195,27 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .post("/logout")
             .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
             .expect(200);
-        if (!response.body.success) {
-            throw Error("test failed");
+        cookies = response.headers["set-cookie"];
+        sAccessTokenCookieFound = false;
+        sRefreshTokenCookieFound = false;
+        sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(Array.isArray(cookies), true);
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
+                sAccessTokenCookieFound = true;
+                sAccessTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sRefreshTokenCookieFound = true;
+                sRefreshTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sIdRefreshTokenCookieFound = true;
+                sIdRefreshTokenCookie2 = cookies[i];
+            }
         }
-
-        response = await supertest(app)
-            .post("/refresh")
-            .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
-            .expect(200);
-        if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
+        if (!response.body.success) {
             throw Error("test failed");
         }
     });
@@ -242,6 +275,26 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .post("/refresh")
             .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
             .expect(200);
+        cookies = response.headers["set-cookie"];
+        sAccessTokenCookieFound = false;
+        sRefreshTokenCookieFound = false;
+        sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(Array.isArray(cookies), true);
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
+                sAccessTokenCookieFound = true;
+                sAccessTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sRefreshTokenCookieFound = true;
+                sRefreshTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sIdRefreshTokenCookieFound = true;
+                sIdRefreshTokenCookie2 = cookies[i];
+            }
+        }
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
         }
@@ -355,6 +408,26 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .post("/refresh")
             .set("Cookie", [sRefreshTokenCookie2, sAccessTokenCookie2, sIdRefreshTokenCookie2])
             .expect(200);
+        cookies = response.headers["set-cookie"];
+        sAccessTokenCookieFound = false;
+        sRefreshTokenCookieFound = false;
+        sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(Array.isArray(cookies), true);
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
+                sAccessTokenCookieFound = true;
+                sAccessTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sRefreshTokenCookieFound = true;
+                sRefreshTokenCookie2 = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken") && cookies[i].includes(expiredCookie)) {
+                sIdRefreshTokenCookieFound = true;
+                sIdRefreshTokenCookie2 = cookies[i];
+            }
+        }
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
         }

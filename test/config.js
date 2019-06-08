@@ -1,3 +1,6 @@
+const assert = require("assert");
+const { printPath } = require("./utils");
+
 const mysqlCommonConfig = {
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT,
@@ -75,5 +78,29 @@ module.exports.configWithShortValidityForAccessToken = {
     },
     cookie: {
         domain: "supertokens.io"
+    }
+};
+
+module.exports.configWithShortValidityForAccessTokenWithTokenTheft = {
+    mysql: mysqlCommonConfig,
+    tokens: {
+        accessToken: {
+            validity: 1
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh"
+        }
+    },
+    cookie: {
+        domain: "supertokens.io"
+    },
+    onTokenTheftDetection: (userId, sessionHandle) => {
+        describe(`Token Theft: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
+            it("detected", function() {
+                assert.strictEqual(typeof userId, "string");
+                assert.deepStrictEqual(userId, "testing");
+                assert.strictEqual(typeof sessionHandle, "string");
+            });
+        });
     }
 };
