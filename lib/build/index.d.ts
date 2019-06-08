@@ -33,7 +33,7 @@ export declare function refreshSession(req: express.Request, res: express.Respon
  */
 export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
 /**
- * @description Called by client normally when token theft is detected.
+ * @description Called by client normally when token theft is detected. Please do not call this to log the user out. This will not clear user cookies. Instead, use the session class to call the revokeSession function
  * @throws AuthError, GENERAL_ERROR
  */
 export declare function revokeSessionUsingSessionHandle(sessionHandle: string): Promise<void>;
