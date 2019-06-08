@@ -12,7 +12,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
     before(function() {
         global.tokenTheftCalled = false;
     });
-    it("create, get and refresh session", async function() {
+    it("create, get and refresh session (includes token theft)", async function() {
         await reset(config.configWithShortValidityForAccessTokenWithTokenTheft);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
