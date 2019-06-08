@@ -119,8 +119,6 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession, "object");
         assert.strictEqual(typeof newSession.accessToken, "object");
         assert.strictEqual(typeof newSession.accessToken.value, "string");
-        assert.strictEqual(typeof newSession.idRefreshToken, "object");
-        assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
         await session.getSession(newSession.accessToken.value);
         const alteredPayload = { a: "a" };
         const alteredSigningKey = "testing";
