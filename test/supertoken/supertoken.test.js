@@ -9,6 +9,9 @@ const errors = require("../../lib/build/error");
 
 const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
+    before(function() {
+        global.tokenTheftCalled = false;
+    });
     it("create, get and refresh session", async function() {
         await reset(config.configWithShortValidityForAccessTokenWithTokenTheft);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
@@ -114,6 +117,8 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             throw Error("test failed");
         }
 
+        // this value shuould be false here
+        assert.deepStrictEqual(tokenTheftCalled, false);
         response = await supertest(app)
             .post("/refresh")
             .set("Cookie", [oldRefreshTokenCookie, oldAccessTokenCookie, oldIdRefreshTokenCookie])
@@ -141,6 +146,8 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
         }
+        // to check if token theft was called
+        assert.deepStrictEqual(tokenTheftCalled, true);
     });
 
     it("revoke session", async function() {

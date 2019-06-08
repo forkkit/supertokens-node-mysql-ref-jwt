@@ -95,12 +95,6 @@ module.exports.configWithShortValidityForAccessTokenWithTokenTheft = {
         domain: "supertokens.io"
     },
     onTokenTheftDetection: (userId, sessionHandle) => {
-        describe(`Token Theft: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
-            it("detected", function() {
-                assert.strictEqual(typeof userId, "string");
-                assert.deepStrictEqual(userId, "testing");
-                assert.strictEqual(typeof sessionHandle, "string");
-            });
-        });
+        tokenTheftCalled = true;
     }
 };
