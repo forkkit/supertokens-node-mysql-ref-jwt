@@ -9,8 +9,17 @@ const errors = require("../../lib/build/error");
 
 const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
-    it("create, get and refresh session", async function() {
-        await reset(config.configWithShortValidityForAccessTokenWithTokenTheft);
+    it("create, get, refresh session and token theft", async function() {
+        let tokenTheftCalled = false;
+        function onTokenTheftDetection(userId, sessionHandle) {
+            if (typeof userId === "string" && userId === "testing" && typeof sessionHandle === "string") {
+                tokenTheftCalled = true;
+            }
+        }
+        await reset({
+            ...config.configWithShortValidityForAccessTokenWithTokenTheft,
+            onTokenTheftDetection
+        });
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
@@ -140,6 +149,10 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         }
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
+        }
+        await delay(500);
+        if (!tokenTheftCalled) {
+            throw Error("token theft function not called");
         }
     });
 
