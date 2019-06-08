@@ -95,7 +95,12 @@ module.exports.configWithShortValidityForAccessTokenWithTokenTheft = {
         domain: "supertokens.io"
     },
     onTokenTheftDetection: (userId, sessionHandle) => {
-        if (userId !== undefined && userId === "testing" && sessionHandle !== undefined) {
+        if (
+            userId !== undefined &&
+            userId === "testing" &&
+            sessionHandle !== undefined &&
+            typeof sessionHandle === "string"
+        ) {
             tokenTheftCalled = true;
         }
     }
