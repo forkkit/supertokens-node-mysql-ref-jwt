@@ -315,7 +315,7 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - Add scaling metrics
 
 ## Support, questions and bugs
-We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord channel](https://discord.gg/zVcVeev). 
+We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
 
 We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
 
