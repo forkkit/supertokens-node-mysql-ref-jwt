@@ -13,7 +13,7 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
-#### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice)
+#### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice). Or if you use MongoDB, please see: [supertokens-node-mongo-ref-jwt](https://github.com/supertokens/supertokens-node-mongo-ref-jwt).
 
 #### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
 
