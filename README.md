@@ -316,6 +316,7 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - Enable this to work with mobile apps as well.
 - To implement info, debug and error logs in a better way.
 - Add scaling metrics
+- IP change detection invalidates access token, so that thefts get caught sooner, or attacker get's logged out, while keeping the actual user logged in (Thanks to [Aervue](https://github.com/Aervue))
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
