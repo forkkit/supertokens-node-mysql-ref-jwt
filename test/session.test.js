@@ -223,6 +223,72 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.notDeepStrictEqual(sessionInfo.newAccessToken.value, sessionInfo2.newAccessToken.value);
     });
 
+    it("refresh session (refresh token expires after 3 secs)", async function() {
+        assert.strictEqual(typeof session.createNewSession, "function");
+        assert.strictEqual(typeof session.getSession, "function");
+        await reset(config.configWithShortValidityForRefreshToken);
+        const userId = "testing";
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+        // Part 1
+        {
+            const newSession = await session.createNewSession(userId, jwtPayload, sessionData);
+            assert.strictEqual(typeof newSession, "object");
+            assert.strictEqual(typeof newSession.refreshToken, "object");
+            assert.strictEqual(typeof newSession.refreshToken.value, "string");
+            const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+            assert.strictEqual(typeof newRefreshedSession, "object");
+            assert.strictEqual(typeof newRefreshedSession.sessionTheftDetected, "boolean");
+            assert.deepStrictEqual(newRefreshedSession.sessionTheftDetected, false);
+            assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+            assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+            const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+            assert.strictEqual(typeof sessionInfo, "object");
+            assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
+            assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
+            assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, sessionInfo.newAccessToken.value);
+            await delay(3000);
+            try {
+                await session.refreshSession(newRefreshedSession.newRefreshToken.value);
+                throw Error("test failed");
+            } catch (err) {
+                if (err.errType !== errors.AuthError.UNAUTHORISED) {
+                    throw err;
+                }
+            }
+        }
+        // Part 2
+        {
+            const newSession = await session.createNewSession(userId, jwtPayload, sessionData);
+            assert.strictEqual(typeof newSession, "object");
+            assert.strictEqual(typeof newSession.refreshToken, "object");
+            assert.strictEqual(typeof newSession.refreshToken.value, "string");
+            const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+            assert.strictEqual(typeof newRefreshedSession, "object");
+            assert.strictEqual(typeof newRefreshedSession.sessionTheftDetected, "boolean");
+            assert.deepStrictEqual(newRefreshedSession.sessionTheftDetected, false);
+            assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+            assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+            const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+            assert.strictEqual(typeof sessionInfo, "object");
+            assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
+            assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
+            assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, sessionInfo.newAccessToken.value);
+            await delay(2000);
+            const newRefreshedSession2 = await session.refreshSession(newRefreshedSession.newRefreshToken.value);
+            assert.strictEqual(typeof newRefreshedSession2, "object");
+            assert.strictEqual(typeof newRefreshedSession2.sessionTheftDetected, "boolean");
+            assert.deepStrictEqual(newRefreshedSession2.sessionTheftDetected, false);
+            assert.strictEqual(typeof newRefreshedSession2.newAccessToken, "object");
+            assert.strictEqual(typeof newRefreshedSession2.newAccessToken.value, "string");
+            const sessionInfo2 = await session.getSession(newRefreshedSession2.newAccessToken.value);
+            assert.strictEqual(typeof sessionInfo2, "object");
+            assert.strictEqual(typeof sessionInfo2.newAccessToken, "object");
+            assert.strictEqual(typeof sessionInfo2.newAccessToken.value, "string");
+            assert.notDeepStrictEqual(newRefreshedSession2.newAccessToken.value, sessionInfo2.newAccessToken.value);
+        }
+    });
+
     it("refresh session (token theft S1->R1->S2->R1)", async function() {
         assert.strictEqual(typeof session.createNewSession, "function");
         assert.strictEqual(typeof session.getSession, "function");

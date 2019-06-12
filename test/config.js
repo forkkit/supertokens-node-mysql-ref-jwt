@@ -105,3 +105,21 @@ module.exports.configWithShortValidityForAccessTokenWithTokenTheft = {
         }
     }
 };
+
+module.exports.configWithShortValidityForRefreshToken = {
+    mysql: mysqlCommonConfig,
+    tokens: {
+        accessToken: {
+            signingKey: {
+                dynamic: false
+            }
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh",
+            validity: 0.0008
+        }
+    },
+    cookie: {
+        domain: "supertokens.io"
+    }
+};
