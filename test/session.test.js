@@ -286,6 +286,18 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             assert.strictEqual(typeof sessionInfo2.newAccessToken, "object");
             assert.strictEqual(typeof sessionInfo2.newAccessToken.value, "string");
             assert.notDeepStrictEqual(newRefreshedSession2.newAccessToken.value, sessionInfo2.newAccessToken.value);
+            await delay(2000);
+            const newRefreshedSession3 = await session.refreshSession(newRefreshedSession2.newRefreshToken.value);
+            assert.strictEqual(typeof newRefreshedSession3, "object");
+            assert.strictEqual(typeof newRefreshedSession3.sessionTheftDetected, "boolean");
+            assert.deepStrictEqual(newRefreshedSession3.sessionTheftDetected, false);
+            assert.strictEqual(typeof newRefreshedSession3.newAccessToken, "object");
+            assert.strictEqual(typeof newRefreshedSession3.newAccessToken.value, "string");
+            const sessionInfo3 = await session.getSession(newRefreshedSession3.newAccessToken.value);
+            assert.strictEqual(typeof sessionInfo3, "object");
+            assert.strictEqual(typeof sessionInfo3.newAccessToken, "object");
+            assert.strictEqual(typeof sessionInfo3.newAccessToken.value, "string");
+            assert.notDeepStrictEqual(newRefreshedSession3.newAccessToken.value, sessionInfo3.newAccessToken.value);
         }
     });
 
