@@ -408,7 +408,7 @@ const defaultConfig = {
                 max: 365 * 24,
                 default: 100 * 24
             },
-            removalCronjobInterval: "0 0 0 1-31/7 * *" // every 7th day of a month starting from the 1st until the 31st
+            removalCronjobInterval: "0 0 1-31/7 * *" // every 7th day of a month starting from the 1st until the 31st
         }
     },
     cookie: {

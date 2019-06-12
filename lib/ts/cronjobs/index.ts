@@ -1,4 +1,4 @@
-import { CronJob } from "cron";
+import { schedule, ScheduledTask } from "node-cron";
 
 import Config from "../config";
 import { errorLogging, infoLogging } from "../helpers/logging";
@@ -38,10 +38,10 @@ export default class Cronjob {
  * @param interval
  * @param jobDescription
  */
-function createNewJob(job: Function, interval: string, jobDescription: string): CronJob {
-    return new CronJob({
-        cronTime: interval,
-        onTick: async () => {
+function createNewJob(job: Function, interval: string, jobDescription: string): ScheduledTask {
+    return schedule(
+        interval,
+        async () => {
             try {
                 const startTime = Date.now();
                 const startLog = `cron job started : ${jobDescription}`;
@@ -53,6 +53,8 @@ function createNewJob(job: Function, interval: string, jobDescription: string): 
                 errorLogging(err);
             }
         },
-        start: false
-    });
+        {
+            scheduled: false
+        }
+    );
 }
