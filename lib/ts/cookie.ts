@@ -5,7 +5,7 @@ import { AuthError, generateError } from "./error";
 
 const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
-const idRefreshTokenCookieKey = "sIdRefreshToken";
+const idRefreshTokenCookieKey = "sIdRefreshToken"; // if you change this name and are using supertokens-website or anything that uses is, then be sure to also change the name of this cookie there. To find the usage of this in those packages, you can simply search for "sIdRefreshToken"
 
 /**
  * @description clears all the auth cookies from the response

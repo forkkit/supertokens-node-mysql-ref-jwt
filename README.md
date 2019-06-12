@@ -1,6 +1,9 @@
 ![SuperTokens banner](https://raw.githubusercontent.com/supertokens/supertokens-logo/master/images/Artboard%20%E2%80%93%2027%402x.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
+<a href="https://discord.gg/zVcVeev">
+        <img src="https://img.shields.io/discord/587173034553769989.svg?logo=discord"
+            alt="chat on Discord"></a>
 
 **Master**
 [![CircleCI](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt.svg?style=svg)](https://circleci.com/gh/supertokens/supertokens-node-mysql-ref-jwt)
@@ -10,7 +13,7 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
-#### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice)
+#### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice). Or if you use MongoDB, please see: [supertokens-node-mongo-ref-jwt](https://github.com/supertokens/supertokens-node-mongo-ref-jwt).
 
 #### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
 
@@ -313,9 +316,12 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - Enable this to work with mobile apps as well.
 - To implement info, debug and error logs in a better way.
 - Add scaling metrics
+- IP change detection invalidates access token, so that thefts get caught sooner, or attacker get's logged out, while keeping the actual user logged in (Thanks to [Aervue](https://github.com/Aervue))
 
 ## Support, questions and bugs
-We are most accessible via team@supertokens.io and via the GitHub issues feature. We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
+We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
+
+We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
 
 General support includes the following (freely available from us forever):
 - Fixing bugs and catering to issues that apply to most users of this library.

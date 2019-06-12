@@ -29,12 +29,14 @@ export function generateUUID(): string {
     return uuid.v1();
 }
 
+// we use sha256 here and not something like bcrypt, since we use this to stored hashed refresh tokens in the db. These tokens change on a short time interval anyways. So we prefer speed.
 export function hash(toHash: string): string {
     return createHash("sha256")
         .update(toHash)
         .digest("hex");
 }
 
+// we use sha256 here since we use this only for signing JWTs, which are short lived + their signing key keeps changing by default
 export function hmac(text: string, key: string) {
     const hashFunction = createHmac("sha256", key);
     return hashFunction.update(text).digest("hex");
