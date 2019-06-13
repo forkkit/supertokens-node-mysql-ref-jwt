@@ -337,9 +337,9 @@ Dedicated support includes the following:
 - Very high availability.
 
 To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (up to 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
-- Raises a reasonable and thoughtful issue.
-- Contributes meaningfully to this project.
-- Uses this repo in their project.
+- Raises a reasonable and thoughtful issue on any of the backend repos of SuperTokens.
+- Contributes meaningfully to SuperTokens.
+- Uses any of the backend repos in their project.
 
 Referrals will be accepted only until this text is in the latest version of the README.md file
 
