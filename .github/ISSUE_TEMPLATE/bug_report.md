@@ -12,7 +12,7 @@ A clear and concise description of what the issue is about.
 ### Your environment
 * version of supertokens-node-mysql-ref-jwt - 
 * version of node - 
-* which browser and its version - 
+* version of mysql - 
 
 ### Steps to reproduce
 Tell us how to reproduce this issue. Please provide a working demo,if you can.
