@@ -42,13 +42,14 @@ The library has the following features:
 2) [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
 3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
 4) [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
-5) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
-6) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-7) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
-8) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-9) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-10) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-11) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+5) [Blacklisting](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#blacklisting)
+6) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
+7) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
+8) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+9) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+10) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+11) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+12) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -308,6 +309,11 @@ As seen above, there is a function in the config that is called when token theft
 onTokenTheftDetection: (userId: string, sessionHandle: string) => void
 ```
 The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unqiue ID identifying that particular session. Using these, you can either logout the user from all their devices. Or just the devices that are using that session. Both of these will stop the attack.
+
+## Blacklisting
+Enabling this feature will result in immediate revocation of JWT access tokens. Use this, for example, when it is very important to ban users immediately. You may wonder if this is enabled, then what is the point of using JWTs, since each authentication will require a DB call anyways. One benefit is that using JWTs instead of Opaque tokens saves you space. Another benefit is that you can have very optimised caching for blacklisted tokens, but doing so requires a thorough understanding of your use case. Please feel free to [contact us](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs) about any queries regarding your specific use case.
+
+To enable this feature, set ```blacklisting``` to true in the configs.
 
 ## Example code & Demo
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
