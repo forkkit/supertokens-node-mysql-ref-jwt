@@ -30,6 +30,24 @@ module.exports.minConfigTest = {
     }
 };
 
+module.exports.minConfigTestWithBlacklisting = {
+    mysql: mysqlCommonConfig,
+    tokens: {
+        accessToken: {
+            signingKey: {
+                dynamic: false
+            },
+            blacklisting: true
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh"
+        }
+    },
+    cookie: {
+        domain: "supertokens.io"
+    }
+};
+
 module.exports.configWithSigningKeyFunction = {
     mysql: mysqlCommonConfig,
     tokens: {

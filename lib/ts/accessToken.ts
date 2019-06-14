@@ -57,7 +57,7 @@ export async function getInfoFromAccessToken(
             payload = JWT.verifyJWTAndGetPayload(token, signingKey); // if this fails, then maybe the signing key has changed. So we ask the user to try refresh token.
         } catch (err) {
             if (retry) {
-                SigningKey.removeKeyFromMemory(); // remove key from memory and retry maybe
+                SigningKey.removeKeyFromMemory(); // remove key from memory and retry
                 return await getInfoFromAccessToken(token, false);
             } else {
                 throw err;
