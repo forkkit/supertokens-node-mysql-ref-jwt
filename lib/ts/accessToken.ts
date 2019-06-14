@@ -40,7 +40,8 @@ export async function getKeyForTesting(): Promise<string> {
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
  */
 export async function getInfoFromAccessToken(
-    token: string
+    token: string,
+    retry: boolean = true
 ): Promise<{
     sessionHandle: string;
     userId: string;
@@ -55,10 +56,12 @@ export async function getInfoFromAccessToken(
         try {
             payload = JWT.verifyJWTAndGetPayload(token, signingKey); // if this fails, then maybe the signing key has changed. So we ask the user to try refresh token.
         } catch (err) {
-            // reload the key from DB.
-            SigningKey.removeKeyFromMemory();
-            await SigningKey.getKey();
-            throw err;
+            SigningKey.removeKeyFromMemory(); // remove key from memory and retry maybe
+            if (retry) {
+                return await getInfoFromAccessToken(token, false);
+            } else {
+                throw err;
+            }
         }
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
         let userId = sanitizeStringInput(payload.userId);

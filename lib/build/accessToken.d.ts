@@ -15,7 +15,7 @@ export declare function getKeyForTesting(): Promise<string>;
  * @description given a token, it verifies it, checks the payload type and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR TRY_REFRESH_TOKEN
  */
-export declare function getInfoFromAccessToken(token: string): Promise<{
+export declare function getInfoFromAccessToken(token: string, retry?: boolean): Promise<{
     sessionHandle: string;
     userId: string;
     refreshTokenHash1: string;
