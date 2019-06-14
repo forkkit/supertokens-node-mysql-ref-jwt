@@ -1,4 +1,4 @@
-import { Connection } from "./mysql";
+import { Connection } from './mysql';
 /**
  * @description contains all the mysql queries.
  * @throws AuthError GENERAL_ERROR
@@ -29,6 +29,7 @@ export declare function getSessionData(connection: Connection, sessionHandleHash
 }>;
 export declare function deleteSession(connection: Connection, sessionHandleHash1: string): Promise<number>;
 export declare function createNewSession(connection: Connection, sessionHandleHash1: string, userId: string, refreshTokenHash2: string, sessionData: any, expiresAt: number, jwtPayload: any): Promise<void>;
+export declare function isSessionBlacklisted(connection: Connection, sessionHandleHash1: string): Promise<boolean>;
 export declare function getSessionInfo_Transaction(connection: Connection, sessionHandleHash1: string): Promise<{
     userId: string;
     refreshTokenHash2: string;

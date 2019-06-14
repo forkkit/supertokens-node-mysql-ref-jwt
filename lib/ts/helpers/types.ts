@@ -19,6 +19,7 @@ export type TypeInputConfig = {
                 get?: TypeGetSigningKeyUserFunction;
             };
             validity?: number;
+            blacklisting?: boolean;
         };
         refreshToken: {
             validity?: number;
@@ -58,6 +59,7 @@ export type TypeConfig = {
                 get: TypeGetSigningKeyUserFunction | undefined;
             };
             validity: number;
+            blacklisting: boolean;
         };
         refreshToken: {
             validity: number;

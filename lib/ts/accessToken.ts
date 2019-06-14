@@ -51,7 +51,13 @@ export async function getInfoFromAccessToken(
 }> {
     let signingKey = await SigningKey.getKey();
     try {
-        let payload = JWT.verifyJWTAndGetPayload(token, signingKey); // if this fails, then maybe the signing key has changed. So we ask the user to try refresh token.
+        let payload;
+        try {
+            payload = JWT.verifyJWTAndGetPayload(token, signingKey); // if this fails, then maybe the signing key has changed. So we ask the user to try refresh token.
+        } catch (err) {
+            SigningKey.removeKeyFromMemory(); // next time, the key will be reloaded from DB if it has changed.
+            throw err;
+        }
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
         let userId = sanitizeStringInput(payload.userId);
         let refreshTokenHash1 = sanitizeStringInput(payload.rt);
@@ -155,6 +161,20 @@ class SigningKey {
         SigningKey.instance = undefined;
     };
 
+    static removeKeyFromMemory = () => {
+        if (SigningKey.instance === undefined) {
+            throw generateError(
+                AuthError.GENERAL_ERROR,
+                new Error("please call init function of access token signing key")
+            );
+        }
+        SigningKey.instance.removeKeyFromMemoryInInstance();
+    };
+
+    private removeKeyFromMemoryInInstance = () => {
+        this.key = undefined;
+    };
+
     private getKeyFromInstance = async (): Promise<string> => {
         if (this.getKeyFromUser !== undefined) {
             // the user has provided their own function for this so use that.
@@ -165,19 +185,19 @@ class SigningKey {
             }
         }
         if (this.key === undefined) {
-            this.key = await this.generateNewKeyAndUpdateInDb();
+            this.key = await this.maybeGenerateNewKeyAndUpdateInDb();
         }
         if (this.dynamic && Date.now() > this.key.createdAtTime + this.updateInterval) {
             // key has expired, we need to change it.
-            this.key = await this.generateNewKeyAndUpdateInDb();
+            this.key = await this.maybeGenerateNewKeyAndUpdateInDb();
         }
         return this.key.keyValue;
     };
 
     /**
-     * @description Generates a new key in a way that takes race conditions in account in case there are multiple node processes running.
+     * @description Maybe generates a new key in a way that takes race conditions in account in case there are multiple node processes running.
      */
-    private generateNewKeyAndUpdateInDb = async (): Promise<{
+    private maybeGenerateNewKeyAndUpdateInDb = async (): Promise<{
         keyValue: string;
         createdAtTime: number;
     }> => {

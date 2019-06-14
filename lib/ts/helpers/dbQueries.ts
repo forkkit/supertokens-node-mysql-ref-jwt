@@ -140,6 +140,15 @@ export async function createNewSession(
     ]);
 }
 
+export async function isSessionBlacklisted(connection: Connection, sessionHandleHash1: string): Promise<boolean> {
+    const config = Config.get();
+    let query = `SELECT session_handle_hash_1 FROM ${
+        config.mysql.tables.refreshTokens
+    } WHERE session_handle_hash_1 = ?`;
+    let result = await connection.executeQuery(query, [sessionHandleHash1]);
+    return result.length === 0;
+}
+
 export async function getSessionInfo_Transaction(
     connection: Connection,
     sessionHandleHash1: string

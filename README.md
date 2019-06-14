@@ -25,7 +25,7 @@ The library has the following features:
 - **Automatic JWT signing key generation** (if you don't provide one), management and **rotation** - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
 - **Complete cookie management** - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
 - **Efficient** in terms of **space complexity** - Needs to store just one row in a SQL table per logged in user per device.
-- **Efficient** in terms of **time complexity** - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all!)
+- **Efficient** in terms of **time complexity** - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all if blacklisting is false - which is the default)
 - Built-in support for **handling multiple devices per user**.
 - **Built-in synchronisation** in case you are running multiple node processes.
 - **Easy to use** (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
@@ -144,7 +144,7 @@ SuperTokens.refreshSession(req, res).then(session => {
 });
 ```
 #### SuperTokens.revokeAllSessionsForUser(userId)
-- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate log out for this user. The actual time they would be logged out is when their access token expires, and since these are short-lived, that should be soon after calling this function.
+- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate log out for this user, unless blacklisting is set to true. If blacklisting is false, the actual time they would be logged out is when their access token expires, and since these are short-lived, that should be soon after calling this function.
 ```js
 // @params userId: string - a unique ID identifying this user. This ID should be the same as what was passed when calling SuperTokens.createNewSession
 // @returns a Promise
@@ -155,7 +155,7 @@ SuperTokens.revokeAllSessionsForUser("User1").then(() => {
 });
 ```
 #### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
-- To be called **only** when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in.
+- To be called **only** when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in. If blacklisting is set to true, this will invalidate the user's access token immediately, resulting in immediate logout.
 - **Do not call this function to logout a user in your logout API. This will not clear the cookies. Instead, call ```session.revokeSession()```**
 ```js
 // @params sessionHandle: string - a unique ID identifying this session.
@@ -181,7 +181,7 @@ let userId = session.getUserId()
 let payloadInfo = session.getJWTPayload()
 ```
 #### session.revokeSession()
-- To be called when you want to logout a user.
+- To be called when you want to logout a user. If blacklisting is set to true, this will invalidate the user's access token immediately.
 ```js
 // @returns a promise
 session.revokeSession().then(() => {
@@ -277,7 +277,8 @@ config = {
                 updateInterval?: number, // in hours - default 24 - should be >= 1 && <= 720. How often to change the signing key 
                 get?: () => Promise<string> // default undefined - If you want to give your own JWT signing key, please give a function here. If this is given, then the dynamic boolean will be ignored as key management will be up to you. This function will be called everytime we generate or verify any JWT. 
             },
-            validity?: number // in seconds, default is 3600 seconds. should be >= 10 && <= 86400000 seconds. This determines the lifetime of an access token.
+            validity?: number, // in seconds, default is 3600 seconds. should be >= 10 && <= 86400000 seconds. This determines the lifetime of an access token.
+            blacklisting?: boolean // default is false. If you set this to true, revoking a session will cause immediate logout of the user using that session, regardless of access token's lifetime (Their access token will be invalidated). But know that this has an adverse effect on time effeciency of each getSession call.
         },
         refreshToken: {
             validity?: number, // in hours, default is 2400 (100 days). This determines how long a refresh token is alive for. So if your user is inactive for these many hours, they will be logged out.

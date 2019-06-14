@@ -117,6 +117,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                     }
                   | undefined;
               validity: number | undefined;
+              blacklisting: boolean | undefined;
           }
         | undefined;
     if (accessTokenInputConfig !== undefined) {
@@ -184,9 +185,11 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                 );
             }
         }
+        let blacklisting = sanitizeBooleanInput(accessTokenInputConfig.blacklisting);
         accessToken = {
             signingKey,
-            validity
+            validity,
+            blacklisting
         };
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
@@ -317,7 +320,8 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                                   defaultConfig.tokens.accessToken.signingKey.updateInterval.default * 60 * 60 * 1000,
                               get: undefined
                           },
-                          validity: defaultConfig.tokens.accessToken.validity.default * 1000
+                          validity: defaultConfig.tokens.accessToken.validity.default * 1000,
+                          blacklisting: defaultConfig.tokens.accessToken.blacklisting
                       }
                     : {
                           signingKey:
@@ -346,7 +350,11 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                                     },
                           validity:
                               (config.tokens.accessToken.validity ||
-                                  defaultConfig.tokens.accessToken.validity.default) * 1000
+                                  defaultConfig.tokens.accessToken.validity.default) * 1000,
+                          blacklisting:
+                              config.tokens.accessToken.blacklisting === undefined
+                                  ? defaultConfig.tokens.accessToken.blacklisting
+                                  : config.tokens.accessToken.blacklisting
                       },
             refreshToken: {
                 validity:
@@ -399,7 +407,8 @@ const defaultConfig = {
                 min: 10,
                 max: 1000 * 24 * 3600,
                 default: 3600
-            }
+            },
+            blacklisting: false
         },
         refreshToken: {
             validity: {

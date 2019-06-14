@@ -8,6 +8,7 @@ import {
     getAllHash1SessionHandlesForUser,
     getSessionData as getSessionDataFromDB,
     getSessionInfo_Transaction,
+    isSessionBlacklisted,
     updateSessionData as updateSessionDataInDB,
     updateSessionInfo_Transaction
 } from "./helpers/dbQueries";
@@ -111,6 +112,19 @@ export async function getSession(
     let config = Config.get();
 
     let accessTokenInfo = await getInfoFromAccessToken(accessToken); // if access token is invalid, this will throw TRY_REFRESH_TOKEN error.
+    let sessionHandle = accessTokenInfo.sessionHandle;
+
+    // we check for blacklisting
+    if (config.tokens.accessToken.blacklisting) {
+        let connection = await getConnection();
+        try {
+            if (await isSessionBlacklisted(connection, hash(sessionHandle))) {
+                throw generateError(AuthError.UNAUTHORISED, new Error("session is over or has been blacklisted"));
+            }
+        } finally {
+            connection.closeConnection();
+        }
+    }
 
     // at this point, we have a valid access token.
     if (accessTokenInfo.parentRefreshTokenHash1 === undefined) {
@@ -130,7 +144,6 @@ export async function getSession(
     try {
         // we start a transaction so that we can later lock that particular row for updating.
         await connection.startTransaction();
-        let sessionHandle = accessTokenInfo.sessionHandle;
         let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
 
         if (sessionInfo === undefined) {
