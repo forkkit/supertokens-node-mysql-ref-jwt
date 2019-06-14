@@ -55,7 +55,9 @@ export async function getInfoFromAccessToken(
         try {
             payload = JWT.verifyJWTAndGetPayload(token, signingKey); // if this fails, then maybe the signing key has changed. So we ask the user to try refresh token.
         } catch (err) {
-            SigningKey.removeKeyFromMemory(); // next time, the key will be reloaded from DB if it has changed.
+            // reload the key from DB.
+            SigningKey.removeKeyFromMemory();
+            await SigningKey.getKey();
             throw err;
         }
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
