@@ -13,6 +13,8 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
+**This version works well with one instance of MySQL. To get this for a clustered environment, please [contact us](mailto:team@supertokens.io)**
+
 #### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice). Or if you use MongoDB, please see: [supertokens-node-mongo-ref-jwt](https://github.com/supertokens/supertokens-node-mongo-ref-jwt).
 
 #### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
@@ -39,13 +41,14 @@ The library has the following features:
 1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
 2) [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
 3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
-4) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
-5) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-6) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
-7) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-8) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-9) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-10) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+4) [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
+5) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
+6) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
+7) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+8) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+9) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+10) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+11) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -298,6 +301,13 @@ config = {
 }
 ```
 To change the default values or ranges, please see [/lib/ts/config.ts](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/config.ts) file.
+
+## Token theft detection
+As seen above, there is a function in the config that is called when token theft is detected:
+```js
+onTokenTheftDetection: (userId: string, sessionHandle: string) => void
+```
+The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unqiue ID identifying that particular session. Using these, you can either logout the user from all their devices. Or just the devices that are using that session. Both of these will stop the attack.
 
 ## Example code & Demo
 You can play around with the [demo project](https://github.com/supertokens/auth-demo) that uses this and the [supertokens-website](https://github.com/supertokens/supertokens-website) library. The demo demonstrates how this package behaves when it detects auth token theft (and the best part is that you are the attacker, muahahaha)!
