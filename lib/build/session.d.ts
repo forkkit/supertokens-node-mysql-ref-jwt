@@ -80,6 +80,11 @@ export declare function refreshSession(refreshToken: string): Promise<{
  */
 export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
 /**
+ * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
+ * @throws AuthError, GENERAL_ERROR
+ */
+export declare function getAllSessionHandlesForUser(userId: string): Promise<string[]>;
+/**
  * @description call to destroy one session
  * @returns true if session was deleted from db. Else false in case there was nothing to delete
  * @throws AuthError, GENERAL_ERROR

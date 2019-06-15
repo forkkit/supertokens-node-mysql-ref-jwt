@@ -45,3 +45,6 @@ export declare function reset(newConfig?: TypeInputConfig): Promise<void>;
  * @param timeInMilliseconds
  */
 export declare function delay(timeInMilliseconds: number): Promise<{}>;
+export declare function generateSessionHandle(): string;
+export declare function convertSessionHandleForDatabaseQuery(sessionHandle: string): string;
+export declare function convertDatabaseFetchedSessionToSendToUser(sessionHandle: string): string;

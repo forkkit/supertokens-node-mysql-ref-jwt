@@ -127,6 +127,31 @@ export async function revokeAllSessionsForUser(userId: string) {
 }
 
 /**
+ * @description gets all session handles for current user.
+ * @throws AuthError, GENERAL_ERROR
+ */
+export async function getAllSessionHandlesForUser(userId: string) {
+    return await SessionFunctions.getAllSessionHandlesForUser(userId);
+}
+
+/**
+ * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself. If you have a Session object, please call this function from that class instead.
+ * @returns session data as provided by the user earlier
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
+export async function getSessionData(sessionHandle: string) {
+    return await SessionFunctions.getSessionData(sessionHandle);
+}
+
+/**
+ * @description: It provides no locking mechanism in case other processes are updating session data for this session as well. If you have a Session object, please call this function from that class instead.
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
+export async function updateSessionData(sessionHandle: string, newSessionData: any) {
+    return await SessionFunctions.updateSessionData(sessionHandle, newSessionData);
+}
+
+/**
  * @description Called by client normally when token theft is detected. Please do not call this to log the user out. This will not clear user cookies. Instead, use the session class to call the revokeSession function
  * @throws AuthError, GENERAL_ERROR
  */

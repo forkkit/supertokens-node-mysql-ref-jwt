@@ -1,6 +1,7 @@
 import Config from "../config";
 import { AuthError, generateError } from "../error";
 import { Connection, getConnection } from "./mysql";
+import { convertDatabaseFetchedSessionToSendToUser, convertSessionHandleForDatabaseQuery } from "./utils";
 
 /**
  * @description contains all the mysql queries.
@@ -85,7 +86,8 @@ export async function insertKeyValueForKeyName_Transaction(
     await connection.executeQuery(query, [keyName, keyValue, createdAtTime, keyValue, createdAtTime]);
 }
 
-export async function updateSessionData(connection: Connection, sessionHandleHash1: string, sessionData: any) {
+export async function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any) {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle_hash_1 = ?`;
     let result = await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandleHash1]);
@@ -94,8 +96,9 @@ export async function updateSessionData(connection: Connection, sessionHandleHas
 
 export async function getSessionData(
     connection: Connection,
-    sessionHandleHash1: string
+    sessionHandle: string
 ): Promise<{ found: false } | { found: true; data: any }> {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     let query = `SELECT session_info FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ?`;
     let result = await connection.executeQuery(query, [sessionHandleHash1]);
@@ -110,7 +113,8 @@ export async function getSessionData(
     };
 }
 
-export async function deleteSession(connection: Connection, sessionHandleHash1: string): Promise<number> {
+export async function deleteSession(connection: Connection, sessionHandle: string): Promise<number> {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle_hash_1 = ?`;
     let result = await connection.executeQuery(query, [sessionHandleHash1]);
@@ -119,13 +123,14 @@ export async function deleteSession(connection: Connection, sessionHandleHash1: 
 
 export async function createNewSession(
     connection: Connection,
-    sessionHandleHash1: string,
+    sessionHandle: string,
     userId: string,
     refreshTokenHash2: string,
     sessionData: any,
     expiresAt: number,
     jwtPayload: any
 ) {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     let query = `INSERT INTO ${config.mysql.tables.refreshTokens} 
     (session_handle_hash_1, user_id, refresh_token_hash_2,
@@ -140,7 +145,8 @@ export async function createNewSession(
     ]);
 }
 
-export async function isSessionBlacklisted(connection: Connection, sessionHandleHash1: string): Promise<boolean> {
+export async function isSessionBlacklisted(connection: Connection, sessionHandle: string): Promise<boolean> {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     let query = `SELECT session_handle_hash_1 FROM ${
         config.mysql.tables.refreshTokens
@@ -151,7 +157,7 @@ export async function isSessionBlacklisted(connection: Connection, sessionHandle
 
 export async function getSessionInfo_Transaction(
     connection: Connection,
-    sessionHandleHash1: string
+    sessionHandle: string
 ): Promise<
     | {
           userId: string;
@@ -162,6 +168,7 @@ export async function getSessionInfo_Transaction(
       }
     | undefined
 > {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading session data");
     let query = `SELECT user_id,
@@ -183,11 +190,12 @@ export async function getSessionInfo_Transaction(
 
 export async function updateSessionInfo_Transaction(
     connection: Connection,
-    sessionHandleHash1: string,
+    sessionHandle: string,
     refreshTokenHash2: string,
     sessionData: any,
     expiresAt: number
 ): Promise<number> {
+    let sessionHandleHash1 = convertSessionHandleForDatabaseQuery(sessionHandle);
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when updating session data");
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET refresh_token_hash_2 = ?, 
@@ -201,11 +209,11 @@ export async function updateSessionInfo_Transaction(
     return result.affectedRows;
 }
 
-export async function getAllHash1SessionHandlesForUser(connection: Connection, userId: string): Promise<string[]> {
+export async function getAllSessionHandlesForUser(connection: Connection, userId: string): Promise<string[]> {
     const config = Config.get();
     let query = `SELECT session_handle_hash_1 FROM ${config.mysql.tables.refreshTokens} WHERE user_id = ?`;
     let result = await connection.executeQuery(query, [userId]);
-    return result.map((i: any) => i.session_handle_hash_1.toString());
+    return result.map((i: any) => convertDatabaseFetchedSessionToSendToUser(i.session_handle_hash_1.toString()));
 }
 
 export async function deleteAllExpiredSessions(connection: Connection) {

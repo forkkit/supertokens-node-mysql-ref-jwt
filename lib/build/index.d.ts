@@ -1,5 +1,6 @@
-import * as express from "express";
-import { TypeInputConfig } from "./helpers/types";
+/// <reference types="express" />
+import * as express from 'express';
+import { TypeInputConfig } from './helpers/types';
 export { AuthError as Error } from "./error";
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
@@ -32,6 +33,22 @@ export declare function refreshSession(req: express.Request, res: express.Respon
  * @throws AuthError, GENERAL_ERROR
  */
 export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
+/**
+ * @description gets all session handles for current user.
+ * @throws AuthError, GENERAL_ERROR
+ */
+export declare function getAllSessionHandlesForUser(userId: string): Promise<string[]>;
+/**
+ * @description: this function reads from the database every time. It provides no locking mechanism in case other processes are updating session data for this session as well, so please take of that by yourself. If you have a Session object, please call this function from that class instead.
+ * @returns session data as provided by the user earlier
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
+export declare function getSessionData(sessionHandle: string): Promise<any>;
+/**
+ * @description: It provides no locking mechanism in case other processes are updating session data for this session as well. If you have a Session object, please call this function from that class instead.
+ * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
+ */
+export declare function updateSessionData(sessionHandle: string, newSessionData: any): Promise<void>;
 /**
  * @description Called by client normally when token theft is detected. Please do not call this to log the user out. This will not clear user cookies. Instead, use the session class to call the revokeSession function
  * @throws AuthError, GENERAL_ERROR

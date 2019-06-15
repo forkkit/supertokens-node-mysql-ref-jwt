@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.0.3] - 2019-06-15
+### Added
+- Does not store hashed version of session handle in database anymore.
+
 ## [2.0.2] - 2019-06-14
 ### Changed
 - Adds feature of blacklisting, and if JWT verification fails, then reloads key from DB.

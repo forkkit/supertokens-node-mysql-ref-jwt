@@ -5,7 +5,7 @@ import { AuthError, generateError } from "./error";
 import {
     createNewSession as createNewSessionInDB,
     deleteSession,
-    getAllHash1SessionHandlesForUser,
+    getAllSessionHandlesForUser as getAllSessionHandlesForUserDB,
     getSessionData as getSessionDataFromDB,
     getSessionInfo_Transaction,
     isSessionBlacklisted,
@@ -14,7 +14,7 @@ import {
 } from "./helpers/dbQueries";
 import { getConnection, Mysql } from "./helpers/mysql";
 import { TypeInputConfig } from "./helpers/types";
-import { generateUUID, hash } from "./helpers/utils";
+import { generateSessionHandle, generateUUID, hash } from "./helpers/utils";
 import { createNewRefreshToken, getInfoFromRefreshToken, init as refreshTokenInit } from "./refreshToken";
 
 /**
@@ -51,7 +51,7 @@ export async function createNewSession(
     };
     idRefreshToken: { value: string; expires: number };
 }> {
-    let sessionHandle = generateUUID();
+    let sessionHandle = generateSessionHandle();
 
     // generate tokens:
     let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
@@ -69,7 +69,7 @@ export async function createNewSession(
         // we store hashed versions of what we send over to the client so that in case the database is compromised, it's still OK.
         await createNewSessionInDB(
             connection,
-            hash(sessionHandle),
+            sessionHandle,
             userId,
             hash(hash(refreshToken.token)),
             sessionData,
@@ -118,7 +118,7 @@ export async function getSession(
     if (config.tokens.accessToken.blacklisting) {
         let connection = await getConnection();
         try {
-            if (await isSessionBlacklisted(connection, hash(sessionHandle))) {
+            if (await isSessionBlacklisted(connection, sessionHandle)) {
                 throw generateError(AuthError.UNAUTHORISED, new Error("session is over or has been blacklisted"));
             }
         } finally {
@@ -144,7 +144,7 @@ export async function getSession(
     try {
         // we start a transaction so that we can later lock that particular row for updating.
         await connection.startTransaction();
-        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
+        let sessionInfo = await getSessionInfo_Transaction(connection, sessionHandle);
 
         if (sessionInfo === undefined) {
             // this session no longer exists in db
@@ -159,7 +159,7 @@ export async function getSession(
                 // we now have to promote to make the child a parent since we now know that the frontend has these tokens for sure.
                 await updateSessionInfo_Transaction(
                     connection,
-                    hash(sessionHandle),
+                    sessionHandle,
                     hash(accessTokenInfo.refreshTokenHash1),
                     sessionInfo.sessionData,
                     Date.now() + config.tokens.refreshToken.validity
@@ -270,7 +270,7 @@ async function refreshSessionHelper(
         // we start a transaction so that we can later lock that particular row for updating.
         await connection.startTransaction();
 
-        let sessionInfo = await getSessionInfo_Transaction(connection, hash(sessionHandle));
+        let sessionInfo = await getSessionInfo_Transaction(connection, sessionHandle);
 
         if (sessionInfo === undefined || sessionInfo.expiresAt < Date.now()) {
             await connection.commit();
@@ -342,7 +342,7 @@ async function refreshSessionHelper(
             // This can be solved fairly easily by keeping the expiry time in the refresh token payload as well.
             await updateSessionInfo_Transaction(
                 connection,
-                hash(sessionHandle),
+                sessionHandle,
                 hash(hash(refreshToken)),
                 sessionInfo.sessionData,
                 Date.now() + config.tokens.refreshToken.validity
@@ -378,10 +378,23 @@ async function refreshSessionHelper(
 export async function revokeAllSessionsForUser(userId: string) {
     let connection = await getConnection();
     try {
-        let sessionHandleHash1List = await getAllHash1SessionHandlesForUser(connection, userId);
-        for (let i = 0; i < sessionHandleHash1List.length; i++) {
-            await revokeSessionUsingSessionHandleHelper(sessionHandleHash1List[i]);
+        let sessionHandleList = await getAllSessionHandlesForUserDB(connection, userId);
+        for (let i = 0; i < sessionHandleList.length; i++) {
+            await revokeSessionUsingSessionHandle(sessionHandleList[i]);
         }
+    } finally {
+        connection.closeConnection();
+    }
+}
+
+/**
+ * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
+ * @throws AuthError, GENERAL_ERROR
+ */
+export async function getAllSessionHandlesForUser(userId: string): Promise<string[]> {
+    let connection = await getConnection();
+    try {
+        return await getAllSessionHandlesForUserDB(connection, userId);
     } finally {
         connection.closeConnection();
     }
@@ -393,13 +406,9 @@ export async function revokeAllSessionsForUser(userId: string) {
  * @throws AuthError, GENERAL_ERROR
  */
 export async function revokeSessionUsingSessionHandle(sessionHandle: string): Promise<boolean> {
-    return await revokeSessionUsingSessionHandleHelper(hash(sessionHandle));
-}
-
-async function revokeSessionUsingSessionHandleHelper(sessionHandleHash1: string): Promise<boolean> {
     let connection = await getConnection();
     try {
-        let numberOfAffectedRows = await deleteSession(connection, sessionHandleHash1);
+        let numberOfAffectedRows = await deleteSession(connection, sessionHandle);
         return numberOfAffectedRows === 1;
     } finally {
         connection.closeConnection();
@@ -414,7 +423,7 @@ async function revokeSessionUsingSessionHandleHelper(sessionHandleHash1: string)
 export async function getSessionData(sessionHandle: string): Promise<any> {
     let connection = await getConnection();
     try {
-        let result = await getSessionDataFromDB(connection, hash(sessionHandle));
+        let result = await getSessionDataFromDB(connection, sessionHandle);
         if (!result.found) {
             throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));
         } else {
@@ -432,7 +441,7 @@ export async function getSessionData(sessionHandle: string): Promise<any> {
 export async function updateSessionData(sessionHandle: string, newSessionData: any) {
     let connection = await getConnection();
     try {
-        let numberOfAffectedRows = await updateSessionDataInDB(connection, hash(sessionHandle), newSessionData);
+        let numberOfAffectedRows = await updateSessionDataInDB(connection, sessionHandle, newSessionData);
         if (numberOfAffectedRows !== 1) {
             // did not update anything, which means there was nothing to update, which means the session does not exist.
             throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist anymore"));

@@ -170,6 +170,15 @@ SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
   // type of err is SuperTokens.Error Will be GENERAL_ERROR
 });
 ```
+#### SuperTokens.getAllSessionHandlesForUser(userId)
+# TODO
+
+#### SuperTokens.getSessionData(sessionHandle)
+# TODO
+
+#### SuperTokens.updateSessionData(sessionHandle, newSessionData)
+# TODO
+
 ### Session
 An instance of this class will be returned to you from some of the functions mentioned above.
 #### session.getUserId()
