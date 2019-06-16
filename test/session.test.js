@@ -1,4 +1,4 @@
-const session = require("../lib/build/session");
+const session = require("../");
 const assert = require("assert");
 const { reset, delay } = require("../lib/build/helpers/utils");
 const config = require("./config");

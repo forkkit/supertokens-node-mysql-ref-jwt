@@ -1,4 +1,4 @@
-const SuperTokens = require("../");
+const SuperTokens = require("../express");
 const assert = require("assert");
 const { printPath } = require("./utils");
 

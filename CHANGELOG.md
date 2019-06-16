@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2019-06-15
+### Breaking Changes
+- Reorganises lib so that express related functions are access via /express. By default, you get the raw functions so that you can use them with any non express frameworks as well.
+- Stores sessionHandle without hashing in db - results in changing of column name in table
+
 ## [2.0.3] - 2019-06-15
 ### Added
 - Does not store hashed version of session handle in database anymore.
