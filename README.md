@@ -68,13 +68,13 @@ CREATE TABLE signing_key (
 );
 
 CREATE TABLE refresh_tokens (
-  session_handle_hash_1 VARCHAR(255) NOT NULL,
+  session_handle VARCHAR(255) NOT NULL,
   user_id VARCHAR(128) NOT NULL,
   refresh_token_hash_2 VARCHAR(128) NOT NULL,
   session_info TEXT,
   expires_at BIGINT UNSIGNED NOT NULL,
   jwt_user_payload TEXT,
-  PRIMARY KEY(session_handle_hash_1)
+  PRIMARY KEY(session_handle)
 );    
 ```
 You can name these tables whatever you want, but be sure to send those to the library via the config params [(see below)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config).

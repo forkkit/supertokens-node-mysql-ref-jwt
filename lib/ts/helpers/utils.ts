@@ -215,24 +215,5 @@ export function delay(timeInMilliseconds: number) {
 }
 
 export function generateSessionHandle() {
-    return generateUUID() + ".v1";
-}
-
-export function convertSessionHandleForDatabaseQuery(sessionHandle: string): string {
-    if (sessionHandle.endsWith("-h1")) {
-        return sessionHandle.substring(0, sessionHandle.length - 3);
-    }
-    if (sessionHandle.endsWith(".v1")) {
-        return sessionHandle;
-    } else {
-        return hash(sessionHandle);
-    }
-}
-
-export function convertDatabaseFetchedSessionToSendToUser(sessionHandle: string): string {
-    if (sessionHandle.endsWith(".v1")) {
-        return sessionHandle;
-    } else {
-        return sessionHandle + "-h1";
-    }
+    return generateUUID();
 }
