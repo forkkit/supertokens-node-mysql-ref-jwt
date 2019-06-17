@@ -34,25 +34,25 @@ The library has the following features:
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. 
 
 #### If you like this project and want to use it, but for a different tech stack:
-- Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack. This is on a first come, first serve basis.
+- Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack.
 - We have made this into a standalone http service as well which you can use with any backend language of your choice: [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice).
 
 ## Index
-1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
-2) [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
-3) [Usage with express](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-express)
-4) [Usage with other http frameworks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-other-http-frameworks)
-5) [Error handling](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#error-handling)
-6) [Config](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config)
-7) [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
-8) [Blacklisting](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#blacklisting)
-9) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
-10) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-11) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
-12) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-13) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-14) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-15) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+- [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
+- [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
+- [Usage with express](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-express)
+- [Usage with other http frameworks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-other-http-frameworks)
+- [Error handling](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#error-handling)
+- [Config](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config)
+- [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
+- [Blacklisting](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#blacklisting)
+- [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
+- [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
+- [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+- [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+- [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+- [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+- [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 **This package is to be used in your backend code, and [supertokens-website](https://github.com/supertokens/supertokens-website) is to be used in your frontend code. Together, these packages solve all the race conditions and failure cases mentioned in this [blog post](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)**
@@ -85,14 +85,14 @@ You can name these tables whatever you want, but be sure to send those to the li
 
 You will also need to use the cookie-parser npm module as a middleware for this library to work:
 ```js
-import * as cookieParser from 'cookie-parser';
-app.use(cookieParser());
+import * as CookieParser from 'cookie-parser';
+app.use(CookieParser());
 ```
 
 ## Accompanying library
 As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
 
-Together this library and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
+Together this and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
 ## Usage with express
 
@@ -108,7 +108,7 @@ import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 SuperTokens.init(config).then(() => {
   // Success! Your app can now use this library in any API
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.createNewSession(res, userId, jwtPayload?, sessionData?)
@@ -122,7 +122,7 @@ SuperTokens.init(config).then(() => {
 SuperTokens.createNewSession(res, "User1", {info: "Data in JWT"}, {info: "Data stored in DB"}).then(session => {
   // session is of type Session class - See below.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.getSession(req, res)
@@ -134,8 +134,8 @@ SuperTokens.createNewSession(res, "User1", {info: "Data in JWT"}, {info: "Data s
 SuperTokens.getSession(req, res).then(session => {
   // session is of type Session class.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED or TRY_REFRESH_TOKEN
-  // most of the time, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details, please see the SuperTokens.Error section below.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED |  SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}. See Error handling below
+  // Normally, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details. See Error handling below
 });
 ```
 #### SuperTokens.refreshSession(req, res)
@@ -147,8 +147,8 @@ SuperTokens.getSession(req, res).then(session => {
 SuperTokens.refreshSession(req, res).then(session => {
   // session is of type Session class.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED
-  // if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
+  // Normally, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details. See Error handling below
 });
 ```
 #### SuperTokens.revokeAllSessionsForUser(userId)
@@ -159,7 +159,7 @@ SuperTokens.refreshSession(req, res).then(session => {
 SuperTokens.revokeAllSessionsForUser("User1").then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
@@ -176,34 +176,34 @@ SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
 ```
 #### SuperTokens.getAllSessionHandlesForUser(userId)
 ```js
-@params userId: string
-@returns a list of strings, where each item is a sessionHandle.
+// @params userId: string
+// @returns a list of strings, where each item is a sessionHandle.
 SuperTokens.getAllSessionHandlesForUser(userId).then((sessionHandles) => {
   // sessionHandles is a list of strings.
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 })
 ```
 
 #### SuperTokens.getSessionData(sessionHandle)
 ```js
-@params sessionHandle: string
-@returns sessionData which can have any type depending on what you put in.
+// @params sessionHandle: string
+// @returns sessionData which can have any type depending on what you put in.
 SuperTokens.getSessionData(sessionHandle).then((data) => {
   // success.
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 })
 ```
 
 #### SuperTokens.updateSessionData(sessionHandle, newSessionData)
 ```js
-@params sessionHandle: string
-@params newSessionData which can have any type.
+// @params sessionHandle: string
+// @params newSessionData which can have any type.
 SuperTokens.updateSessionData(sessionHandle, newSessionData).then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 })
 ```
 
@@ -228,7 +228,7 @@ let payloadInfo = session.getJWTPayload()
 session.revokeSession().then(() => {
   // success. user has been logged out.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### session.getSessionData()
@@ -239,7 +239,7 @@ session.revokeSession().then(() => {
 session.getSessionData().then((data) => {
   // success.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR and UNAUTHORISED
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 });
 ```
 #### session.updateSessionData()
@@ -251,7 +251,7 @@ session.getSessionData().then((data) => {
 session.updateSessionData(data).then(() => {
   // success.
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR and UNAUTHORISED
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 });
 ```
 ## Usage with other http frameworks
@@ -267,7 +267,7 @@ import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 SuperTokens.init(config).then(() => {
   // Success! Your app can now use this library in any API
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.createNewSession(userId, jwtPayload?, sessionData?)
@@ -294,7 +294,7 @@ SuperTokens.createNewSession("User1", {info: "Data in JWT"}, {info: "Data stored
          idRefreshToken: { value: string, expires: number }
      }*/
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.getSession(accessToken)
@@ -313,8 +313,8 @@ SuperTokens.getSession(accessToken).then(session => {
          newAccessToken: { value: string; expires: number } | undefined;
      } */
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED or TRY_REFRESH_TOKEN
-  // most of the time, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details, please see the SuperTokens.Error section below.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED |  SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}. See Error handling below
+  // Normally, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details. See Error handling below
 });
 ```
 #### SuperTokens.refreshSession(refreshToken)
@@ -335,7 +335,7 @@ SuperTokens.refreshSession(refreshToken).then(session => {
          newIdRefreshToken: { value: string; expires: number };
      } */
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
   /* if err is UNAUTHORISED and token has been stolen, then err will have the following type (The onTokenTheftDetection function will also be called): {
          errType: SuperTokens.ERROR.UNAUTHORISED,
          err: {
@@ -353,7 +353,7 @@ SuperTokens.refreshSession(refreshToken).then(session => {
 SuperTokens.revokeAllSessionsForUser("User1").then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
@@ -366,7 +366,7 @@ SuperTokens.revokeAllSessionsForUser("User1").then(() => {
 SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 });
 ```
 #### SuperTokens.getAllSessionHandlesForUser(userId)
@@ -376,7 +376,7 @@ SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
 SuperTokens.getAllSessionHandlesForUser(userId).then((sessionHandles) => {
   // sessionHandles is a list of strings.
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}. See Error handling below
 })
 ```
 
@@ -388,7 +388,7 @@ SuperTokens.getAllSessionHandlesForUser(userId).then((sessionHandles) => {
 SuperTokens.getSessionData(sessionHandle).then((data) => {
   // success.
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 })
 ```
 
@@ -400,7 +400,7 @@ SuperTokens.getSessionData(sessionHandle).then((data) => {
 SuperTokens.updateSessionData(sessionHandle, newSessionData).then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+  // err will be of type {errType: SuperTokens.ERROR.GENERAL_ERROR | SuperTokens.ERROR.UNAUTHORISED, err: any}. See Error handling below
 })
 ```
 
@@ -435,10 +435,10 @@ Thrown by many of the functions that are mentioned above. There are of three typ
 // If you call this in TypeScript, then the err object will have a type {errType: number, err: any}
 let isErrorGeneratedBySuperTokensLib = SuperTokens.Error.isErrorFromAuth(err)
 ```
-#### In general
+#### Important
 - In a GET API call which returns a rendered HTML page (for example when using server-side rendered ReactJS):
   - If you get an UNAUTHORISED error, redirect to a login page.
-  - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the supertokens-website package and if that is successful, call the current API again, else redirect to a login page.
+  - If you get a TRY_REFRESH_TOKEN error, then send HTML & JS that attempts to call the refreshtoken API via the supertokens-website package and if that is successful, call the current API again, else redirect to a login page. For more details on this please [contact us](mailto:team@supertokens.io)
 - In all other APIs
   - If you get an UNAUTHORISED or TRY_REFRESH_TOKEN error, send a status code that represents session expiry
 
@@ -540,12 +540,12 @@ Dedicated support includes the following:
 - Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
 - Very high availability.
 
-To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referral an additional free month (up to 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
+To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referrer an additional free month (up to 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
 - Raises a reasonable and thoughtful issue on any of the backend repos of SuperTokens.
 - Contributes meaningfully to SuperTokens.
 - Uses any of the backend repos in their project.
 
-Referrals will be accepted only until this text is in the latest version of the README.md file
+**Referrals will be accepted only until this text is in the latest version of the README.md file**
 
 ## Further reading and understanding
 We have written a blog post about sessions in general:
