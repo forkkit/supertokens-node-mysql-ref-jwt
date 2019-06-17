@@ -40,16 +40,19 @@ The library has the following features:
 ## Index
 1) [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
 2) [Accompanying library](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#accompanying-library)
-3) [Usage](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage)
-4) [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
-5) [Blacklisting](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#blacklisting)
-6) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
-7) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
-8) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
-9) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
-10) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
-11) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
-12) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+3) [Usage with express](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-express)
+4) [Usage with other http frameworks](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#usage-with-other-http-frameworks)
+5) [Error handling](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#error-handling)
+6) [Config](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#config)
+7) [Token theft detection](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#token-theft-detection)
+8) [Blacklisting](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#blacklisting)
+9) [Example code & Demo](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#example-code--demo)
+10) [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
+11) [Tests](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#tests)
+12) [Future work](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#future-work)
+13) [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
+14) [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
+15) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
 ```bash
@@ -90,11 +93,11 @@ As of now, this library will only work if your frontend is a website. To use thi
 
 Together this library and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
-## Usage
+## Usage with express
 
-### SuperTokens
+#### Importing SuperTokens
 ```js
-import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
+import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 ```
 #### SuperTokens.init(config)
 - To be called while starting your server
@@ -159,7 +162,7 @@ SuperTokens.revokeAllSessionsForUser("User1").then(() => {
 });
 ```
 #### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
-- To be called **only** when the token theft callback is called (see configs). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in. If blacklisting is set to true, this will invalidate the user's access token immediately, resulting in immediate logout.
+- To be called **only** when the token theft callback is called (see Token Theft detection). The callback function will give you a sessionHandle and a userId. Using the sessionHandle, you can logout any device that is using that particular session. This enables you to keep other devices of this userId still logged in. If blacklisting is set to true, this will invalidate the user's access token immediately, resulting in immediate logout.
 - **Do not call this function to logout a user in your logout API. This will not clear the cookies. Instead, call ```session.revokeSession()```**
 ```js
 // @params sessionHandle: string - a unique ID identifying this session.
@@ -167,17 +170,41 @@ SuperTokens.revokeAllSessionsForUser("User1").then(() => {
 SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
   // success
 }).catch(err => {
-  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
 });
 ```
 #### SuperTokens.getAllSessionHandlesForUser(userId)
-# TODO
+```js
+@params userId: string
+@returns a list of strings, where each item is a sessionHandle.
+SuperTokens.getAllSessionHandlesForUser(userId).then((sessionHandles) => {
+  // sessionHandles is a list of strings.
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+})
+```
 
 #### SuperTokens.getSessionData(sessionHandle)
-# TODO
+```js
+@params sessionHandle: string
+@returns sessionData which can have any type depending on what you put in.
+SuperTokens.getSessionData(sessionHandle).then((data) => {
+  // success.
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+})
+```
 
 #### SuperTokens.updateSessionData(sessionHandle, newSessionData)
-# TODO
+```js
+@params sessionHandle: string
+@params newSessionData which can have any type.
+SuperTokens.updateSessionData(sessionHandle, newSessionData).then(() => {
+  // success
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+})
+```
 
 ### Session
 An instance of this class will be returned to you from some of the functions mentioned above.
@@ -226,8 +253,158 @@ session.updateSessionData(data).then(() => {
   // type of err is SuperTokens.Error Will be GENERAL_ERROR and UNAUTHORISED
 });
 ```
-### SuperTokens.Error
-This is thrown in many of the functions that are mentioned above. There are of three types:
+## Usage with other http frameworks
+#### Importing SuperTokens
+```js
+import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
+```
+#### SuperTokens.init(config)
+- To be called while starting your server
+```js
+// @params config: An object which allows you to set the behaviour of this library. See the Config section below for details on the options.
+// @returns a Promise
+SuperTokens.init(config).then(() => {
+  // Success! Your app can now use this library in any API
+}).catch(err => {
+  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+});
+```
+#### SuperTokens.createNewSession(userId, jwtPayload?, sessionData?)
+- To be called when you want to login a user, after verifying their credentials.
+- ```idRefreshToken``` must not be secure and must not be HttpOnly. The ```accessToken``` and ```refreshToken``` must be HttpOnly and secure.
+- The path for ```idRefreshToken``` and ```accessToken``` must be so that all APIs get this. The ```refreshToken``` path must be only so that the refresh API gets it.
+```js
+// @params userId: string - some unique ID for this user for you to retrieve in your APIs
+// @params: jwtPayload - default is undefined. any js object/array/primitive type to store in the JWT's payload. Once set, it cannot be changed for this session. Also, this should not contain any sensitive data. The advantage of this is that for any API call, you do not need a database lookup to retrieve the information stored here.
+// @params: sessionData - default is undefined. any js object/array/primitive type to store in the DB for this session. This is changeable throughout the lifetime of this session
+// @returns a Promise
+SuperTokens.createNewSession("User1", {info: "Data in JWT"}, {info: "Data stored in DB"}).then(session => {
+  /* session is of type: {
+         session: {
+             handle: string,
+             userId: string,
+             jwtPayload: any
+         },
+         accessToken: { value: string, expires: number },
+         refreshToken: {
+             value: string,
+             expires: number,
+         },
+         idRefreshToken: { value: string, expires: number }
+     }*/
+}).catch(err => {
+  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+});
+```
+#### SuperTokens.getSession(accessToken)
+- To be called in any API that requires an authenticated user.
+- If ```newAccessToken``` is not ```undefined```, then change the access token cookie accordingly
+```js
+// @params accessToken: string
+// @returns a Promise
+SuperTokens.getSession(accessToken).then(session => {
+  /* session is of type: {
+         session: {
+             handle: string;
+             userId: string;
+             jwtPayload: any;
+         };
+         newAccessToken: { value: string; expires: number } | undefined;
+     } */
+}).catch(err => {
+  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED or TRY_REFRESH_TOKEN
+  // most of the time, if err is not GENERAL_ERROR, then you should respond with a status code that indicates session expiry. For more details, please see the SuperTokens.Error section below.
+});
+```
+#### SuperTokens.refreshSession(refreshToken)
+- To be called only in the API that is responsible for refreshing your access token. Calls to this API should be handled by the supertokens-website package.
+- Please replace all the cookies with the returned values.
+```js
+// @params refreshToken: string
+// @returns a Promise
+SuperTokens.refreshSession(refreshToken).then(session => {
+  /* session type is: {
+         session: {
+             handle: string;
+             userId: string;
+             jwtPayload: any;
+         };
+         newAccessToken: { value: string; expires: number };
+         newRefreshToken: { value: string; expires: number };
+         newIdRefreshToken: { value: string; expires: number };
+     } */
+}).catch(err => {
+  // type of err is SuperTokens.Error Will be GENERAL_ERROR, UNAUTHORISED
+  /* if err is UNAUTHORISED and token has been stolen, then err will have the following type (The onTokenTheftDetection function will also be called): {
+         errType: SuperTokens.ERROR.UNAUTHORISED,
+         err: {
+             message: string, sessionHandle: string, userId: string
+         }
+     } */
+});
+```
+
+#### SuperTokens.revokeAllSessionsForUser(userId)
+- To be called when you want this user to be logged out of all devices. Note that this will not cause immediate log out for this user, unless blacklisting is set to true. If blacklisting is false, the actual time they would be logged out is when their access token expires, and since these are short-lived, that should be soon after calling this function.
+```js
+// @params userId: string - a unique ID identifying this user. This ID should be the same as what was passed when calling SuperTokens.createNewSession
+// @returns a Promise
+SuperTokens.revokeAllSessionsForUser("User1").then(() => {
+  // success
+}).catch(err => {
+  // type of err is SuperTokens.Error Will be GENERAL_ERROR
+});
+```
+#### SuperTokens.revokeSessionUsingSessionHandle(sessionHandle)
+- This can be used to logout a user. If blacklisting is set to true, this will invalidate the user's access token immediately, resulting in immediate logout.
+- Please remember to delete all auth cookies after calling this
+```session.revokeSession()```**
+```js
+// @params sessionHandle: string - a unique ID identifying this session.
+// @returns a Promise
+SuperTokens.revokeSessionUsingSessionHandle(sessionHandle).then(() => {
+  // success
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+});
+```
+#### SuperTokens.getAllSessionHandlesForUser(userId)
+```js
+@params userId: string
+@returns a list of strings, where each item is a sessionHandle.
+SuperTokens.getAllSessionHandlesForUser(userId).then((sessionHandles) => {
+  // sessionHandles is a list of strings.
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR
+})
+```
+
+#### SuperTokens.getSessionData(sessionHandle)
+- If error is ```UNAUTHORISED```, do rememeber to clear all auth related cookies.
+```js
+@params sessionHandle: string
+@returns sessionData which can have any type depending on what you put in.
+SuperTokens.getSessionData(sessionHandle).then((data) => {
+  // success.
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+})
+```
+
+#### SuperTokens.updateSessionData(sessionHandle, newSessionData)
+- If error is ```UNAUTHORISED```, do rememeber to clear all auth related cookies.
+```js
+@params sessionHandle: string
+@params newSessionData which can have any type.
+SuperTokens.updateSessionData(sessionHandle, newSessionData).then(() => {
+  // success
+}).catch(err => {
+  // type of err is SuperTokens.Error. Will be GENERAL_ERROR, UNAUTHORISED.
+})
+```
+
+## Error handling
+Thrown by many of the functions that are mentioned above. There are of three types:
 #### GENERAL_ERROR
 ```js
 // here the err will be the actual error generated by whatever caused the error.
@@ -238,7 +415,7 @@ This is thrown in many of the functions that are mentioned above. There are of t
 #### UNAUTHORISED
 ```js
 // here the err will be the actual error generated by whatever caused the error.
-// when this error is thrown, you would generally consider this user logged out and would redirect them to a login page or send a session expiry status code
+// when this error is thrown, you would generally consider this user logged out and would redirect them to a login page or send a session expiry status code. You would also clear all the auth cookies they have.
 // example for when this is thrown is if the user clears their cookies or they have opened your app after a long time such that their refresh token has expired.
 {errType: SuperTokens.Error.UNAUTHORISED, err}
 ```
@@ -264,7 +441,7 @@ let isErrorGeneratedBySuperTokensLib = SuperTokens.Error.isErrorFromAuth(err)
 - In all other APIs
   - If you get an UNAUTHORISED or TRY_REFRESH_TOKEN error, send a status code that represents session expiry
 
-### Config
+## Config
 The config object has the following structure:
 
 ##### NOTE: If you do not provide a signingKey, it will create one for you and you can also configure it so that it changes after a fixed amount of time (for maximum security). The changing of the key will not log any user out.
