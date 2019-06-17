@@ -55,6 +55,7 @@ The library has the following features:
 15) [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
 ## Installation
+**This package is to be used in your backend code, and [supertokens-website](https://github.com/supertokens/supertokens-website) is to be used in your frontend code. Together, these packages solve all the race conditions and failure cases mentioned in this [blog post](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)**
 ```bash
 npm i --save supertokens-node-mysql-ref-jwt
 ```
