@@ -1,4 +1,4 @@
-import { TypeInputConfig } from "./helpers/types";
+import { TypeInputConfig } from './helpers/types';
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
  * Please create a database in your mysql instance before calling this function
@@ -45,10 +45,10 @@ export declare function getSession(accessToken: string): Promise<{
 }>;
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
+ * @sideEffects calls onTokenTheftDetection if token theft is detected.
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED. If UNAUTHORISED, and token has been stolen, then err has type {message: string, sessionHandle: string, userId: string}
  */
 export declare function refreshSession(refreshToken: string): Promise<{
-    sessionTheftDetected: false;
     session: {
         handle: string;
         userId: string;
@@ -65,12 +65,6 @@ export declare function refreshSession(refreshToken: string): Promise<{
     newIdRefreshToken: {
         value: string;
         expires: number;
-    };
-} | {
-    sessionTheftDetected: true;
-    session: {
-        handle: string;
-        userId: string;
     };
 }>;
 /**

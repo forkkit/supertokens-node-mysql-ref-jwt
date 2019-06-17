@@ -200,30 +200,21 @@ export async function getSession(
 
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
+ * @sideEffects calls onTokenTheftDetection if token theft is detected.
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED. If UNAUTHORISED, and token has been stolen, then err has type {message: string, sessionHandle: string, userId: string}
  */
 export async function refreshSession(
     refreshToken: string
-): Promise<
-    | {
-          sessionTheftDetected: false;
-          session: {
-              handle: string;
-              userId: string;
-              jwtPayload: any;
-          };
-          newAccessToken: { value: string; expires: number };
-          newRefreshToken: { value: string; expires: number };
-          newIdRefreshToken: { value: string; expires: number };
-      }
-    | {
-          sessionTheftDetected: true;
-          session: {
-              handle: string;
-              userId: string;
-          };
-      }
-> {
+): Promise<{
+    session: {
+        handle: string;
+        userId: string;
+        jwtPayload: any;
+    };
+    newAccessToken: { value: string; expires: number };
+    newRefreshToken: { value: string; expires: number };
+    newIdRefreshToken: { value: string; expires: number };
+}> {
     let config = Config.get();
 
     // here we decrypt and verify the refresh token. If this fails, it means either the key has changed. Or that someone is sending a "fake" refresh token.
@@ -234,7 +225,7 @@ export async function refreshSession(
 
 /**
  * @description this function exists since we need to recurse on it. It has the actual logic for creating child tokens given the parent refresh token.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED. If UNAUTHORISED, and token has been stolen, then err has type {message: string, sessionHandle: string, userId: string}
  */
 async function refreshSessionHelper(
     refreshToken: string,
@@ -243,26 +234,16 @@ async function refreshSessionHelper(
         userId: string;
         parentRefreshTokenHash1: string | undefined;
     }
-): Promise<
-    | {
-          sessionTheftDetected: false;
-          session: {
-              handle: string;
-              userId: string;
-              jwtPayload: any;
-          };
-          newAccessToken: { value: string; expires: number };
-          newRefreshToken: { value: string; expires: number };
-          newIdRefreshToken: { value: string; expires: number };
-      }
-    | {
-          sessionTheftDetected: true;
-          session: {
-              handle: string;
-              userId: string;
-          };
-      }
-> {
+): Promise<{
+    session: {
+        handle: string;
+        userId: string;
+        jwtPayload: any;
+    };
+    newAccessToken: { value: string; expires: number };
+    newRefreshToken: { value: string; expires: number };
+    newIdRefreshToken: { value: string; expires: number };
+}> {
     let config = Config.get();
     let connection = await getConnection();
     try {
@@ -305,7 +286,6 @@ async function refreshSessionHelper(
                 sessionInfo.jwtPayload
             );
             return {
-                sessionTheftDetected: false,
                 session: {
                     handle: sessionHandle,
                     userId: refreshTokenInfo.userId,
@@ -357,14 +337,12 @@ async function refreshSessionHelper(
         // but that refresh token is neither a child, nor a parent. This would happen only in the case of token theft since the frontend
         // synchronises calls to refresh token API.
         await connection.commit();
-
-        return {
-            sessionTheftDetected: true,
-            session: {
-                handle: refreshTokenInfo.sessionHandle,
-                userId: refreshTokenInfo.userId
-            }
-        };
+        config.onTokenTheftDetection(refreshTokenInfo.userId, refreshTokenInfo.sessionHandle);
+        throw generateError(AuthError.UNAUTHORISED, {
+            message: "token theft detected!",
+            sessionHandle: refreshTokenInfo.sessionHandle,
+            userId: refreshTokenInfo.userId
+        });
     } finally {
         connection.closeConnection();
     }

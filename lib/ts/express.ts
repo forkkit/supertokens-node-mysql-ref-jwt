@@ -99,18 +99,12 @@ export async function refreshSession(req: express.Request, res: express.Response
 
     try {
         let response = await SessionFunctions.refreshSession(refreshToken);
-        if (response.sessionTheftDetected) {
-            // cookies clearing happens when catching unauthorised error
-            config.onTokenTheftDetection(response.session.userId, response.session.handle);
-            throw generateError(AuthError.UNAUTHORISED, new Error("session theft detected"));
-        } else {
-            // attach tokens to cookies
-            attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
-            attachRefreshTokenToCookie(res, response.newRefreshToken.value, response.newRefreshToken.expires);
-            attachIdRefreshTokenToCookie(res, response.newIdRefreshToken.value, response.newIdRefreshToken.expires);
+        // attach tokens to cookies
+        attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
+        attachRefreshTokenToCookie(res, response.newRefreshToken.value, response.newRefreshToken.expires);
+        attachIdRefreshTokenToCookie(res, response.newIdRefreshToken.value, response.newIdRefreshToken.expires);
 
-            return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
-        }
+        return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
     } catch (err) {
         if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
             clearSessionFromCookie(res);

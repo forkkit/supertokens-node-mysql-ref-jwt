@@ -106,7 +106,7 @@ export async function getSessionData(
     }
     return {
         found: true,
-        data: unserialiseSessionData(result[0].session_info.toString())
+        data: unserialiseSessionData(result[0].session_info)
     };
 }
 
@@ -173,9 +173,9 @@ export async function getSessionInfo_Transaction(
     return {
         userId: row.user_id.toString(),
         refreshTokenHash2: row.refresh_token_hash_2,
-        sessionData: unserialiseSessionData(row.session_info.toString()),
+        sessionData: unserialiseSessionData(row.session_info),
         expiresAt: Number(row.expires_at),
-        jwtPayload: unserialiseSessionData(row.jwt_user_payload.toString())
+        jwtPayload: unserialiseSessionData(row.jwt_user_payload)
     };
 }
 
