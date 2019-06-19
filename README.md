@@ -521,6 +521,7 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - To implement info, debug and error logs in a better way.
 - Add scaling metrics
 - IP change detection invalidates access token, so that thefts get caught sooner, or attacker get's logged out, while keeping the actual user logged in (Thanks to [Aervue](https://github.com/Aervue))
+- Easy prevention of CSRF attacks using a combination of localstorage and cookie storage for authentication
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
