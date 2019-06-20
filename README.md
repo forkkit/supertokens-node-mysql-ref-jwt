@@ -13,11 +13,9 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
-**This version works well with one instance of MySQL. To get this for a clustered environment, please [contact us](mailto:team@supertokens.io)**
-
 #### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice). Or if you use MongoDB, please see: [supertokens-node-mongo-ref-jwt](https://github.com/supertokens/supertokens-node-mongo-ref-jwt).
 
-#### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
+**The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460).** The library is currently being implemented by a few large technology companies.
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
@@ -36,6 +34,8 @@ The library has the following features:
 #### If you like this project and want to use it, but for a different tech stack:
 - Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack.
 - We have made this into a standalone http service as well which you can use with any backend language of your choice: [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice).
+
+**This version works well with one instance of MySQL. To get this for a clustered environment, please [contact us](mailto:team@supertokens.io)**
 
 ## Index
 - [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
