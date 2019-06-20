@@ -91,7 +91,10 @@ app.use(CookieParser());
 ```
 
 ## Accompanying library
-As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if your frontend is a website. **To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code.** This library is a drop-in replacement for your axios/ajax calls on the frontend.
+```js
+import * as SuperTokensRequest from 'supertokens-website';
+```
 
 Together this and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
