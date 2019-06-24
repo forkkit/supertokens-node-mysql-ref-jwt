@@ -499,7 +499,7 @@ As seen above, there is a function in the config that is called when token theft
 ```js
 onTokenTheftDetection: (userId: string, sessionHandle: string) => void
 ```
-The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unqiue ID identifying that particular session. Using these, you can either logout the user from all their devices. Or just the devices that are using that session. Both of these will stop the attack.
+The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unique ID identifying that particular session. Using these, you can either logout the user from all their devices or just the devices that are using that session. Both of these will stop the attack.
 
 ## Blacklisting
 Enabling this feature will result in immediate revocation of JWT access tokens. Use this, for example, when it is very important to ban users immediately. You may wonder if this is enabled, then what is the point of using JWTs, since each authentication will require a DB call anyways. One benefit is that using JWTs instead of Opaque tokens saves you space. Another benefit is that you can have very optimised caching for blacklisted tokens, but doing so requires a thorough understanding of your use case. Please feel free to [contact us](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs) about any queries regarding your specific use case.
