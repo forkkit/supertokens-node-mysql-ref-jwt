@@ -44,5 +44,5 @@ export declare function reset(newConfig?: TypeInputConfig): Promise<void>;
  *
  * @param timeInMilliseconds
  */
-export declare function delay(timeInMilliseconds: number): Promise<{}>;
+export declare function delay(timeInMilliseconds: number): Promise<unknown>;
 export declare function generateSessionHandle(): string;

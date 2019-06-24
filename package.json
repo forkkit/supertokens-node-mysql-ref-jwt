@@ -7,7 +7,13 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "TEST_MODE=testing node_modules/.bin/mocha \" test/**/*.test.js\" --exit --slow=10000 --timeout=20000"
+    "test": "TEST_MODE=testing npx mocha \" test/**/*.test.js\" --exit --slow=10000 --timeout=20000",
+    "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit",
+    "build": "cd lib && npx tsc -p tsconfig.json",
+    "pretty": "cd lib && npx prettier --write --config .prettierrc \"ts/**/*.ts\" \"build/**/*.js\" \"../test/**/*.js\"",
+    "build-pretty": "npm run build && npm run pretty",
+    "pretty-check": "cd lib && npx prettier --check --config .prettierrc \"ts/**/*.ts\" \"build/**/*.js\" \"../test/**/*.js\"",
+    "set-up-hooks": "cp hooks/pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit"
   },
   "repository": {
     "type": "git",
@@ -51,6 +57,8 @@
     "cookie-parser": "1.4.4",
     "express": "4.17.1",
     "mocha": "6.1.4",
-    "supertest": "4.0.2"
+    "prettier": "1.17.1",
+    "supertest": "4.0.2",
+    "typescript": "3.5.2"
   }
 }

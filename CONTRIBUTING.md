@@ -23,15 +23,9 @@ Please only issue pull requests to the dev branch.
     npm install -d
     ```
 
-3) This repo is written in Typescript. So please install the typescript compiler
+3) Set-up hooks
     ```bash
-    npm install -g typescript
-    ```
-
-4) Also run the pre commit installer (This will install prettier as a global npm package):
-    ```bash
-    sudo -s
-    (cd hooks && ./pre-commit-hook-install.sh)
+    npm run set-up-hooks
     ```
 
 ## Coding standards
@@ -56,17 +50,12 @@ All other issues like quote styles, spacing etc.. will be taken care of by the f
 
 ## Pre committing checks
 
-1) Run the typescript compiler
+1) Run the build pretty script
     ```bash
-    (cd lib && tsc -p tsconfig.json)
+    npm run build-pretty
     ```
 
-2) Run the formatter
-    ```bash
-    (cd lib && ./formatCode.sh)
-    ```
-
-4) If you have edited ```/index.ts``` or ```/indexRaw.ts```, please make the corresponding changes to ```/index.js``` or ```indexRaw.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
+2) If you have edited ```/index.ts``` or ```/indexRaw.ts```, please make the corresponding changes to ```/index.js``` or ```indexRaw.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
 
 
 ## Pre push

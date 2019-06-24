@@ -4,8 +4,7 @@
 
 ### Installation
 ```bash
-sudo -s # required because the installer below installs prettier in the global context
-cd hooks && ./pre-commit-hook-install.sh
+npm run set-up-hooks
 ```
 
 ### What it does
