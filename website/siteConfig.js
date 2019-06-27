@@ -21,39 +21,45 @@
 // ];
 
 const siteConfig = {
-  title: 'Test Site', // Title for your website.
-  tagline: 'A website for testing',
-  url: 'https://your-docusaurus-test-site.com', // Your website URL
+  headerIcon: "img/superTokens.png",
+  title: '', // Title for your website.
+  tagline: 'Best session management',
+  url: 'https://supertokens.github.io/supertokens-node-mysql-ref-jwt/', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'test-site',
-  organizationName: 'Supertokens',
+  projectName: 'SuperTokens',
+  organizationName: 'SuperTokens',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
+    { doc: "main", label: "Docs" },
+    { href: "https://discordapp.com/invite/zVcVeev", label: "Discord" },
+    { href: "https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" },
+    { href: "https://github.com/supertokens/supertokens-node-mysql-ref-jwt", label: "Github" },
+    { href: "https://supertokens.io", label: "SuperTokens" }
     //   {doc: "main", label: ""}
   ],
-  disableHeaderTitle: true,
+  disableHeaderTitle: false,
   docsSideNavCollapsible: true,
 
   // If you have users set above, you add it here:
-//   users,
+  //   users,
 
   /* path to images for header/footer */
-//   headerIcon: 'img/favicon.ico',
-//   footerIcon: 'img/favicon.ico',
-//   favicon: 'img/favicon.ico',
+  //   headerIcon: 'img/favicon.ico',
+  //   footerIcon: 'img/favicon.ico',
+  //   favicon: 'img/favicon.ico',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#222222',
+    primaryColor: '#333333',
     secondaryColor: '#222222',
   },
 
@@ -72,7 +78,7 @@ const siteConfig = {
   */
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-//   copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
+  //   copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -83,13 +89,13 @@ const siteConfig = {
   scripts: ['https://buttons.github.io/buttons.js'],
 
   // On page navigation for the current documentation page.
-//   onPageNav: 'separate',
+  //   onPageNav: 'separate',
   // No .html extensions for paths.
   cleanUrl: true,
 
   // Open Graph and Twitter card images.
-//   ogImage: 'img/undraw_online.svg',
-//   twitterImage: 'img/undraw_tweetstorm.svg',
+  //   ogImage: 'img/undraw_online.svg',
+  //   twitterImage: 'img/undraw_tweetstorm.svg',
 
   // Show documentation's last contributor's name.
   // enableUpdateBy: true,

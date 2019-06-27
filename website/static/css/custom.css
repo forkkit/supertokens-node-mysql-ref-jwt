@@ -1,12 +1,26 @@
 /* your custom css */
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+    .docsNavContainer .toc .navBreadcrumb {
+        background-color: #333333;
+    }
+    
+    .docsNavContainer {
+        background-color: #333333;
+    }
 }
 
 @media only screen and (min-width: 1024px) {
 }
 
 @media only screen and (max-width: 1023px) {
+    .docsNavContainer .toc .navBreadcrumb {
+        background-color: #333333;
+    }
+    
+    .docsNavContainer {
+        background-color: #333333;
+    }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -30,3 +44,52 @@
 .sideNavVisible {
     background-color: #222222;
 }
+
+.line1, .line2, .line3 {
+    background-color: #ffffff;
+}
+
+.navBreadcrumb a, .navBreadcrumb span {
+    color: #ffffff;
+}
+
+.toggleNav h2 i {
+    font-size: 0px
+}
+
+.toc .toggleNav ul li a {
+    color: #999999
+}
+
+.toc .toggleNav .navGroup .navGroupSubcategoryTitle {
+    color: #999999
+}
+
+.toc .toggleNav .navGroup .navGroupCategoryTitle {
+    color: #f89431;
+    font-weight: normal;
+}
+
+.toc .toggleNav .subNavGroup .navListItem .navItem {
+    padding-left: 40px
+}
+
+.toc .toggleNav .navGroup .navGroupSubcategoryTitle {
+    padding-left: 20px
+}
+
+.toc .toggleNav ul li a {
+    padding-left: 20px
+}
+
+.collapsible .arrow.rotate path[d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"] {
+    fill: #ffffff
+}
+
+.collapsible .arrow path[d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"] {
+    fill: #ffffff
+}
+
+/* .fixedHeaderContainer a {
+    href: "www.google.com"
+} */

@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A website for testing",
+    "tagline": "Best session management",
     "docs": {
       "backend/beintro": {
         "title": "Introduction",
@@ -17,6 +17,10 @@
         "title": "Introduction",
         "sidebar_label": "Introduction"
       },
+      "fe-web/fewebintro2": {
+        "title": "Introduction2",
+        "sidebar_label": "Introduction2"
+      },
       "fe-web/fewebpackages": {
         "title": "Packages",
         "sidebar_label": "Packages"
@@ -25,7 +29,13 @@
         "title": "Overview"
       }
     },
-    "links": {},
+    "links": {
+      "Docs": "Docs",
+      "Discord": "Discord",
+      "Blog": "Blog",
+      "Github": "Github",
+      "SuperTokens": "SuperTokens"
+    },
     "categories": {
       "Getting Started": "Getting Started",
       "Frontend Setup": "Frontend Setup",
