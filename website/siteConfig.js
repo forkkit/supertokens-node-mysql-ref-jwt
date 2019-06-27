@@ -43,7 +43,6 @@ const siteConfig = {
     { href: "https://discordapp.com/invite/zVcVeev", label: "Discord" },
     { href: "https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" },
     { href: "https://github.com/supertokens/supertokens-node-mysql-ref-jwt", label: "Github" },
-    { href: "https://supertokens.io", label: "SuperTokens" }
     //   {doc: "main", label: ""}
   ],
   disableHeaderTitle: false,
@@ -86,7 +85,7 @@ const siteConfig = {
   },
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ['https://buttons.github.io/buttons.js'],
+  scripts: ['https://buttons.github.io/buttons.js', "/scripts/homeButtonListener.js"],
 
   // On page navigation for the current documentation page.
   //   onPageNav: 'separate',

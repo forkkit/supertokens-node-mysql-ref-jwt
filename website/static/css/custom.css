@@ -90,6 +90,16 @@
     fill: #ffffff
 }
 
-/* .fixedHeaderContainer a {
-    href: "www.google.com"
-} */
+.mainContainer {
+    color: #ffffff
+}
+
+a.docs-next.button {
+    border: 1px solid #ffffff;
+    color: #ffffff;
+}
+
+a.docs-prev.button {
+    border: 1px solid #ffffff;
+    color: #ffffff;
+}
