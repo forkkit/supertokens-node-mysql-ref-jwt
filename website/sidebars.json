@@ -1,0 +1,18 @@
+{
+    "docs": {
+        "Getting Started": [
+            "main"
+        ],
+
+        "Frontend Setup": [
+            "fe-web/fewebintro",
+            "fe-web/fewebpackages"
+        ],
+
+        "Backend Setup": [
+            "backend/beintro",
+            "backend/bepackages"
+        ]
+    }
+}
+  
