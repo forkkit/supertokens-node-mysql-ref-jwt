@@ -26,15 +26,15 @@
         "sidebar_label": "Packages"
       },
       "main": {
-        "title": "Overview"
+        "title": "Overview",
+        "sidebar_label": "Overview"
       }
     },
     "links": {
       "Docs": "Docs",
       "Discord": "Discord",
       "Blog": "Blog",
-      "Github": "Github",
-      "SuperTokens": "SuperTokens"
+      "Github": "Github"
     },
     "categories": {
       "Getting Started": "Getting Started",

@@ -22,7 +22,7 @@
 
 const siteConfig = {
   headerIcon: "img/superTokens.png",
-  title: '', // Title for your website.
+  title: 'SuperTokens', // Title for your website.
   tagline: 'Best session management',
   url: 'https://supertokens.github.io/supertokens-node-mysql-ref-jwt/', // Your website URL
   baseUrl: '/', // Base URL for your project */
@@ -52,14 +52,14 @@ const siteConfig = {
   //   users,
 
   /* path to images for header/footer */
-  //   headerIcon: 'img/favicon.ico',
+  headerIcon: 'img/favicon.ico',
   //   footerIcon: 'img/favicon.ico',
   //   favicon: 'img/favicon.ico',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#333333',
-    secondaryColor: '#222222',
+    primaryColor: '#222222',
+    secondaryColor: '#333333',
   },
 
   /* Custom fonts for website */
@@ -91,6 +91,11 @@ const siteConfig = {
   //   onPageNav: 'separate',
   // No .html extensions for paths.
   cleanUrl: true,
+  scrollToTop: true,
+  scrollToTopOptions: {
+    backgroundColor: "#999999",
+    textColor: "#222222"
+  }
 
   // Open Graph and Twitter card images.
   //   ogImage: 'img/undraw_online.svg',
