@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let path = splittedUrl.filter((x, i) => i >= 3).join("/");
         let base = splittedUrl.filter((x, i) => i < 3).join("/");
         let currLocation = window.location.origin;
-        if (base === currLocation && path === "") {
+        if (base === currLocation && splittedUrl.length === 5) {
             element.href = "https://supertokens.io";
             element.target = "_blank";
         }
