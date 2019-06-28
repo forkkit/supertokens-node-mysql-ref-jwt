@@ -25,7 +25,7 @@ const siteConfig = {
   title: 'SuperTokens', // Title for your website.
   tagline: 'Best session management',
   url: 'https://supertokens.github.io/supertokens-node-mysql-ref-jwt/', // Your website URL
-  baseUrl: '/', // Base URL for your project */
+  baseUrl: '/supertokens-node-mysql-ref-jwt/website/build/SuperTokens/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
@@ -54,7 +54,7 @@ const siteConfig = {
   /* path to images for header/footer */
   // headerIcon: 'img/favicon.ico',
   //   footerIcon: 'img/favicon.ico',
-  //   favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.ico',
 
   /* Colors for website */
   colors: {
