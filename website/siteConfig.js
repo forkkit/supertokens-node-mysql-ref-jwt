@@ -21,7 +21,7 @@
 // ];
 
 const siteConfig = {
-  headerIcon: "img/superTokens.png",
+  headerIcon: "/img/superTokens.png",
   title: 'SuperTokens', // Title for your website.
   tagline: 'Best session management',
   url: 'https://supertokens.github.io/supertokens-node-mysql-ref-jwt/', // Your website URL
