@@ -5,7 +5,8 @@ jobs:
       - image: circleci/node:8.10.0
     steps:
       - checkout
-      - run: ls
+      - run: (cd website && npm i -d)
+      - run: ./publishToGit.sh
 
 workflows:
   version: 2
