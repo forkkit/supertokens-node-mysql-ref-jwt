@@ -1,18 +1,18 @@
 version: 2
 jobs:
-  success_job:
+  deploy_gh_pages:
     docker:
       - image: circleci/node:8.10.0
     steps:
-      - run: echo "success"
+      - checkout
+      - run: ls
 
 workflows:
   version: 2
   tagged-build:
     jobs:
-      - success_job:
+      - deploy_gh_pages:
           filters:
             branches:
               only: 
-                - gh-pages
                 - website
