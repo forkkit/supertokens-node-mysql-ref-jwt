@@ -4,9 +4,6 @@ jobs:
     docker:
       - image: circleci/node:8.10.0
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "ce:d8:2f:5c:c1:04:ac:05:75:96:71:76:a4:2d:da:4f"
       - checkout
       - run: (cd website && npm i)
       - run: git config --global user.email "rishabh.poddar@gmail.com"
