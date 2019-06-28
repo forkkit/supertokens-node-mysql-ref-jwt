@@ -25,14 +25,14 @@ const siteConfig = {
   title: 'SuperTokens', // Title for your website.
   tagline: 'Best session management',
   url: 'https://supertokens.github.io/supertokens-node-mysql-ref-jwt/', // Your website URL
-  baseUrl: '/', // Base URL for your project */
+  baseUrl: '/supertokens-node-mysql-ref-jwt/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'SuperTokens',
-  organizationName: 'SuperTokens',
+  projectName: 'supertokens-node-mysql-ref-jwt',
+  organizationName: 'supertokens',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
@@ -85,7 +85,7 @@ const siteConfig = {
   },
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ['https://buttons.github.io/buttons.js', "/scripts/homeButtonListener.js"],
+  scripts: ['https://buttons.github.io/buttons.js', "/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"],
 
   // On page navigation for the current documentation page.
   //   onPageNav: 'separate',
