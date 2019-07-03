@@ -38,10 +38,42 @@
             "backend-setup/session-handle",
             "backend-setup/token-theft",
             "backend-setup/blacklisting",
-            "backend-setup/config"
+            "backend-setup/config",
+            "backend-setup/api-reference"
         ],
         "Frontend Setup": [
-            "frontend-setup/installation"
+            "frontend-setup/installation",
+            {
+                "type": "subcategory",
+                "label": "Website",
+                "ids": [
+                    "frontend-setup/website/initialisation",
+                    "frontend-setup/website/sending-requests",
+                    "frontend-setup/website/cookies-and-localstorage",
+                    "frontend-setup/website/api-reference"
+                ]
+            },
+            {
+                "type": "subcategory",
+                "label": "iOS",
+                "ids": [
+                    "frontend-setup/ios/coming-soon"
+                ]
+            },
+            {
+                "type": "subcategory",
+                "label": "Android",
+                "ids": [
+                    "frontend-setup/android/coming-soon"
+                ]
+            },
+            {
+                "type": "subcategory",
+                "label": "React Native",
+                "ids": [
+                    "frontend-setup/react-native/coming-soon"
+                ]
+            }
         ]
     }
 }

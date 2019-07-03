@@ -5,6 +5,10 @@
     "previous": "Previous",
     "tagline": "Best session management",
     "docs": {
+      "backend-setup/api-reference": {
+        "title": "API Reference",
+        "sidebar_label": "API Reference"
+      },
       "backend-setup/blacklisting": {
         "title": "Blacklisting",
         "sidebar_label": "Blacklisting"
@@ -30,8 +34,8 @@
         "sidebar_label": "Token Theft Detection"
       },
       "backend-setup/usage-with-express/initialisation": {
-        "title": "Express Initialisation",
-        "sidebar_label": "Initialisation"
+        "title": "Express Init",
+        "sidebar_label": "Init"
       },
       "backend-setup/usage-with-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
@@ -62,8 +66,8 @@
         "sidebar_label": "Verify Session"
       },
       "backend-setup/usage-without-express/initialisation": {
-        "title": "Express Initialisation",
-        "sidebar_label": "Initialisation"
+        "title": "Init",
+        "sidebar_label": "Init"
       },
       "backend-setup/usage-without-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
@@ -93,9 +97,37 @@
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
+      "frontend-setup/android/coming-soon": {
+        "title": "Coming Soon",
+        "sidebar_label": "Coming Soon"
+      },
       "frontend-setup/installation": {
         "title": "Frontend Installation",
         "sidebar_label": "Installation"
+      },
+      "frontend-setup/ios/coming-soon": {
+        "title": "Coming Soon",
+        "sidebar_label": "Coming Soon"
+      },
+      "frontend-setup/react-native/coming-soon": {
+        "title": "Coming Soon",
+        "sidebar_label": "Coming Soon"
+      },
+      "frontend-setup/website/api-reference": {
+        "title": "API Reference",
+        "sidebar_label": "API Reference"
+      },
+      "frontend-setup/website/cookies-and-localstorage": {
+        "title": "Cookies and Localstorage",
+        "sidebar_label": "Cookies and Localstorage"
+      },
+      "frontend-setup/website/initialisation": {
+        "title": "Init",
+        "sidebar_label": "Init"
+      },
+      "frontend-setup/website/sending-requests": {
+        "title": "Sending Requests",
+        "sidebar_label": "Sending Requests"
       },
       "getting-started/setup": {
         "title": "Setup",
