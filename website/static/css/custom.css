@@ -122,3 +122,39 @@ a.docs-prev.button {
 .fixedHeaderContainer header .headerTitleWithLogo {
     display: none
 }
+
+.mainContainer {
+    color: #dddddd
+}
+
+.mainContainer h1 {
+    color: #FFFFFF
+}
+
+.mainContainer h2 {
+    color: #6ab1fd
+}
+
+.mainContainer h3 {
+    color: #6ab1fd
+}
+
+.mainContainer h4 {
+    color: #6ab1fd
+}
+
+.mainContainer a {
+    color: #ffffff;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.docs-prevnext a {
+    color: #ffffff;
+    text-decoration: none;
+    font-style: normal;
+}
+
+.highlighted-text {
+    color: #ff9933;
+}

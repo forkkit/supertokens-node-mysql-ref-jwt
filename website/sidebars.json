@@ -1,79 +1,89 @@
 {
     "docs": {
-        "Getting Started": [
-            "getting-started/what-and-why",
-            "getting-started/setup"
+        "Introduction": [
+            "introduction/what-and-why",
+            "introduction/next-steps"
         ],
-        "Backend Setup": [
-            "backend-setup/installation",
+        "Backend": [
+            "backend/installation",
             {
                 "type": "subcategory",
                 "label": "Usage with Express",
                 "ids": [
-                    "backend-setup/usage-with-express/initialisation",
-                    "backend-setup/usage-with-express/user-login",
-                    "backend-setup/usage-with-express/verify-session",
-                    "backend-setup/usage-with-express/session-object",
-                    "backend-setup/usage-with-express/refreshing-session",
-                    "backend-setup/usage-with-express/manipulating-session-data",
-                    "backend-setup/usage-with-express/user-logout",
-                    "backend-setup/usage-with-express/revoking-session"
+                    "backend/usage-with-express/initialisation",
+                    "backend/usage-with-express/user-login",
+                    "backend/usage-with-express/verify-session",
+                    "backend/usage-with-express/session-object",
+                    "backend/usage-with-express/refreshing-session",
+                    "backend/usage-with-express/manipulating-session-data",
+                    "backend/usage-with-express/user-logout",
+                    "backend/usage-with-express/revoking-session"
                 ]
             },
             {
                 "type": "subcategory",
                 "label": "Usage without Express",
                 "ids": [
-                    "backend-setup/usage-without-express/initialisation",
-                    "backend-setup/usage-without-express/user-login",
-                    "backend-setup/usage-without-express/verify-session",
-                    "backend-setup/usage-without-express/session-object",
-                    "backend-setup/usage-without-express/refreshing-session",
-                    "backend-setup/usage-without-express/manipulating-session-data",
-                    "backend-setup/usage-without-express/user-logout",
-                    "backend-setup/usage-without-express/revoking-session"
+                    "backend/usage-without-express/initialisation",
+                    "backend/usage-without-express/user-login",
+                    "backend/usage-without-express/verify-session",
+                    "backend/usage-without-express/session-object",
+                    "backend/usage-without-express/refreshing-session",
+                    "backend/usage-without-express/manipulating-session-data",
+                    "backend/usage-without-express/user-logout",
+                    "backend/usage-without-express/revoking-session"
                 ]
             },
-            "backend-setup/error-handling",
-            "backend-setup/session-handle",
-            "backend-setup/token-theft",
-            "backend-setup/blacklisting",
-            "backend-setup/config",
-            "backend-setup/api-reference"
+            "backend/error-handling",
+            "backend/session-handle",
+            "backend/token-theft",
+            "backend/blacklisting",
+            "backend/config",
+            "backend/api-reference"
         ],
-        "Frontend Setup": [
-            "frontend-setup/installation",
+        "Frontend": [
+            "frontend/installation",
             {
                 "type": "subcategory",
                 "label": "Website",
                 "ids": [
-                    "frontend-setup/website/initialisation",
-                    "frontend-setup/website/sending-requests",
-                    "frontend-setup/website/cookies-and-localstorage",
-                    "frontend-setup/website/api-reference"
+                    "frontend/website/initialisation",
+                    "frontend/website/sending-requests",
+                    "frontend/website/cookies-and-localstorage",
+                    "frontend/website/api-reference"
                 ]
             },
             {
                 "type": "subcategory",
                 "label": "iOS",
                 "ids": [
-                    "frontend-setup/ios/coming-soon"
+                    "frontend/ios/coming-soon"
                 ]
             },
             {
                 "type": "subcategory",
                 "label": "Android",
                 "ids": [
-                    "frontend-setup/android/coming-soon"
+                    "frontend/android/coming-soon"
                 ]
             },
             {
                 "type": "subcategory",
                 "label": "React Native",
                 "ids": [
-                    "frontend-setup/react-native/coming-soon"
+                    "frontend/react-native/coming-soon"
                 ]
             }
+        ],
+        "How it works": [
+            "how-it-works/details"
+        ],
+        "Try it out": [
+            "try-it-out/example",
+            "try-it-out/docker"
+        ],
+        "Limitations": [
+            "limitations/limitations"
         ]
     }
 }

@@ -5,137 +5,153 @@
     "previous": "Previous",
     "tagline": "Best session management",
     "docs": {
-      "backend-setup/api-reference": {
+      "backend/api-reference": {
         "title": "API Reference",
         "sidebar_label": "API Reference"
       },
-      "backend-setup/blacklisting": {
+      "backend/blacklisting": {
         "title": "Blacklisting",
         "sidebar_label": "Blacklisting"
       },
-      "backend-setup/config": {
+      "backend/config": {
         "title": "Configuration",
         "sidebar_label": "Configuration"
       },
-      "backend-setup/error-handling": {
+      "backend/error-handling": {
         "title": "Error Handling",
         "sidebar_label": "Error Handling"
       },
-      "backend-setup/installation": {
+      "backend/installation": {
         "title": "Backend Installation",
         "sidebar_label": "Installation"
       },
-      "backend-setup/session-handle": {
+      "backend/session-handle": {
         "title": "Session Handle",
         "sidebar_label": "Session Handle"
       },
-      "backend-setup/token-theft": {
+      "backend/token-theft": {
         "title": "Token Theft Detection",
         "sidebar_label": "Token Theft Detection"
       },
-      "backend-setup/usage-with-express/initialisation": {
+      "backend/usage-with-express/initialisation": {
         "title": "Express Init",
         "sidebar_label": "Init"
       },
-      "backend-setup/usage-with-express/manipulating-session-data": {
+      "backend/usage-with-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
       },
-      "backend-setup/usage-with-express/refreshing-session": {
+      "backend/usage-with-express/refreshing-session": {
         "title": "Refreshing Session",
         "sidebar_label": "Refreshing Session"
       },
-      "backend-setup/usage-with-express/revoking-session": {
+      "backend/usage-with-express/revoking-session": {
         "title": "Revoking Session",
         "sidebar_label": "Revoking Session"
       },
-      "backend-setup/usage-with-express/session-object": {
+      "backend/usage-with-express/session-object": {
         "title": "Session Object",
         "sidebar_label": "Session Object"
       },
-      "backend-setup/usage-with-express/user-login": {
+      "backend/usage-with-express/user-login": {
         "title": "User login",
         "sidebar_label": "User login"
       },
-      "backend-setup/usage-with-express/user-logout": {
+      "backend/usage-with-express/user-logout": {
         "title": "User Logout",
         "sidebar_label": "User Logout"
       },
-      "backend-setup/usage-with-express/verify-session": {
+      "backend/usage-with-express/verify-session": {
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
-      "backend-setup/usage-without-express/initialisation": {
+      "backend/usage-without-express/initialisation": {
         "title": "Init",
         "sidebar_label": "Init"
       },
-      "backend-setup/usage-without-express/manipulating-session-data": {
+      "backend/usage-without-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
       },
-      "backend-setup/usage-without-express/refreshing-session": {
+      "backend/usage-without-express/refreshing-session": {
         "title": "Refreshing Session",
         "sidebar_label": "Refreshing Session"
       },
-      "backend-setup/usage-without-express/revoking-session": {
+      "backend/usage-without-express/revoking-session": {
         "title": "Revoking Session",
         "sidebar_label": "Revoking Session"
       },
-      "backend-setup/usage-without-express/session-object": {
+      "backend/usage-without-express/session-object": {
         "title": "Session Object",
         "sidebar_label": "Session Object"
       },
-      "backend-setup/usage-without-express/user-login": {
+      "backend/usage-without-express/user-login": {
         "title": "User login",
         "sidebar_label": "User login"
       },
-      "backend-setup/usage-without-express/user-logout": {
+      "backend/usage-without-express/user-logout": {
         "title": "User Logout",
         "sidebar_label": "User Logout"
       },
-      "backend-setup/usage-without-express/verify-session": {
+      "backend/usage-without-express/verify-session": {
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
-      "frontend-setup/android/coming-soon": {
+      "frontend/android/coming-soon": {
         "title": "Coming Soon",
         "sidebar_label": "Coming Soon"
       },
-      "frontend-setup/installation": {
+      "frontend/installation": {
         "title": "Frontend Installation",
         "sidebar_label": "Installation"
       },
-      "frontend-setup/ios/coming-soon": {
+      "frontend/ios/coming-soon": {
         "title": "Coming Soon",
         "sidebar_label": "Coming Soon"
       },
-      "frontend-setup/react-native/coming-soon": {
+      "frontend/react-native/coming-soon": {
         "title": "Coming Soon",
         "sidebar_label": "Coming Soon"
       },
-      "frontend-setup/website/api-reference": {
+      "frontend/website/api-reference": {
         "title": "API Reference",
         "sidebar_label": "API Reference"
       },
-      "frontend-setup/website/cookies-and-localstorage": {
+      "frontend/website/cookies-and-localstorage": {
         "title": "Cookies and Localstorage",
         "sidebar_label": "Cookies and Localstorage"
       },
-      "frontend-setup/website/initialisation": {
+      "frontend/website/initialisation": {
         "title": "Init",
         "sidebar_label": "Init"
       },
-      "frontend-setup/website/sending-requests": {
+      "frontend/website/sending-requests": {
         "title": "Sending Requests",
         "sidebar_label": "Sending Requests"
       },
-      "getting-started/setup": {
-        "title": "Setup",
-        "sidebar_label": "Setup"
+      "how-it-works/details": {
+        "title": "How it works",
+        "sidebar_label": "How it works"
       },
-      "getting-started/what-and-why": {
-        "title": "What and Why",
+      "introduction/next-steps": {
+        "title": "Next Steps",
+        "sidebar_label": "Next Steps"
+      },
+      "introduction/what-and-why": {
+        "title": "SuperTokens",
         "sidebar_label": "What and Why"
+      },
+      "limitations/limitations": {
+        "title": "Limitations",
+        "sidebar_label": "Limitations"
+      },
+      "try-it-out/docker": {
+        "title": "Docker",
+        "sidebar_label": "Docker"
+      },
+      "try-it-out/example": {
+        "title": "Example code and Demo",
+        "sidebar_label": "Example code and Demo"
       }
     },
     "links": {
@@ -145,9 +161,12 @@
       "Github": "Github"
     },
     "categories": {
-      "Getting Started": "Getting Started",
-      "Backend Setup": "Backend Setup",
-      "Frontend Setup": "Frontend Setup"
+      "Introduction": "Introduction",
+      "Backend": "Backend",
+      "Frontend": "Frontend",
+      "How it works": "How it works",
+      "Try it out": "Try it out",
+      "Limitations": "Limitations"
     }
   },
   "pages-strings": {
