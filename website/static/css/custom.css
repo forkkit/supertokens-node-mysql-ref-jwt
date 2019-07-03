@@ -67,7 +67,6 @@
 .toc .toggleNav .navGroup .navGroupSubcategoryTitle {
     padding-left: 20px;
     color: #999999;
-    cursor: pointer;
 }
 
 .toc .toggleNav .navGroup .navGroupSubcategoryTitle:hover {

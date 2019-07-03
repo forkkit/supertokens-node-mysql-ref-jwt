@@ -1,12 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-    function uncollapse(node, title, currNav) {
+    function uncollapseInitial(node, title, currNav) {
         node.classList.remove("hide");
         currNav.children[0].innerHTML = title + '<span class="arrow rotate"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>';
     }
 
-    function collapse(node, title, currNav) {
+    function collapseInitial(node, title, currNav) {
         node.classList.add("hide");
         currNav.children[0].innerHTML = title + '<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>'
+    }
+
+    function uncollapse(node, title, currNav) {
+        node.classList.remove("hide");
+        let arrow = currNav.children[0].children[0];
+        arrow.classList.toggle("rotate");
+    }
+
+    function collapse(node, title, currNav) {
+        node.classList.add("hide");
+        let arrow = currNav.children[0].children[0];
+        arrow.classList.toggle("rotate");
     }
 
     function isDescendant(parent, child) {
@@ -30,8 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const content = navGroupElements[i].childNodes[1];
         currNav.children[0].classList.add("collapsible");
 
-
-        collapse(content, title, currNav);
         currNav.childNodes[0].addEventListener("click", function () {
             if (!content.classList.contains("hide")) {
                 collapse(content, title, currNav);
@@ -41,9 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (isDescendant(currNav, activeItem)) {
-            uncollapse(content, title, currNav);
+            uncollapseInitial(content, title, currNav);
         } else {
-            collapse(content, title, currNav);
+            collapseInitial(content, title, currNav);
         }
 
     }
