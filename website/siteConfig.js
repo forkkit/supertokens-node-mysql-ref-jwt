@@ -39,7 +39,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: "main", label: "Docs" },
+    { doc: "getting-started/what-and-why", label: "Docs" },
     { href: "https://discordapp.com/invite/zVcVeev", label: "Discord" },
     { href: "https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" },
     { href: "https://github.com/supertokens/supertokens-node-mysql-ref-jwt", label: "Github" },

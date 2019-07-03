@@ -5,29 +5,105 @@
     "previous": "Previous",
     "tagline": "Best session management",
     "docs": {
-      "backend/beintro": {
-        "title": "Introduction",
-        "sidebar_label": "Introduction"
+      "backend-setup/blacklisting": {
+        "title": "Blacklisting",
+        "sidebar_label": "Blacklisting"
       },
-      "backend/bepackages": {
-        "title": "Packages",
-        "sidebar_label": "Packages"
+      "backend-setup/config": {
+        "title": "Configuration",
+        "sidebar_label": "Configuration"
       },
-      "fe-web/fewebintro": {
-        "title": "Introduction",
-        "sidebar_label": "Introduction"
+      "backend-setup/error-handling": {
+        "title": "Error Handling",
+        "sidebar_label": "Error Handling"
       },
-      "fe-web/fewebintro2": {
-        "title": "Introduction2",
-        "sidebar_label": "Introduction2"
+      "backend-setup/installation": {
+        "title": "Backend Installation",
+        "sidebar_label": "Installation"
       },
-      "fe-web/fewebpackages": {
-        "title": "Packages",
-        "sidebar_label": "Packages"
+      "backend-setup/session-handle": {
+        "title": "Session Handle",
+        "sidebar_label": "Session Handle"
       },
-      "main": {
-        "title": "Overview",
-        "sidebar_label": "Overview"
+      "backend-setup/token-theft": {
+        "title": "Token Theft Detection",
+        "sidebar_label": "Token Theft Detection"
+      },
+      "backend-setup/usage-with-express/initialisation": {
+        "title": "Express Initialisation",
+        "sidebar_label": "Initialisation"
+      },
+      "backend-setup/usage-with-express/manipulating-session-data": {
+        "title": "Manipulating Session Data",
+        "sidebar_label": "Manipulating Session Data"
+      },
+      "backend-setup/usage-with-express/refreshing-session": {
+        "title": "Refreshing Session",
+        "sidebar_label": "Refreshing Session"
+      },
+      "backend-setup/usage-with-express/revoking-session": {
+        "title": "Revoking Session",
+        "sidebar_label": "Revoking Session"
+      },
+      "backend-setup/usage-with-express/session-object": {
+        "title": "Session Object",
+        "sidebar_label": "Session Object"
+      },
+      "backend-setup/usage-with-express/user-login": {
+        "title": "User login",
+        "sidebar_label": "User login"
+      },
+      "backend-setup/usage-with-express/user-logout": {
+        "title": "User Logout",
+        "sidebar_label": "User Logout"
+      },
+      "backend-setup/usage-with-express/verify-session": {
+        "title": "Verify Session",
+        "sidebar_label": "Verify Session"
+      },
+      "backend-setup/usage-without-express/initialisation": {
+        "title": "Express Initialisation",
+        "sidebar_label": "Initialisation"
+      },
+      "backend-setup/usage-without-express/manipulating-session-data": {
+        "title": "Manipulating Session Data",
+        "sidebar_label": "Manipulating Session Data"
+      },
+      "backend-setup/usage-without-express/refreshing-session": {
+        "title": "Refreshing Session",
+        "sidebar_label": "Refreshing Session"
+      },
+      "backend-setup/usage-without-express/revoking-session": {
+        "title": "Revoking Session",
+        "sidebar_label": "Revoking Session"
+      },
+      "backend-setup/usage-without-express/session-object": {
+        "title": "Session Object",
+        "sidebar_label": "Session Object"
+      },
+      "backend-setup/usage-without-express/user-login": {
+        "title": "User login",
+        "sidebar_label": "User login"
+      },
+      "backend-setup/usage-without-express/user-logout": {
+        "title": "User Logout",
+        "sidebar_label": "User Logout"
+      },
+      "backend-setup/usage-without-express/verify-session": {
+        "title": "Verify Session",
+        "sidebar_label": "Verify Session"
+      },
+      "frontend-setup/installation": {
+        "title": "Frontend Installation",
+        "sidebar_label": "Installation"
+      },
+      "getting-started/setup": {
+        "title": "Setup",
+        "sidebar_label": "Setup"
+      },
+      "getting-started/what-and-why": {
+        "title": "What and Why",
+        "sidebar_label": "What and Why"
       }
     },
     "links": {
@@ -38,8 +114,8 @@
     },
     "categories": {
       "Getting Started": "Getting Started",
-      "Frontend Setup": "Frontend Setup",
-      "Backend Setup": "Backend Setup"
+      "Backend Setup": "Backend Setup",
+      "Frontend Setup": "Frontend Setup"
     }
   },
   "pages-strings": {

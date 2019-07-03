@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    let superTokensPrevButtons = document.getElementsByClassName("docs-prev");
-    let superTokensNextButtons = document.getElementsByClassName("docs-next");
-    Array.from(superTokensPrevButtons).forEach(element => {
-        element.children[1].innerHTML = "Previous";
-    });
+    // let superTokensPrevButtons = document.getElementsByClassName("docs-prev");
+    // let superTokensNextButtons = document.getElementsByClassName("docs-next");
+    // Array.from(superTokensPrevButtons).forEach(element => {
+    //     element.children[1].innerHTML = "Previous";
+    // });
 
-    Array.from(superTokensNextButtons).forEach(element => {
-        element.children[0].innerHTML = "Next";
-    });
+    // Array.from(superTokensNextButtons).forEach(element => {
+    //     element.children[0].innerHTML = "Next";
+    // });
 });
