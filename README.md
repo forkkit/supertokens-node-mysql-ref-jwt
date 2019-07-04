@@ -13,17 +13,15 @@
 
 This library implements user session management for websites that run on **NodeJS**, **Express** and **MySQL**. This is meant to be used with your backend code. For a complete solution, you also need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) package on your frontend. A demo project that uses these two libraries is available here: [auth-demo](https://github.com/supertokens/auth-demo)
 
-**This version works well with one instance of MySQL. To get this for a clustered environment, please [contact us](mailto:team@supertokens.io)**
-
 #### If you do not use node in your tech stack, please checkout [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice). Or if you use MongoDB, please see: [supertokens-node-mongo-ref-jwt](https://github.com/supertokens/supertokens-node-mongo-ref-jwt).
 
-#### The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)
+**The protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460).** The library is currently being implemented by a few large technology companies.
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
-- **Minimises probability of token theft** - follows all the best practices for handling auth tokens across all attack surfaces: the frontend, backend and during transit
+- **Protects against**: XSS, Brute force, Session fixation, JWT signing key compromise, Data theft from database, CSRF (coming soon) and session hijacking.
 - **Token theft detection**: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
-- **Complete auth token management** - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session. Furthermore, the tokens sent over to the client have a long length and high entropy - so brute force attack is out of the question.
+- **Complete auth token management** - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session.
 - **Automatic JWT signing key generation** (if you don't provide one), management and **rotation** - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
 - **Complete cookie management** - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
 - **Efficient** in terms of **space complexity** - Needs to store just one row in a SQL table per logged in user per device.
@@ -36,6 +34,8 @@ The library has the following features:
 #### If you like this project and want to use it, but for a different tech stack:
 - Please contact us at team@supertokens.io and we will evaluate building a solution for your tech stack.
 - We have made this into a standalone http service as well which you can use with any backend language of your choice: [supertokens-node-mysql-ref-jwt-webservice](https://github.com/supertokens/supertokens-node-mysql-ref-jwt-webservice).
+
+**This version works well with one instance of MySQL. To get this for a clustered environment, please [contact us](mailto:team@supertokens.io)**
 
 ## Index
 - [Installation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#installation)
@@ -53,6 +53,7 @@ The library has the following features:
 - [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
 - [Further reading and understanding](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#further-reading-and-understanding)
 - [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
+- [FAQ](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#faq)
 
 ## Installation
 **This package is to be used in your backend code, and [supertokens-website](https://github.com/supertokens/supertokens-website) is to be used in your frontend code. Together, these packages solve all the race conditions and failure cases mentioned in this [blog post](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460)**
@@ -90,7 +91,10 @@ app.use(CookieParser());
 ```
 
 ## Accompanying library
-As of now, this library will only work if your frontend is a website. To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code. This library is a drop-in replacement for your axios/ajax calls on the frontend.
+As of now, this library will only work if your frontend is a website. **To use this library, you will need to use the [supertokens-website](https://github.com/supertokens/supertokens-website) in your frontend code.** This library is a drop-in replacement for your axios/ajax calls on the frontend.
+```js
+import * as SuperTokensRequest from 'supertokens-website';
+```
 
 Together this and the supertokens-website library take into account all the failures and race conditions that can possibly occur when implementing session management.
 
@@ -495,7 +499,7 @@ As seen above, there is a function in the config that is called when token theft
 ```js
 onTokenTheftDetection: (userId: string, sessionHandle: string) => void
 ```
-The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unqiue ID identifying that particular session. Using these, you can either logout the user from all their devices. Or just the devices that are using that session. Both of these will stop the attack.
+The ```userId``` belongs to the user whose token was stolen. And the ```sessionHandle``` is a unique ID identifying that particular session. Using these, you can either logout the user from all their devices or just the devices that are using that session. Both of these will stop the attack.
 
 ## Blacklisting
 Enabling this feature will result in immediate revocation of JWT access tokens. Use this, for example, when it is very important to ban users immediately. You may wonder if this is enabled, then what is the point of using JWTs, since each authentication will require a DB call anyways. One benefit is that using JWTs instead of Opaque tokens saves you space. Another benefit is that you can have very optimised caching for blacklisted tokens, but doing so requires a thorough understanding of your use case. Please feel free to [contact us](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs) about any queries regarding your specific use case.
@@ -521,6 +525,7 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - To implement info, debug and error logs in a better way.
 - Add scaling metrics
 - IP change detection invalidates access token, so that thefts get caught sooner, or attacker get's logged out, while keeping the actual user logged in (Thanks to [Aervue](https://github.com/Aervue))
+- Easy prevention of CSRF attacks using a combination of localstorage and cookie storage for authentication
 
 ## Support, questions and bugs
 We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
@@ -556,3 +561,47 @@ To understand the logic behind how sessions are created, managed and destroyed, 
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
+
+## FAQ
+#### Why should I care about session security?
+As mentioned in our blog, session security is important because session tokens are used to identify your user while they are logged in. Their theft is as good as stolen passwords - sometimes even worse. Also, OWASP considers authentication and authorisation as one of the [top security problems](https://www.owasp.org/index.php/Top_10-2017_Top_10)
+
+#### How is this different from OAuth 2.0?
+To understand this, first know that they both have refresh tokens that are long lived and access tokens that are short lived. Also, if party1 needs access to party2, party2 will have to generate the auth tokens and party1 would have to store them to maintain access. 
+
+About OAuth:
+- We have three parties (there are other types too): App1's backend, App1's frontend and App2's backend. 
+- Here the aim is to give access to App1's backend and frontend, access to App2's backend, on behalf of a user. 
+- Here only, App1's backend and App2's backend can be trusted as secure parties.
+
+About SuperTokens:
+- We have two parties: App1's backend, App1's frontend. 
+- Here the aim is to give App1's frontend, access to App1's backend, on behalf of a user (this is the case for all apps, after a user logs into the app).
+- Here only App1's backend is a trusted party.
+
+Since refresh tokens are long lived, getting unauthorised access to them can be a serious problem. So, in OAuth flow, it is designed so that App2 backend's refresh tokens are only stored on App1's backend (which is a trusted party). And only App2 backend's access token (which is short lived) is sent to App1's frontend. In SuperTokens, we have no trusted party to store App1 backend's refresh token. This means, that you are storing the refresh token in a place where it can be stolen relatively easily - which is a security problem. So while OAuth doesn't have to solve this problem as such, SuperTokens does, and has by making the refresh token change on each use - minimising the impact of stolen refresh tokens, while also having a way to detect such a theft.
+
+#### Why do we need refresh tokens?
+- One of the key properties of a refresh token is that it is long lived and hence it is not to be exposed over the wire often (cause that is an attack surface as well). If we do not have this, then the access token would have to be long lived and we need to use the access token for each request - so in doing so, we are exposing a long lived token more often, reducing security.
+-  Secondly, when a long lived token (refresh token in our case) is expected to change, the frontend needs to synchronise requests to that endpoint to avoid this race condition. If we have one dedicated end point for this - the refresh token endpoint, then we need to do that only when we call that API and no other API. If we do not use refresh tokens, then there is a chance that the access token can change in any API call - so then we would be forced to synchronise calls to all API end points causing a massive bottleneck on the frontend.
+
+#### Is this efficient in terms of time and space complexity?
+Depending on how you setup the config for this library, most authentication calls do not require a DB query. In the worst case, this is equally efficient as any other standard implementation of session management in most frameworks out there.
+About space requirements, if using JWT access tokens, you will only ever need to store one refresh token per device per user in your database. With Opaque access tokens, you will be storing one refresh and one access token in the database per device per user.
+
+#### Is this library well tested? How do I know that this is really doing what it claims?
+We have written many extensive tests for this library to test all the normal and edge cases, including detection of token theft. Furthermore, we have been using this implementation for our own mobile app (qually.com) since mid 2018 and it has not caused any problems whatsoever.
+
+In terms of how you can verify that it is actually doing what it claims, feel free to inspect the code yourself!
+
+#### Why should I use this over existing libraries?
+Depending on your tech stack, most existing libraries are either less secure, or do not provide a complete end-to-end solution. In addition to robust token theft detection, our library also prevents XSS, Brute force, Session fixation, JWT signing key compromise, Data theft from database, CSRF (coming soon) and session hijacking. Furthermore, it is quite scalable and optimised to take minimum time and space complexity. If you can find any other library that is as secure, performant and open source, please feel free to notify us about that! We strive for excellence and aim to create the best solution for this problem out there!
+
+#### I cannot find an implementation for my tech stack. What do I do?
+You can contact us via our email or Discord server, and depending on your use case, we will be happy to implement a solution for you
+
+#### What happens if I need guaranteed, dedicated support for this library?
+For our early adopters, we are offering free dedicated support initially. We also have a referral scheme that you can use to gain additional free support. See [here](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs) for more details
+
+#### Why shouldn’t I implement this on my own from scratch?
+While it may seem simple enough to try and implement it, while implementing it, you will inevitably run into various cases where you have to handle network failure issues, multiple race conditions on the backend and frontend. The whole point in creating a library is that you do not have to do this yourself and can use this as a solution, or at least as a starting point to your own solution.
