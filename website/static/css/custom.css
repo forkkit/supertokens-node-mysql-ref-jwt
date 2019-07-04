@@ -187,3 +187,29 @@ a.docs-prev.button {
 .highlighted-text {
     color: #ff9933;
 }
+
+.mainContainer h2 a {
+    color: #6ab1fd;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+.mainContainer h3 a {
+    color: #6ab1fd;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+.mainContainer h4 a {
+    color: #6ab1fd;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+.divider {
+    background-color: #444444; 
+    height: 1px; 
+    width: 100%; 
+    margin-top: 40px; 
+    margin-bottom: 40px;
+}

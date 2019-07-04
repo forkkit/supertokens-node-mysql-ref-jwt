@@ -34,8 +34,8 @@
         "sidebar_label": "Token Theft Detection"
       },
       "backend/usage-with-express/initialisation": {
-        "title": "Express Init",
-        "sidebar_label": "Init"
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
       },
       "backend/usage-with-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
@@ -66,8 +66,8 @@
         "sidebar_label": "Verify Session"
       },
       "backend/usage-without-express/initialisation": {
-        "title": "Init",
-        "sidebar_label": "Init"
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
       },
       "backend/usage-without-express/manipulating-session-data": {
         "title": "Manipulating Session Data",

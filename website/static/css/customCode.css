@@ -1,6 +1,6 @@
 code {
-    background-color: #4D5569;
-    color: #DEEDFF;
+    background-color: #2B303B;
+    color: #C2D1F4;
 }
 
 .hljs {
@@ -116,7 +116,7 @@ code {
   }
   
   .hljs-comment {
-    color: #4C566A;
+    color: #6F7C96;
   }
   
   .hljs-doctag {
