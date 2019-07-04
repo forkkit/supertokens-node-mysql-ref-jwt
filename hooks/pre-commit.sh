@@ -18,7 +18,7 @@ if [ $no_of_files_to_stash -ne 0 ]
 then
    echo "$(tput setaf 3)* Stashing non-staged changes"
    files_to_stash=`git ls-files . --exclude-standard --others -m | xargs`
-   git stash push -k -u -- $files_to_stash >/dev/null
+   git stash push -k -u -- $files_to_stash >/dev/null 2>/dev/null
 fi
 
 npm run build-check >/dev/null 2>/dev/null
@@ -50,12 +50,12 @@ fi
 if [ $no_of_files_to_stash -ne 0 ]
 then
    echo "$(tput setaf 3)* Undoing stashing$(tput sgr 0)"
-   git stash apply >/dev/null
+   git stash apply >/dev/null 2>/dev/null
    if [ $? -ne 0 ]
    then
-      git checkout --theirs . >/dev/null
+      git checkout --theirs . >/dev/null 2>/dev/null
    fi
-   git stash drop >/dev/null
+   git stash drop >/dev/null 2>/dev/null
 fi
 
 if [ $compiles -eq 0 ] && [ $formatted -eq 0 ]
