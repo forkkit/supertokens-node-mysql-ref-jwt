@@ -1,5 +1,5 @@
 code {
-    background-color: #2B303B;
+    background-color: #222222;
     color: #C2D1F4;
 }
 
@@ -7,7 +7,7 @@ code {
     display: block;
     overflow-x: auto;
     padding: 0.5em;
-    background: #2E3440;
+    background: #222222;
   }
   
   .hljs,
