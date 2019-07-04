@@ -5,17 +5,12 @@ sidebar_label: Installation
 ---
 
 ### 1. Pre install NodeJS and MySQL
-<div style="border: 1px solid #6ab1fd; border-radius: 6px; width: 100%; padding: 20px; display: flex">
-<div style="margin-right: 20px;">
-<img src="../../img/star.png" style="width: 15px"></img>
-</div>
-<div style="flex: 1">
 
 <!-- <span style="color: #6ab1fd">Note:</span> For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK. -->
 <!-- Not deleting the code above for reference later -->
-<insert-element></insert-element>
-</div>
-</div>
+<special-highlight img="../../img/star.png">
+For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK.
+</special-highlight>
 
 ### 2. Create a database in MySQL that will store session related information
 - This could either be your existing app database or a new database. 
