@@ -15,7 +15,7 @@ import * as CookieParser from 'cookie-parser';
 app.use(CookieParser());
 ```
 
-## Call the ```init``` function: [API reference](../api-reference#initconfig)
+## Call the ```init``` function: [API Reference](../api-reference#initconfig)
 ```js
 SuperTokens.init(config);
 ```
@@ -28,7 +28,7 @@ SuperTokens.init(config);
 
 <div class="divider"></div>
 
-## Example setup
+## Example code
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 import * as CookieParser from 'cookie-parser';

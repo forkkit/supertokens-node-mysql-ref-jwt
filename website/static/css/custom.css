@@ -172,6 +172,10 @@ a.docs-prev.button {
     color: #6ab1fd
 }
 
+.mainContainer h5 {
+    color: #6ab1fd
+}
+
 .mainContainer a {
     color: #ffffff;
     text-decoration: underline;
@@ -201,6 +205,12 @@ a.docs-prev.button {
 }
 
 .mainContainer h4 a {
+    color: #6ab1fd;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+.mainContainer h5 a {
     color: #6ab1fd;
     text-decoration: underline;
     font-style: normal;
