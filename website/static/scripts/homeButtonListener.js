@@ -1,5 +1,3 @@
-customElements.define('special-highlight', class extends HTMLElement { });
-
 document.addEventListener("DOMContentLoaded", () => {
     function uncollapseInitial(node, title, currNav) {
         node.classList.remove("hide");
@@ -83,11 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    let specialHighlights = document.getElementsByTagName("special-highlight");
-    for (let i = 0; i < specialHighlights.length; i++) {
-        let text = " " + specialHighlights[i].innerHTML.trim();
-        let imgPath = specialHighlights[i].getAttribute("img");
-        specialHighlights[i].innerHTML = `
+    let specialNotes = document.getElementsByClassName("specialNote");
+    for (let i = 0; i < specialNotes.length; i++) {
+        let text = " " + specialNotes[i].innerHTML.trim();
+        let imgPath = specialNotes[i].getAttribute("img");
+        specialNotes[i].innerHTML = `
             <div style="border: 1px solid #6ab1fd; border-radius: 6px; width: 100%; padding: 20px; display: flex">
             <div style="margin-right: 20px;">
             <img src="` + imgPath + `" style="width: 15px"></img>

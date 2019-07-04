@@ -6,11 +6,9 @@ sidebar_label: Installation
 
 ### 1. Pre install NodeJS and MySQL
 
-<!-- <span style="color: #6ab1fd">Note:</span> For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK. -->
-<!-- Not deleting the code above for reference later -->
-<special-highlight img="../../img/star.png">
+<div class="specialNote" img="../../img/star.png">
 For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK.
-</special-highlight>
+</div>
 
 ### 2. Create a database in MySQL that will store session related information
 - This could either be your existing app database or a new database. 
@@ -49,3 +47,4 @@ Our package uses this to set and get cookies from express ```request``` and ```r
 ```js
 npm i --save cookie-parser
 ```
+
