@@ -13,8 +13,14 @@
 echo ""
 echo "$(tput setaf 3)Running pre-commit hook ... (you can omit this with --no-verify, but don't)$(tput sgr 0)"
 
-echo "$(tput setaf 3)* Stashing non-staged changes if any$(tput sgr 0)"
-stashed=$(git stash --keep-index -u)
+no_of_files_to_stash=`git ls-files . --exclude-standard --others -m | wc -l`
+echo $no_of_files_to_stash
+if [ $no_of_files_to_stash -ne 0 ]
+then
+   echo "$(tput setaf 3)* Stashing non-staged changes if any$(tput sgr 0)" >/dev/null
+   files_to_stash=`git ls-files . --exclude-standard --others -m | xargs` >/dev/null
+   git stash push -k -u -- $files_to_stash >/dev/null
+fi
 
 npm run build-check >/dev/null 2>/dev/null
 compiles=$?
@@ -42,11 +48,12 @@ else
     echo ""
 fi
 
-if [ "$stashed" != "No local changes to save" ]
+if [ $no_of_files_to_stash -ne 0 ]
 then
    echo "$(tput setaf 3)* Undoing stashing$(tput sgr 0)"
-   git stash apply > /dev/null
-   git stash drop > /dev/null
+   git stash apply >/dev/null
+   git checkout --theirs . >/dev/null
+   git stash drop >/dev/null
 fi
 
 if [ $compiles -eq 0 ] && [ $formatted -eq 0 ]
