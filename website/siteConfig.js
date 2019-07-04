@@ -79,11 +79,6 @@ const siteConfig = {
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   //   copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
 
-  highlight: {
-    // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: 'dark',
-  },
-
   // Add custom scripts here that would be placed in <script> tags.
   scripts: ['https://buttons.github.io/buttons.js', "/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"],
 
