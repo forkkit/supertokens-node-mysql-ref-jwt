@@ -10,7 +10,10 @@ sidebar_label: Installation
 <img src="../../img/star.png" style="width: 15px"></img>
 </div>
 <div style="flex: 1">
-<span style="color: #6ab1fd">Note:</span> For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK.
+
+<!-- <span style="color: #6ab1fd">Note:</span> For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK. -->
+<!-- Not deleting the code above for reference later -->
+<insert-element></insert-element>
 </div>
 </div>
 

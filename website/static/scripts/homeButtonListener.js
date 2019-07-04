@@ -81,6 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    customElements.define('insert-element', class extends HTMLElement {
+        connectedCallback() {
+            this.innerHTML = "For a complete solution, you will also need to use our frontend SDK along with our backend SDK.";
+        }
+    });
+
     let body = document.getElementsByTagName("body")[0];
     body.style.display = "block";
 });
