@@ -1,3 +1,10 @@
+function goToGithub() {
+    window.open(
+        'https://github.com/supertokens/supertokens-node-mysql-ref-jwt',
+        '_blank'
+    );
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     function uncollapseInitial(node, title, currNav) {
         node.classList.remove("hide");
@@ -84,7 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let specialNotes = document.getElementsByClassName("specialNote");
     for (let i = 0; i < specialNotes.length; i++) {
         let text = " " + specialNotes[i].innerHTML.trim();
-        let imgPath = specialNotes[i].getAttribute("img");
+        let header = document.getElementsByClassName("fixedHeaderContainer")[0];
+        let splittedCurrPath = window.location.pathname.split("/");
+        let imgPath = ["", splittedCurrPath[1], "img", "star.png"].join("/");
         specialNotes[i].innerHTML = `
             <div style="border: 1px solid #6ab1fd; border-radius: 6px; width: 100%; padding: 20px; display: flex">
             <div style="margin-right: 20px;">
@@ -93,6 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
             <div style="flex: 1"><span style="color: #6ab1fd">Note:</span>` + text + `</div></div>
         `;
     }
+
+    let header = document.getElementsByClassName("fixedHeaderContainer")[0];
+    let splittedCurrPath = window.location.pathname.split("/");
+    let imgPath = ["", splittedCurrPath[1], "img", "githubFold.png"].join("/");
+    header.innerHTML = `
+    <div style="position: relative">
+        ` + header.innerHTML + `
+        <img 
+            src="`+ imgPath + `"
+            style="width: 50px; height: 50px; position: absolute; top: -8px; right: 0px; cursor: pointer"
+            onClick="goToGithub()">
+        </img>
+    </div>
+    `;
 
     let body = document.getElementsByTagName("body")[0];
     body.style.display = "block";
