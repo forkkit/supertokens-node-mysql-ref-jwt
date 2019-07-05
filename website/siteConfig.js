@@ -41,9 +41,7 @@ const siteConfig = {
   headerLinks: [
     { doc: "introduction/what-and-why", label: "Docs" },
     { href: "https://discordapp.com/invite/zVcVeev", label: "Discord" },
-    { href: "https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" },
-    { href: "https://github.com/supertokens/supertokens-node-mysql-ref-jwt", label: "Github" },
-    //   {doc: "main", label: ""}
+    { href: "https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" }
   ],
   disableHeaderTitle: false,
   docsSideNavCollapsible: true,

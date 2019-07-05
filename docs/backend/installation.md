@@ -6,15 +6,15 @@ sidebar_label: Installation
 
 ### 1. Pre install NodeJS and MySQL
 
-<div class="specialNote" img="../../img/star.png">
+<div class="specialNote">
 For a complete solution, you will also need to use our <a href="../frontend/installation">frontend SDK</a> along with our backend SDK.
 </div>
 
 ### 2. Create a database in MySQL that will store session related information
 - This could either be your existing app database or a new database. 
-- We recommend that you create a new database as it would become easier for you to monitor the data our library stores. An example name for a database is ```auth_session```
 - You will have to provide this name in the [Configuration](config) object
 
+Note: We recommend that you create a new database as it would become easier for you to monitor the data our library stores. An example name for a database is ```auth_session```
 ### 3. Optionally create tables in the MySQL database
 - If you do not create them, our library will create these two tables for you:
   ```SQL

@@ -145,6 +145,10 @@
         "title": "Limitations",
         "sidebar_label": "Limitations"
       },
+      "migration/migration": {
+        "title": "Migration",
+        "sidebar_label": "Migration"
+      },
       "try-it-out/docker": {
         "title": "Docker",
         "sidebar_label": "Docker"
@@ -157,8 +161,7 @@
     "links": {
       "Docs": "Docs",
       "Discord": "Discord",
-      "Blog": "Blog",
-      "Github": "Github"
+      "Blog": "Blog"
     },
     "categories": {
       "Introduction": "Introduction",
@@ -166,7 +169,8 @@
       "Frontend": "Frontend",
       "How it works": "How it works",
       "Try it out": "Try it out",
-      "Limitations": "Limitations"
+      "Limitations": "Limitations",
+      "Migration": "Migration"
     }
   },
   "pages-strings": {

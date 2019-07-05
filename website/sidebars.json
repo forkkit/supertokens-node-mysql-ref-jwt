@@ -66,13 +66,6 @@
                 "ids": [
                     "frontend/android/coming-soon"
                 ]
-            },
-            {
-                "type": "subcategory",
-                "label": "React Native",
-                "ids": [
-                    "frontend/react-native/coming-soon"
-                ]
             }
         ],
         "How it works": [
@@ -84,6 +77,9 @@
         ],
         "Limitations": [
             "limitations/limitations"
+        ],
+        "Migration": [
+            "migration/migration"
         ]
     }
 }

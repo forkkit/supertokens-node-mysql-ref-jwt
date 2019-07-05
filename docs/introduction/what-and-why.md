@@ -12,7 +12,7 @@ sidebar_label: What and Why
 - Provides an end-to-end solution, handling everything from cookies / headers to your database.
 
 ### Why is SuperTokens most secure?
-We protect against all session related attacks and vulnerability:
+We protect against all session related attacks and vulnerabilities:
 - XSS
 - Brute force
 - CSRF

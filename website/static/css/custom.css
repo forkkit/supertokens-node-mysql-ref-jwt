@@ -10,16 +10,6 @@
     }
 }
 
-@media only screen and (min-width: 1024px) {
-    html {
-        background-color: #141414;
-    }
-    
-    body {
-        display: none;
-    }
-}
-
 @media only screen and (max-width: 1023px) {
     .docsNavContainer .toc .navBreadcrumb {
         background-color: #000000;
@@ -27,6 +17,17 @@
     
     .docsNavContainer {
         background-color: #000000;
+    }
+    
+}
+
+@media only screen and (min-width: 1024px) {
+    html {
+        background-color: #141414;
+    }
+    
+    body {
+        display: none;
     }
 }
 
