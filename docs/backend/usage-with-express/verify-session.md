@@ -11,7 +11,7 @@ SuperTokens.getSession(req, res, enableCsrfProtection);
 ```
 - Call this function in any API that requires user authentication.
 - You can also use this to build your own middleware. Please see our [Migration](../../migration/migration) guide on how to do this.
-- This function will mostly never require a database call since we are using JWT access tokens.
+- This function will mostly never require a database call since we are using JWT access tokens - if ```blacklisting``` is disabled.
 - This function does the following operations:
     - Verifies the current session using the ```req``` object.
     - If ```enableCsrfProtection``` is ```true```, the function checks for the ```anti-csrf``` header in the ```req``` object and verifies that. We strongly recommend that you set it to true for any non-GET API that requires user auth.

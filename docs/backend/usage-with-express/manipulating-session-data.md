@@ -45,11 +45,17 @@ SuperTokens.updateSessionData(sessionHandle, newSessionData);
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
 async function changeSessionDataAPI(req: express.Request, res: express.Response) {
+    let session;
     try {
-        let session = await SuperTokens.getSession(req, res, true);
+        session = await SuperTokens.getSession(req, res, true);
+    } catch (err) {
+        //...
+    }
+    try {
         let jwtPayload = session.getJWTPayload();
         let sessionData = await session.getSessionData();
         await session.updateSessionData({comment: "new session data"});
+        res.send("Success!");
     } catch (err) {
         if (SuperTokens.Error.isErrorFromAuth(err)) {
             if (err.errType === SuperTokens.Error.GENERAL_ERROR) {

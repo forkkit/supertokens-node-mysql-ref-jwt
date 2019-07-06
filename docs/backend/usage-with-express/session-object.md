@@ -26,7 +26,10 @@ session.getJWTPayload()
 ```js
 session.revokeSession()
 ```
-- Please see [User logout](user-logout) section for more information.
+- Use this to logout a user from their current session.
+- This function deletes the session from the database
+- Clears relevant auth cookies
+- If using ```blacklisting```, this will immediately invalidate the ```JWT``` access token. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
 ## Call the ```getSessionData()``` function: [API Reference](../api-reference#sessiongetsessiondata)
 ```js
@@ -74,9 +77,7 @@ async function testSessionAPI(req: express.Request, res: express.Response) {
         // session has been destroyed.
     } catch (err) {
         if (SuperTokens.Error.isErrorFromAuth(err)) {   // GENERAL_ERROR
-            if (err.errType === SuperTokens.Error.GENERAL_ERROR) {
-                res.status(500).send("Something went wrong");
-            }
+            res.status(500).send("Something went wrong");
         } else {
             res.status(500).send(err);  // Something went wrong.
         }

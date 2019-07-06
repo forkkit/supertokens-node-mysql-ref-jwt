@@ -212,3 +212,30 @@ sidebar_label: API Reference
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
 
 <div class="divider"></div>
+
+## ```revokeSessionUsingSessionHandle(sessionHandle)```
+##### Parameters
+- ```sessionHandle```
+    - Type: ```string```
+    - Identifies a unique session in your system. Please see the Session Handle section for more information. 
+##### Returns
+- ```Promise<boolean>```
+    - Will be ```true``` if a row was removed from the MySQL table.
+    - Will be ```false``` if either the ```sessionHandle``` is invalid, or the session had already been removed.
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+
+    <div class="divider"></div>
+
+## ```revokeAllSessionsForUser(userId)```
+##### Parameters
+- ```userId```
+    - Type: ```string```
+##### Returns
+- ```Promise<void>```
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.
