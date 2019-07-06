@@ -23,14 +23,14 @@ Please see the [Session Object](session-object#call-the-getsessiondata-function-
 These functions should only be used if absolutely necessary, since they do not handle cookies for you. So if you are able to get a <code>Session</code> object, please use the functions from the above section instead.
 </div>
 
-### Call the ```getSessionData(sessionHandle)``` function: [API Reference](../api-reference#getsessiondatasessionhandle)
+### Call the ```getSessionData``` function: [API Reference](../api-reference#getsessiondatasessionhandle)
 ```js
 SuperTokens.getSessionData(sessionHandle);
 ```
 - This function requires a database call each time it's called.
 - It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
-### Call the ```updateSessionData(sessionHandle, newSessionData)``` function: [API Reference](../api-reference#updatesessiondatasessionhandle-data)
+### Call the ```updateSessionData``` function: [API Reference](../api-reference#updatesessiondatasessionhandle-data)
 ```js
 SuperTokens.updateSessionData(sessionHandle, newSessionData);
 ```

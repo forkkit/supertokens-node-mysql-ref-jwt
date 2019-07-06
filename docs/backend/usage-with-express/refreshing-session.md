@@ -20,7 +20,7 @@ Our frontend SDK takes care of calling your refresh endpoint and managing the au
 If you are building a webapp and get a <code>TRY_REFRESH_TOKEN</code> error on your backend for a <code>GET</code> request that returns <code>HTML</code>, then you should reply with  <code>HTML & JS</code> code that calls your <code>/refreshSession</code> endpoint. Once that is successful, your frontend code should redirect the browser to call again the original <code>GET</code> API. More details on this in the frontend section.
 </div>
 
-## Call the ```refreshSession(req, res)``` function: [API Reference](../api-reference#refreshsessionreq-res)
+## Call the ```refreshSession``` function: [API Reference](../api-reference#refreshsessionreq-res)
 ```js
 SuperTokens.refreshSession(req, res);
 ```

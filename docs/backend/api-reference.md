@@ -239,3 +239,40 @@ sidebar_label: API Reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+
+<div class="divider"></div>
+
+## ```createNewSession(userId, jwtPayload, sessionData)```
+##### Parameters
+- ```userId```
+    - Type: ```string```
+    - Should be used to ID a user in your system.
+- ```jwtPayload``` (Optional)
+    - Type: ```object | array | number | string | boolean | undefined | null``` 
+    - This information is stored in the JWT sent to the frontend, so <span class="highlighted-text">it should not contain any sensitive information.</span>
+    - Once set, it cannot be changed during the lifetime of a session.
+- ```sessionData``` (Optional)
+    - Type: ```object | array | number | string | boolean | undefined | null``` 
+    - This information is stored only in your database, so <span class="highlighted-text">it can contain sensitive information if needed.</span>
+    - This can be freely modified during the lifetime of a session. But we do not synchronize calls to modify this - you must take care of locks yourself.
+##### Returns
+```js
+Promise<{
+    session: {
+        handle: string,
+        userId: string,
+        jwtPayload: any
+    },
+    accessToken: { value: string, expires: number },
+    refreshToken: {
+        value: string,
+        expires: number,
+    },
+    idRefreshToken: { value: string, expires: number },
+    antiCsrfToken: string
+}>
+```
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.

@@ -9,20 +9,20 @@ A ```Session``` object is returned when a session is verified successfully. Foll
 let session = await SuperTokens.getSession(req, res, enableCsrfProtection);
 ```
 
-## Call the ```getUserId()``` function: [API Reference](../api-reference#sessiongetuserid)
+## Call the ```getUserId``` function: [API Reference](../api-reference#sessiongetuserid)
 ```js
 session.getUserId()
 ```
 - This function does not do any database call.
 
-## Call the ```getJWTPayload()``` function: [API Reference](../api-reference#sessiongetjwtpayload)
+## Call the ```getJWTPayload``` function: [API Reference](../api-reference#sessiongetjwtpayload)
 ```js
 session.getJWTPayload()
 ```
 - This function does not do any database call.
 - It reads the payload available in the JWT access token that was used to verify this session.
 
-## Call the ```revokeSession()``` function: [API Reference](../api-reference#sessionrevokesession)
+## Call the ```revokeSession``` function: [API Reference](../api-reference#sessionrevokesession)
 ```js
 session.revokeSession()
 ```
@@ -31,14 +31,14 @@ session.revokeSession()
 - Clears relevant auth cookies
 - If using ```blacklisting```, this will immediately invalidate the ```JWT``` access token. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
-## Call the ```getSessionData()``` function: [API Reference](../api-reference#sessiongetsessiondata)
+## Call the ```getSessionData``` function: [API Reference](../api-reference#sessiongetsessiondata)
 ```js
 session.getSessionData()
 ```
 - This function requires a database call each time it's called.
 - It does nothing to synchronize with other ```getSessionData``` or ```updateSessionData``` calls on this session. So it is up to you to handle various race conditions depending on your use case. 
 
-## Call the ```updateSessionData(data)``` function: [API Reference](../api-reference#sessionupdatesessiondatadata)
+## Call the ```updateSessionData``` function: [API Reference](../api-reference#sessionupdatesessiondatadata)
 ```js
 session.updateSessionData(data)
 ```

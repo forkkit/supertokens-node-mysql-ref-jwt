@@ -16,7 +16,7 @@ If you can get the <code>Session</code> object, use that since revoking a sessio
 Please see the [Session Object](session-object#call-the-revokesession-function-api-reference-api-reference-sessionrevokesession) section for more information.
 
 ## If you have a ```sessionHandle```
-### Call the ```revokeSessionUsingSessionHandle(sessionHandle)``` function: [API Reference](../api-reference#revokesessionusingsessionhandlesessionhandle)
+### Call the ```revokeSessionUsingSessionHandle``` function: [API Reference](../api-reference#revokesessionusingsessionhandlesessionhandle)
 ```js
 SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
 ```
@@ -26,7 +26,7 @@ SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
 - If using blacklisting, this will immediately invalidate the JWT access token. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
 ## If you have a ```userId```
-### Call the ```revokeAllSessionsForUser(userId)``` function: [API Reference](../api-reference#revokeallsessionsforuseruserid)
+### Call the ```revokeAllSessionsForUser``` function: [API Reference](../api-reference#revokeallsessionsforuseruserid)
 ```js
 SuperTokens.revokeAllSessionsForUser(userId);
 ```
