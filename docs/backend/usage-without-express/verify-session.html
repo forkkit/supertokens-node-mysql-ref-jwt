@@ -72,11 +72,11 @@
 <li>This function does the following operations:
 <ul>
 <li>Verifies the current session using input tokens.</li>
-<li>If <code>antiCsrfToken</code> is not <code>undefined</code>, also gives CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs.</li>
+<li>If <code>antiCsrfToken</code> is not <code>null</code>, also gives CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs.</li>
 <li>May return a new access token. Please see How it works section for more information about this.</li>
 </ul></li>
 <li><code>accessToken</code> can be obtained from the cookies with the key <code>sAccessToken</code>. If this cookie is missing, then you should treat it as an error of type <code>TRY_REFRESH_TOKEN</code>.</li>
-<li><code>antiCsrfToken</code> can be obtained from the headers with the key <code>anti-csrf</code>. If this is missing pass <code>undefined</code> to this function.</li>
+<li><code>antiCsrfToken</code> can be obtained from the headers with the key <code>anti-csrf</code>. If this is missing and you do not expect it to be there then pass <code>null</code> to this function. Otherwise treat this like a <code>TRY_REFRESH_TOKEN</code> error.</li>
 <li>This function may return a <code>newAccessToken</code>. If that happens, please update the access token cookies as mentioned in the <a href="user-login">User login</a> section.</li>
 </ul>
 <div class="divider"></div>
