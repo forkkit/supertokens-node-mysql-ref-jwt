@@ -29,9 +29,11 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(typeof antiCsrfHeader, "string");
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=")) {
@@ -52,15 +54,17 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
+
         if (!response.body.success) {
             throw Error("test failed");
         }
         await delay(1500);
-
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (response.body.errCode !== errors.AuthError.TRY_REFRESH_TOKEN) {
             throw Error("test failed");
@@ -74,6 +78,8 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
+        antiCsrfHeader = response.headers["anti-csrf"];
+        assert.strictEqual(typeof antiCsrfHeader, "string");
         assert.strictEqual(Array.isArray(cookies), true);
         let oldAccessTokenCookie = undefined;
         let oldRefreshTokenCookie = undefined;
@@ -109,6 +115,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -119,9 +126,11 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .set("Cookie", [oldRefreshTokenCookie, oldAccessTokenCookie, oldIdRefreshTokenCookie])
             .expect(200);
         cookies = response.headers["set-cookie"];
+        antiCsrfHeader = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(antiCsrfHeader === undefined, true); // since this is token theft. This header should not be there.
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
@@ -160,9 +169,11 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
+        assert.strict(typeof antiCsrfHeader, "string");
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=")) {
@@ -183,6 +194,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -191,11 +203,14 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .post("/logout")
             .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         cookies = response.headers["set-cookie"];
+        let newAntiCsrfHeader = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(newAntiCsrfHeader === undefined, true);
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
@@ -217,6 +232,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -243,6 +259,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
@@ -266,6 +283,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -274,11 +292,14 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .post("/logout")
             .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         cookies = response.headers["set-cookie"];
+        let newAntiCsrf = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(newAntiCsrf === undefined, true);
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
@@ -300,6 +321,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
@@ -326,6 +348,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
@@ -349,6 +372,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -362,9 +386,11 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
             .expect(200);
         cookies = response.headers["set-cookie"];
+        antiCsrfHeader = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
+        assert.strictEqual(antiCsrfHeader === undefined, true);
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
             if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
@@ -406,6 +432,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader1 = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
@@ -435,6 +462,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         cookies = response.headers["set-cookie"];
+        let antiCsrfHeader2 = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
@@ -458,6 +486,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -466,6 +495,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie2, sIdRefreshTokenCookie2])
+            .set("anti-csrf", antiCsrfHeader2)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -474,6 +504,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .post("/revokeAll")
             .set("Cookie", [sRefreshTokenCookie1, sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -533,6 +564,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -541,6 +573,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie2, sIdRefreshTokenCookie2])
+            .set("anti-csrf", antiCsrfHeader2)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -570,6 +603,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader1 = response.headers["anti-csrf"];
         let sAccessTokenCookieFound = false;
         let sRefreshTokenCookieFound = false;
         let sIdRefreshTokenCookieFound = false;
@@ -599,6 +633,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             })
             .expect(200);
         cookies = response.headers["set-cookie"];
+        let antiCsrfHeader2 = response.headers["anti-csrf"];
         sAccessTokenCookieFound = false;
         sRefreshTokenCookieFound = false;
         sIdRefreshTokenCookieFound = false;
@@ -622,6 +657,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -630,6 +666,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie2, sIdRefreshTokenCookie2])
+            .set("anti-csrf", antiCsrfHeader2)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -638,6 +675,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .post("/revokeAll")
             .set("Cookie", [sRefreshTokenCookie1, sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (!response.body.success) {
             throw Error("test failed");
@@ -646,6 +684,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .post("/refresh")
             .set("Cookie", [sRefreshTokenCookie1, sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         cookies = response.headers["set-cookie"];
         sAccessTokenCookieFound = false;
@@ -697,6 +736,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie1, sIdRefreshTokenCookie1])
+            .set("anti-csrf", antiCsrfHeader1)
             .expect(200);
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");
@@ -705,6 +745,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         response = await supertest(app)
             .get("/")
             .set("Cookie", [sAccessTokenCookie2, sIdRefreshTokenCookie2])
+            .set("anti-csrf", antiCsrfHeader2)
             .expect(200);
         if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
             throw Error("test failed");

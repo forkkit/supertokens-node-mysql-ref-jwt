@@ -1,4 +1,4 @@
-const cookie = require("../lib/build/cookie");
+const cookie = require("../lib/build/cookieAndHeaders");
 const assert = require("assert");
 let cookieParser = require("cookie-parser");
 const supertest = require("supertest");

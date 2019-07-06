@@ -31,9 +31,10 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newSession.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof newSession.session.userId, "string");
         assert.deepStrictEqual(newSession.session.userId, userId);
+        assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
         const noOfRows = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRows, 1);
-        const sessionInfo = await session.getSession(newSession.accessToken.value);
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo.session, "object");
@@ -81,10 +82,11 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.accessToken.value, "string");
         assert.strictEqual(typeof newSession.idRefreshToken, "object");
         assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
-        await session.getSession(newSession.accessToken.value);
+        assert.strictEqual(typeof newSession.antiCsrfToken, "string");
+        await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         await delay(2000);
         try {
-            await session.getSession(newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -96,7 +98,12 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
         assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
         assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
-        const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.strictEqual(newRefreshedSession.newAntiCsrfToken !== newSession.antiCsrfToken, true);
+        const sessionInfo = await session.getSession(
+            newRefreshedSession.newAccessToken.value,
+            newRefreshedSession.newAntiCsrfToken
+        );
         assert.strictEqual(typeof sessionInfo, "object");
         assert.strictEqual(typeof sessionInfo.session, "object");
         assert.strictEqual(typeof sessionInfo.session.jwtPayload, "object");
@@ -116,13 +123,14 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession, "object");
         assert.strictEqual(typeof newSession.accessToken, "object");
         assert.strictEqual(typeof newSession.accessToken.value, "string");
-        await session.getSession(newSession.accessToken.value);
+        assert.strictEqual(typeof newSession.antiCsrfToken, "string");
+        await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         const alteredPayload = Buffer.from(JSON.stringify({ ...jwtPayload, b: "new field" })).toString("base64");
         const alteredToken = `${newSession.accessToken.value.split(".")[0]}.${alteredPayload}.${
             newSession.accessToken.value.split(".")[2]
         }`;
         try {
-            await session.getSession(alteredToken);
+            await session.getSession(alteredToken, newSession.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -146,9 +154,10 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
         assert.strictEqual(typeof newSession.refreshToken, "object");
         assert.strictEqual(typeof newSession.refreshToken.value, "string");
+        assert.strictEqual(typeof newSession.antiCsrfToken, "string");
         await delay(1500);
         try {
-            await session.getSession(newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -175,7 +184,12 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
         assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
-        const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.strictEqual(newRefreshedSession.newAntiCsrfToken !== newSession.antiCsrfToken, true);
+        const sessionInfo = await session.getSession(
+            newRefreshedSession.newAccessToken.value,
+            newRefreshedSession.newAntiCsrfToken
+        );
         assert.strictEqual(typeof sessionInfo, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
@@ -187,7 +201,10 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo.session.userId, "string");
         assert.deepStrictEqual(sessionInfo.session.userId, userId);
-        const newSessionInfo = await session.getSession(sessionInfo.newAccessToken.value);
+        const newSessionInfo = await session.getSession(
+            sessionInfo.newAccessToken.value,
+            newRefreshedSession.newAntiCsrfToken
+        );
         assert.strictEqual(typeof newSessionInfo, "object");
         assert.deepStrictEqual(newSessionInfo.newAccessToken, undefined);
         assert.strictEqual(typeof newSessionInfo.session, "object");
@@ -198,7 +215,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(newSessionInfo.session.userId, userId);
         await delay(1500);
         try {
-            await session.getSession(sessionInfo.newAccessToken.value);
+            await session.getSession(sessionInfo.newAccessToken.value, newRefreshedSession.newAntiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -210,7 +227,12 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession2.newAccessToken, "object");
         assert.strictEqual(typeof newRefreshedSession2.newAccessToken.value, "string");
         assert.notDeepStrictEqual(newRefreshedSession2.newAccessToken.value, sessionInfo.newAccessToken.value);
-        const sessionInfo2 = await session.getSession(newRefreshedSession2.newAccessToken.value);
+        assert.strictEqual(typeof newRefreshedSession2.newAntiCsrfToken, "string");
+        assert.strictEqual(newRefreshedSession2.newAntiCsrfToken !== newRefreshedSession.antiCsrfToken, true);
+        const sessionInfo2 = await session.getSession(
+            newRefreshedSession2.newAccessToken.value,
+            newRefreshedSession2.newAntiCsrfToken
+        );
         assert.strictEqual(typeof sessionInfo2, "object");
         assert.strictEqual(typeof sessionInfo2.newAccessToken, "object");
         assert.strictEqual(typeof sessionInfo2.newAccessToken.value, "string");
@@ -234,7 +256,10 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             assert.strictEqual(typeof newRefreshedSession, "object");
             assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
             assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
-            const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+            const sessionInfo = await session.getSession(
+                newRefreshedSession.newAccessToken.value,
+                newRefreshedSession.newAntiCsrfToken
+            );
             assert.strictEqual(typeof sessionInfo, "object");
             assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
             assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
@@ -287,7 +312,10 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession, "object");
         assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
         assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
-        const sessionInfo = await session.getSession(newRefreshedSession.newAccessToken.value);
+        const sessionInfo = await session.getSession(
+            newRefreshedSession.newAccessToken.value,
+            newRefreshedSession.newAntiCsrfToken
+        );
         assert.strictEqual(typeof sessionInfo, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken, "object");
         assert.strictEqual(typeof sessionInfo.newAccessToken.value, "string");
@@ -356,12 +384,15 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession, "object");
         assert.strictEqual(typeof newSession.session, "object");
         assert.strictEqual(typeof newSession.session.handle, "string");
-        const sessionDataBeforeUpdate = await session.getSessionData(newSession.session.handle);
+        const sessionDataBeforeUpdate = await session.getSessionData(
+            newSession.session.handle,
+            newSession.antiCsrfToken
+        );
         assert.strictEqual(typeof sessionDataBeforeUpdate, "object");
         assert.deepStrictEqual(sessionData, sessionDataBeforeUpdate);
         const newSessionData = 2;
         await session.updateSessionData(newSession.session.handle, newSessionData);
-        const sessionDataPostUpdate = await session.getSessionData(newSession.session.handle);
+        const sessionDataPostUpdate = await session.getSessionData(newSession.session.handle, newSession.antiCsrfToken);
         assert.strictEqual(typeof sessionDataPostUpdate, "number");
         assert.deepStrictEqual(newSessionData, sessionDataPostUpdate);
     });
@@ -393,7 +424,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
                 throw err;
             }
         }
-        const sessionInfo = await session.getSession(newSession.accessToken.value);
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo.session, "object");
@@ -425,7 +456,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession2.refreshToken.value, "string");
         const noOfRowsBefore = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsBefore, 2);
-        const sessionInfo1 = await session.getSession(newSession1.accessToken.value);
+        const sessionInfo1 = await session.getSession(newSession1.accessToken.value, newSession1.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo1, "object");
         assert.deepStrictEqual(sessionInfo1.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo1.session, "object");
@@ -446,14 +477,14 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             }
         }
         try {
-            await session.getSession(newSession1.accessToken.value);
+            await session.getSession(newSession1.accessToken.value, newSession1.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.UNAUTHORISED) {
                 throw err;
             }
         }
-        const sessionInfo2 = await session.getSession(newSession2.accessToken.value);
+        const sessionInfo2 = await session.getSession(newSession2.accessToken.value, newSession2.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo2, "object");
         assert.deepStrictEqual(sessionInfo2.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo2.session, "object");
@@ -478,7 +509,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.accessToken, "object");
         assert.strictEqual(typeof newSession.accessToken.value, "string");
         await session.revokeSessionUsingSessionHandle(newSession.session.handle);
-        const sessionInfo = await session.getSession(newSession.accessToken.value);
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo.session, "object");
@@ -489,7 +520,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo.session.userId, userId);
         await delay(1500);
         try {
-            await session.getSession(newSession.accessToken.value);
+            await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
@@ -521,7 +552,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         await session.revokeAllSessionsForUser(userId);
         const noOfRowsAfter = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsAfter, 0);
-        const sessionInfo1 = await session.getSession(newSession1.accessToken.value);
+        const sessionInfo1 = await session.getSession(newSession1.accessToken.value, newSession1.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo1, "object");
         assert.deepStrictEqual(sessionInfo1.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo1.session, "object");
@@ -530,7 +561,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo1.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo1.session.userId, "string");
         assert.deepStrictEqual(sessionInfo1.session.userId, userId);
-        const sessionInfo2 = await session.getSession(newSession2.accessToken.value);
+        const sessionInfo2 = await session.getSession(newSession2.accessToken.value, newSession2.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo2, "object");
         assert.deepStrictEqual(sessionInfo2.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo2.session, "object");
@@ -539,7 +570,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo2.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo2.session.userId, "string");
         assert.deepStrictEqual(sessionInfo2.session.userId, userId);
-        const sessionInfo3 = await session.getSession(newSession3.accessToken.value);
+        const sessionInfo3 = await session.getSession(newSession3.accessToken.value, newSession3.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo3, "object");
         assert.deepStrictEqual(sessionInfo3.newAccessToken, undefined);
         assert.strictEqual(typeof sessionInfo3.session, "object");
@@ -566,7 +597,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         const noOfRowsAfter = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsAfter, 0);
         try {
-            await session.getSession(newSession1.accessToken.value);
+            await session.getSession(newSession1.accessToken.value, newSession1.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.UNAUTHORISED) {
@@ -574,7 +605,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             }
         }
         try {
-            await session.getSession(newSession2.accessToken.value);
+            await session.getSession(newSession2.accessToken.value, newSession2.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.UNAUTHORISED) {
@@ -582,7 +613,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             }
         }
         try {
-            await session.getSession(newSession3.accessToken.value);
+            await session.getSession(newSession3.accessToken.value, newSession3.antiCsrfToken);
             throw Error("test failed");
         } catch (err) {
             if (err.errType !== errors.AuthError.UNAUTHORISED) {

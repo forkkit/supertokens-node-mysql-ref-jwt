@@ -105,7 +105,7 @@ export async function createNewSession(
  */
 export async function getSession(
     accessToken: string,
-    antiCsrfToken?: string
+    antiCsrfToken: string | null
 ): Promise<{
     session: {
         handle: string;
@@ -118,8 +118,10 @@ export async function getSession(
 
     let accessTokenInfo = await getInfoFromAccessToken(accessToken); // if access token is invalid, this will throw TRY_REFRESH_TOKEN error.
     let sessionHandle = accessTokenInfo.sessionHandle;
-
-    if (antiCsrfToken !== undefined) {
+    if (antiCsrfToken === undefined) {
+        throw generateError(AuthError.GENERAL_ERROR, new Error("provided antiCsrfToken is undefined"));
+    }
+    if (antiCsrfToken !== null) {
         if (antiCsrfToken !== accessTokenInfo.antiCsrfToken) {
             throw generateError(AuthError.TRY_REFRESH_TOKEN, new Error("anti-csrf check failed"));
         }

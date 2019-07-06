@@ -6,6 +6,7 @@ import { AuthError, generateError } from "./error";
 const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
 const idRefreshTokenCookieKey = "sIdRefreshToken"; // if you change this name and are using supertokens-website or anything that uses is, then be sure to also change the name of this cookie there. To find the usage of this in those packages, you can simply search for "sIdRefreshToken"
+const antiCsrfHeaderKey = "anti-csrf";
 
 /**
  * @description clears all the auth cookies from the response
@@ -69,6 +70,29 @@ export function getRefreshTokenFromCookie(req: express.Request): string | undefi
 
 export function getIdRefreshTokenFromCookie(req: express.Request): string | undefined {
     return getCookieValue(req, idRefreshTokenCookieKey);
+}
+
+export function getAntiCsrfTokenFromHeaders(req: express.Request): string | undefined {
+    return getHeader(req, antiCsrfHeaderKey);
+}
+
+export function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string) {
+    setHeader(res, antiCsrfHeaderKey, antiCsrfToken);
+}
+
+export function getHeader(req: express.Request, key: string): string | undefined {
+    let value = req.headers[key];
+    if (value === undefined) {
+        return undefined;
+    }
+    if (Array.isArray(value)) {
+        return value[0];
+    }
+    return value;
+}
+
+export function setHeader(res: express.Response, key: string, value: string) {
+    res.header(key, value);
 }
 
 /**

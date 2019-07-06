@@ -7,13 +7,14 @@ import {
     attachRefreshTokenToCookie,
     clearSessionFromCookie,
     getAccessTokenFromCookie,
+    getAntiCsrfTokenFromHeaders,
     getIdRefreshTokenFromCookie,
-    getRefreshTokenFromCookie
-} from "./cookie";
+    getRefreshTokenFromCookie,
+    setAntiCsrfTokenInHeaders
+} from "./cookieAndHeaders";
 import { AuthError, generateError } from "./error";
 import { TypeInputConfig } from "./helpers/types";
 import * as SessionFunctions from "./session";
-import { getAntiCsrfTokenFromRequestHeaders, setAntiCsrfTokenInResponseHeaders } from "./helpers/utils";
 
 export { AuthError as Error } from "./error";
 
@@ -46,7 +47,7 @@ export async function createNewSession(
     attachAccessTokenToCookie(res, response.accessToken.value, response.accessToken.expires);
     attachRefreshTokenToCookie(res, response.refreshToken.value, response.refreshToken.expires);
     attachIdRefreshTokenToCookie(res, response.idRefreshToken.value, response.idRefreshToken.expires);
-    setAntiCsrfTokenInResponseHeaders(res, response.antiCsrfToken);
+    setAntiCsrfTokenInHeaders(res, response.antiCsrfToken);
 
     return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
 }
@@ -76,13 +77,16 @@ export async function getSession(
 
     try {
         if (typeof enableCsrfProtection !== "boolean") {
-            throw Error("you need to pass enableCsrfProtection boolean");
+            throw generateError(AuthError.GENERAL_ERROR, Error("you need to pass enableCsrfProtection boolean"));
         }
-        let antiCsrfToken = enableCsrfProtection ? getAntiCsrfTokenFromRequestHeaders(req) : undefined;
+        let antiCsrfToken = getAntiCsrfTokenFromHeaders(req);
         if (enableCsrfProtection && antiCsrfToken === undefined) {
-            throw Error("anit-csrf token not found in headers");
+            throw generateError(AuthError.TRY_REFRESH_TOKEN, Error("anit-csrf token not found in headers"));
         }
-        let response = await SessionFunctions.getSession(accessToken, antiCsrfToken);
+        let response = await SessionFunctions.getSession(
+            accessToken,
+            antiCsrfToken === undefined ? null : antiCsrfToken
+        );
         if (response.newAccessToken !== undefined) {
             attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
         }
@@ -116,7 +120,7 @@ export async function refreshSession(req: express.Request, res: express.Response
         attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
         attachRefreshTokenToCookie(res, response.newRefreshToken.value, response.newRefreshToken.expires);
         attachIdRefreshTokenToCookie(res, response.newIdRefreshToken.value, response.newIdRefreshToken.expires);
-        setAntiCsrfTokenInResponseHeaders(res, response.newAntiCsrfToken);
+        setAntiCsrfTokenInHeaders(res, response.newAntiCsrfToken);
 
         return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
     } catch (err) {

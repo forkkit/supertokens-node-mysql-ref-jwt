@@ -25,7 +25,7 @@ app.get("/", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res);
+        const sessionInfo = await SuperTokens.getSession(req, res, true);
         success = true;
     } catch (err) {
         if (err.errType === undefined) {
@@ -43,7 +43,7 @@ app.post("/logout", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res);
+        const sessionInfo = await SuperTokens.getSession(req, res, true);
         await sessionInfo.revokeSession();
         success = true;
     } catch (err) {
@@ -62,7 +62,7 @@ app.post("/revokeAll", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res);
+        const sessionInfo = await SuperTokens.getSession(req, res, true);
         const userId = sessionInfo.userId;
         await SuperTokens.revokeAllSessionsForUser(userId);
         success = true;

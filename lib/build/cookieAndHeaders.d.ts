@@ -18,6 +18,10 @@ export declare function attachIdRefreshTokenToCookie(res: express.Response, toke
 export declare function getAccessTokenFromCookie(req: express.Request): string | undefined;
 export declare function getRefreshTokenFromCookie(req: express.Request): string | undefined;
 export declare function getIdRefreshTokenFromCookie(req: express.Request): string | undefined;
+export declare function getAntiCsrfTokenFromHeaders(req: express.Request): string | undefined;
+export declare function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string): void;
+export declare function getHeader(req: express.Request, key: string): string | undefined;
+export declare function setHeader(res: express.Response, key: string, value: string): void;
 /**
  * @param res
  * @param key

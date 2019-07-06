@@ -1,5 +1,4 @@
 import { TypeInputConfig } from "./types";
-import { Request, Response } from "express";
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
  */
@@ -47,6 +46,3 @@ export declare function reset(newConfig?: TypeInputConfig): Promise<void>;
  */
 export declare function delay(timeInMilliseconds: number): Promise<unknown>;
 export declare function generateSessionHandle(): string;
-export declare const ANTI_CSRF_HEADER = "anti-csrf";
-export declare function getAntiCsrfTokenFromRequestHeaders(req: Request): string | undefined;
-export declare function setAntiCsrfTokenInResponseHeaders(res: Response, antiCsrfToken: string): void;
