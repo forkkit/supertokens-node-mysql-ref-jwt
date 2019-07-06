@@ -43,7 +43,7 @@ sidebar_label: API Reference
 
 <div class="divider"></div>
 
-## ```getSession(req, res)```
+## ```getSession(req, res, enableCsrfProtection)```
 ##### Important
 - Use this only if you are importing from ```supertokens-node-mysql-ref-jwt/express```
 ##### Parameters
@@ -51,6 +51,8 @@ sidebar_label: API Reference
     - Type: ```Express.Request```
 - ```res```
     - Type: ```Express.Response```
+- ```enableCsrfProtection```
+    - Type: ```boolean```
 ##### Returns
 - ```Promise<Session>``` on successful verification of a session
 ##### Throws
@@ -64,6 +66,7 @@ sidebar_label: API Reference
 - ```TRY_REFRESH_TOKEN```
     - Type: ```{errType: SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}```
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
+    - This will be thrown if ```enableCsrfProtection``` is ```true``` and ```anti-csrf``` token validation fails.
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
 
 <div class="divider"></div>
@@ -140,5 +143,34 @@ sidebar_label: API Reference
     - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+
+<div class="divider"></div>
+
+## ```refreshSession(req, res)```
+##### Important
+- Use this only if you are importing from ```supertokens-node-mysql-ref-jwt/express```
+##### Parameters
+- ```req```
+    - Type: ```Express.Request```
+- ```res```
+    - Type: ```Express.Response```
+##### Returns
+- ```Promise<Session>``` on successful refresh.
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+- ```UNAUTHORISED```
+    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - This is thrown if the current session was revoked or has expired, or if the provided refresh and anti-csrf token are invalid.
+    - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+- ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
+    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
+            sessionHandle: string,
+            userId: string
+        }}```
+    - This is thrown if token theft is detected.
+    - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+    - Please see the token theft detection section for more information.
 
 <div class="divider"></div>

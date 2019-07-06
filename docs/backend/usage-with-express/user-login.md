@@ -13,8 +13,8 @@ SuperTokens.createNewSession(res, userId, jwtPayload, sessionData);
 - This function does the following operations:
     - Creates a new access and a new refresh token for this session.
     - This function will set the following cookies and headers in the ```res``` object for you:
-        - Sets ```saccesstokenp2``` header that contains half of the access token. This header should be sent for all API calls that require authentication. 
-        - Sets ```sAccessToken``` in cookies with the other half of the access token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. This cookie should be sent for all API calls that require authentication. 
+        - Sets ```anti-csrf``` header that contains an anti-csrf token. This header should be sent for all non-GET API calls that require authentication. 
+        - Sets ```sAccessToken``` in cookies with the access token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. This cookie should be sent for all API calls that require authentication. 
         - Sets ```sRefreshToken``` in cookies containing the refresh token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. <span class="highlighted-text">This cookie should be sent only to the refresh token API.</span>
         - Sets ```sIdRefreshToken``` in cookies containing a unique ID. Details for why this is needed can be found in the "How it works" section. This cookie has ```HttpOnly``` set to ```false``` and ```secure``` set to ```false```. This cookie should be sent for all API calls that require authentication. 
     - Inserts a new row in the MySQL table for this new session.

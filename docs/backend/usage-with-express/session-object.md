@@ -6,7 +6,7 @@ sidebar_label: Session Object
 
 A ```Session``` object is returned when a session is verified successfully. Following are the functions you can use on this ```session``` object:
 ```js
-let session = await SuperTokens.getSession(req, res);
+let session = await SuperTokens.getSession(req, res, enableCsrfProtection);
 ```
 
 ## Call the ```getUserId()``` function: [API Reference](../api-reference#sessiongetuserid)
@@ -50,7 +50,7 @@ session.updateSessionData(data)
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
 async function testSessionAPI(req: express.Request, res: express.Response) {
-    let session = await SuperTokens.getSession(req, res);
+    let session = await SuperTokens.getSession(req, res, true);
     let userId = session.getUserId();
     let getJWTPayload = session.getJWTPayload();
     try {
@@ -62,7 +62,7 @@ async function testSessionAPI(req: express.Request, res: express.Response) {
             if (err.errType === SuperTokens.Error.GENERAL_ERROR) {
                 res.status(500).send("Something went wrong");
             } else {    // UNAUTHORISED
-                res.redirect("/loginpage");
+                res.status(440).send("Session expired!");
             }
         } else {
             res.status(500).send(err);  // Something went wrong.
