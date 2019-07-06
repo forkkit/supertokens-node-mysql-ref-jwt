@@ -8,10 +8,10 @@ This operation is to be done whenever any function returns the ```TRY_REFRESH_TO
 
 ### The following are the steps that describe how this works:
 - Your frontend calls an API (let's say ```/getHomeFeed```) with an access token that has expired.
-- In that API, your backend first calls the ```SuperTokens.getSession(req, res, enableCsrfProtection)``` function which throws a ```TRY_REFRESH_TOKEN``` error.
+- In that API, your backend calls the ```SuperTokens.getSession(req, res, enableCsrfProtection)``` function which throws a ```TRY_REFRESH_TOKEN``` error.
 - Your backend replies with a ```session expired``` status code to your frontend.
 - Your frontend detects this code and calls an API on your backend that will refresh the session (let's call this API ```/refreshSession```).
-- In this API, you call the ```SuperTokens.refreshSession(req, res) function that "refreshes" the session.
+- In this API, you call the ```SuperTokens.refreshSession(req, res)``` function that "refreshes" the session.
 - Your frontend then calls the ```/getHomeFeed``` API once again with the new access token yielding a successful response.
 
 Our frontend SDK takes care of calling your refresh endpoint and managing the auth tokens on your frontend. It also does a few more operations to handle race conditions when changing tokens.
@@ -42,8 +42,10 @@ function refreshSessionAPI(req: express.Request, res: express.Response) {
             if (err.errType === SuperTokens.Error.GENERAL_ERROR) {
                 res.status(500).send("Something went wrong");
             } else if (err.errType === SuperTokens.Error.UNAUTHORISED) {
+                // redirect user to login page
                 res.status(440).send("Session expired!");
             } else {    // UNAUTHORISED_AND_TOKEN_THEFT_DETECTED
+                // redirect user to login page
                 res.status(440).send("Session expired!");
                 let userId = err.err.userId;
                 let sessionHandle = err.err.sessionHandle;

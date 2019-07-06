@@ -27,7 +27,6 @@
                     "backend/usage-without-express/initialisation",
                     "backend/usage-without-express/user-login",
                     "backend/usage-without-express/verify-session",
-                    "backend/usage-without-express/session-object",
                     "backend/usage-without-express/refreshing-session",
                     "backend/usage-without-express/manipulating-session-data",
                     "backend/usage-without-express/user-logout",

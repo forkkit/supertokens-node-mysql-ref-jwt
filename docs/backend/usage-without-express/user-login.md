@@ -36,7 +36,7 @@ SuperTokens.createNewSession(userId, jwtPayload, sessionData);
 
 ## Example code
 ```js
-import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
+import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
 function loginAPI() {
     // ...
@@ -60,6 +60,8 @@ function loginAPI() {
 
         let antiCsrfToken = session.antiCsrfToken;
         setHeader("anti-csrf", antiCsrfToken);
+
+        // reply with success
 
     }).catch(err => {
         // session was not created. Handle error...

@@ -20,6 +20,10 @@ SuperTokens.init(config);
     - Creates new signing keys if you do not provide one and they don't already exist. It synchronizes across all running instances of your node app to make sure all of them have the same keys.
     - Parses and loads your provided config in memory.
 
+<div class="specialNote">
+We highly recommend that you create a wrapper around the provided APIs. This will make it much easier for you to do error handling in your API logic. For an example of how a wrapper would look like, please see our <a href="https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/express.ts">Express wrapper</a>
+</div>
+
 <div class="divider"></div>
 
 ## Example code

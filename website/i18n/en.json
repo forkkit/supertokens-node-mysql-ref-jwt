@@ -81,10 +81,6 @@
         "title": "Revoking Session",
         "sidebar_label": "Revoking Session"
       },
-      "backend/usage-without-express/session-object": {
-        "title": "Session Object",
-        "sidebar_label": "Session Object"
-      },
       "backend/usage-without-express/user-login": {
         "title": "User login",
         "sidebar_label": "User login"
