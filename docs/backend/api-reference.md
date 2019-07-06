@@ -276,12 +276,13 @@ Promise<{
 
 <div class="divider"></div>
 
-## ```getSession(accessToken, antiCsrfToken?)```
+## ```getSession(accessToken, antiCsrfToken)```
 ##### Parameters
 - ```accessToken```
     - Type: ```string```
-- ```antiCsrfToken``` (Optional)
-    - Type: ```string```
+- ```antiCsrfToken```
+    - Type: ```string | null```
+    - Pass ```null``` if you do not want to have CSRF protection for this auth call.
 ##### Returns
 ```js
 Promise<{

@@ -14,10 +14,10 @@ SuperTokens.getSession(accessToken, antiCsrfToken);
 - This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
 - This function does the following operations:
     - Verifies the current session using input tokens.
-    - If ```antiCsrfToken``` is not ```undefined```, also gives CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs.
+    - If ```antiCsrfToken``` is not ```null```, also gives CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs.
     - May return a new access token. Please see How it works section for more information about this.
 - ```accessToken``` can be obtained from the cookies with the key ```sAccessToken```. If this cookie is missing, then you should treat it as an error of type ```TRY_REFRESH_TOKEN```.
-- ```antiCsrfToken``` can be obtained from the headers with the key ```anti-csrf```. If this is missing pass ```undefined``` to this function.
+- ```antiCsrfToken``` can be obtained from the headers with the key ```anti-csrf```. If this is missing and you do not expect it to be there then pass ```null``` to this function. Otherwise treat this like a ```TRY_REFRESH_TOKEN``` error.
 - This function may return a ```newAccessToken```. If that happens, please update the access token cookies as mentioned in the [User login](user-login) section.
 
 <div class="divider"></div>
