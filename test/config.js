@@ -99,31 +99,6 @@ module.exports.configWithShortValidityForAccessToken = {
     }
 };
 
-module.exports.configWithShortValidityForAccessTokenWithTokenTheft = {
-    mysql: mysqlCommonConfig,
-    tokens: {
-        accessToken: {
-            validity: 1
-        },
-        refreshToken: {
-            renewTokenPath: "/refersh"
-        }
-    },
-    cookie: {
-        domain: "supertokens.io"
-    },
-    onTokenTheftDetection: (userId, sessionHandle) => {
-        if (
-            userId !== undefined &&
-            userId === "testing" &&
-            sessionHandle !== undefined &&
-            typeof sessionHandle === "string"
-        ) {
-            tokenTheftCalled = true;
-        }
-    }
-};
-
 module.exports.configWithShortValidityForRefreshToken = {
     mysql: mysqlCommonConfig,
     tokens: {

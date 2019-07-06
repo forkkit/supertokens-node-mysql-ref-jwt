@@ -275,20 +275,11 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         domain,
         secure
     };
-    const onTokenTheftDetectionFromUser = config.onTokenTheftDetection;
-    let onTokenTheftDetection;
-    if (onTokenTheftDetectionFromUser !== undefined) {
-        if (typeof onTokenTheftDetectionFromUser !== "function") {
-            throw generateError(AuthError.GENERAL_ERROR, new Error("onTokenTheftDetection must be a function"), false);
-        }
-        onTokenTheftDetection = onTokenTheftDetectionFromUser;
-    }
     return {
         mysql,
         tokens,
         cookie,
-        logging,
-        onTokenTheftDetection
+        logging
     };
 };
 
@@ -376,8 +367,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
         logging: {
             info: config.logging !== undefined ? config.logging.info : undefined,
             error: config.logging !== undefined ? config.logging.error : undefined
-        },
-        onTokenTheftDetection: config.onTokenTheftDetection === undefined ? () => {} : config.onTokenTheftDetection
+        }
     };
 };
 

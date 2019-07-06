@@ -9,6 +9,7 @@ import { init } from "../session";
 import { resetTables } from "./dbQueries";
 import { getConnection, Mysql } from "./mysql";
 import { TypeInputConfig } from "./types";
+import { Request, Response } from "express";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
@@ -216,4 +217,21 @@ export function delay(timeInMilliseconds: number) {
 
 export function generateSessionHandle() {
     return generateUUID();
+}
+
+export const ANTI_CSRF_HEADER = "anti-csrf";
+
+export function getAntiCsrfTokenFromRequestHeaders(req: Request): string | undefined {
+    let antiCsrfToken = req.headers[ANTI_CSRF_HEADER];
+    if (antiCsrfToken === undefined) {
+        return antiCsrfToken;
+    }
+    if (Array.isArray(antiCsrfToken)) {
+        return antiCsrfToken[0];
+    }
+    return antiCsrfToken;
+}
+
+export function setAntiCsrfTokenInResponseHeaders(res: Response, antiCsrfToken: string) {
+    res.header(ANTI_CSRF_HEADER, antiCsrfToken);
 }

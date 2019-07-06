@@ -9,11 +9,8 @@ const errors = require("../../lib/build/error");
 
 const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
-    before(function() {
-        global.tokenTheftCalled = false;
-    });
     it("create, get and refresh session (includes token theft)", async function() {
-        await reset(config.configWithShortValidityForAccessTokenWithTokenTheft);
+        await reset(config.configWithShortValidityForAccessToken);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
@@ -117,8 +114,6 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             throw Error("test failed");
         }
 
-        // this value shuould be false here
-        assert.deepStrictEqual(tokenTheftCalled, false);
         response = await supertest(app)
             .post("/refresh")
             .set("Cookie", [oldRefreshTokenCookie, oldAccessTokenCookie, oldIdRefreshTokenCookie])
@@ -140,11 +135,9 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
             throw Error("");
         }
-        if (response.body.errCode !== errors.AuthError.UNAUTHORISED) {
+        if (response.body.errCode !== errors.AuthError.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED) {
             throw Error("test failed");
         }
-        // to check if token theft was called
-        assert.deepStrictEqual(tokenTheftCalled, true);
     });
 
     it("revoke session (without blacklisting)", async function() {

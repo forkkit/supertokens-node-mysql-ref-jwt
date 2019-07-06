@@ -50,15 +50,18 @@ export async function createNewSession(
         expires: number;
     };
     idRefreshToken: { value: string; expires: number };
+    antiCsrfToken: string;
 }> {
     let sessionHandle = generateSessionHandle();
 
     // generate tokens:
     let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
+    let antiCsrfToken = generateUUID();
     let accessToken = await createNewAccessToken(
         sessionHandle,
         userId,
         hash(refreshToken.token),
+        antiCsrfToken,
         undefined,
         jwtPayload
     );
@@ -91,7 +94,8 @@ export async function createNewSession(
             value: refreshToken.token,
             expires: refreshToken.expiry
         },
-        idRefreshToken: { value: generateUUID(), expires: refreshToken.expiry }
+        idRefreshToken: { value: generateUUID(), expires: refreshToken.expiry },
+        antiCsrfToken
     };
 }
 
@@ -100,7 +104,8 @@ export async function createNewSession(
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  */
 export async function getSession(
-    accessToken: string
+    accessToken: string,
+    antiCsrfToken?: string
 ): Promise<{
     session: {
         handle: string;
@@ -114,6 +119,11 @@ export async function getSession(
     let accessTokenInfo = await getInfoFromAccessToken(accessToken); // if access token is invalid, this will throw TRY_REFRESH_TOKEN error.
     let sessionHandle = accessTokenInfo.sessionHandle;
 
+    if (antiCsrfToken !== undefined) {
+        if (antiCsrfToken !== accessTokenInfo.antiCsrfToken) {
+            throw generateError(AuthError.TRY_REFRESH_TOKEN, new Error("anti-csrf check failed"));
+        }
+    }
     // we check for blacklisting
     if (config.tokens.accessToken.blacklisting) {
         let connection = await getConnection();
@@ -173,6 +183,7 @@ export async function getSession(
                 sessionHandle,
                 accessTokenInfo.userId,
                 accessTokenInfo.refreshTokenHash1,
+                accessTokenInfo.antiCsrfToken,
                 undefined,
                 accessTokenInfo.userPayload
             );
@@ -214,6 +225,7 @@ export async function refreshSession(
     newAccessToken: { value: string; expires: number };
     newRefreshToken: { value: string; expires: number };
     newIdRefreshToken: { value: string; expires: number };
+    newAntiCsrfToken: string;
 }> {
     let config = Config.get();
 
@@ -243,6 +255,7 @@ async function refreshSessionHelper(
     newAccessToken: { value: string; expires: number };
     newRefreshToken: { value: string; expires: number };
     newIdRefreshToken: { value: string; expires: number };
+    newAntiCsrfToken: string;
 }> {
     let config = Config.get();
     let connection = await getConnection();
@@ -278,10 +291,12 @@ async function refreshSessionHelper(
                 refreshTokenInfo.userId,
                 hash(refreshToken)
             );
+            let newAntiCsrfToken = generateUUID();
             let newAccessToken = await createNewAccessToken(
                 sessionHandle,
                 refreshTokenInfo.userId,
                 hash(newRefreshToken.token),
+                newAntiCsrfToken,
                 hash(refreshToken),
                 sessionInfo.jwtPayload
             );
@@ -302,7 +317,8 @@ async function refreshSessionHelper(
                 newIdRefreshToken: {
                     value: generateUUID(),
                     expires: newRefreshToken.expiry
-                }
+                },
+                newAntiCsrfToken
             };
         }
 
@@ -337,9 +353,7 @@ async function refreshSessionHelper(
         // but that refresh token is neither a child, nor a parent. This would happen only in the case of token theft since the frontend
         // synchronises calls to refresh token API.
         await connection.commit();
-        config.onTokenTheftDetection(refreshTokenInfo.userId, refreshTokenInfo.sessionHandle);
-        throw generateError(AuthError.UNAUTHORISED, {
-            message: "token theft detected!",
+        throw generateError(AuthError.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, {
             sessionHandle: refreshTokenInfo.sessionHandle,
             userId: refreshTokenInfo.userId
         });

@@ -27,12 +27,13 @@ export declare function createNewSession(userId: string, jwtPayload?: any, sessi
         value: string;
         expires: number;
     };
+    antiCsrfToken: string;
 }>;
 /**
  * @description authenticates a session. To be used in APIs that require authentication
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  */
-export declare function getSession(accessToken: string): Promise<{
+export declare function getSession(accessToken: string, antiCsrfToken?: string): Promise<{
     session: {
         handle: string;
         userId: string;
@@ -66,6 +67,7 @@ export declare function refreshSession(refreshToken: string): Promise<{
         value: string;
         expires: number;
     };
+    newAntiCsrfToken: string;
 }>;
 /**
  * @description deletes session info of a user from db. This only invalidates the refresh token. Not the access token.

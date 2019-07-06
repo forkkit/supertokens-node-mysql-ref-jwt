@@ -35,7 +35,6 @@ export declare type TypeInputConfig = {
         domain: string;
         secure?: boolean;
     };
-    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void;
 };
 export declare type TypeConfig = {
     mysql: {
@@ -74,7 +73,6 @@ export declare type TypeConfig = {
         domain: string;
         secure: boolean;
     };
-    onTokenTheftDetection: (userId: string, sessionHandle: string) => void;
 };
 export declare type TypeGetSigningKeyUserFunction = () => Promise<string>;
 export declare type MySQLParamTypes = string | number | boolean | null | Date;

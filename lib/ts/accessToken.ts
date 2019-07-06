@@ -49,6 +49,7 @@ export async function getInfoFromAccessToken(
     expiryTime: number;
     parentRefreshTokenHash1: string | undefined;
     userPayload: any;
+    antiCsrfToken: string;
 }> {
     let signingKey = await SigningKey.getKey();
     try {
@@ -68,12 +69,14 @@ export async function getInfoFromAccessToken(
         let refreshTokenHash1 = sanitizeStringInput(payload.rt);
         let expiryTime = sanitizeNumberInput(payload.expiryTime);
         let parentRefreshTokenHash1 = sanitizeStringInput(payload.prt);
+        let antiCsrfToken = sanitizeStringInput(payload.antiCsrfToken);
         let userPayload = payload.userPayload;
         if (
             sessionHandle === undefined ||
             userId === undefined ||
             refreshTokenHash1 === undefined ||
-            expiryTime === undefined
+            expiryTime === undefined ||
+            antiCsrfToken === undefined
         ) {
             // it would come here if we change the structure of the JWT.
             throw Error("invalid access token payload");
@@ -87,7 +90,8 @@ export async function getInfoFromAccessToken(
             refreshTokenHash1,
             expiryTime,
             parentRefreshTokenHash1,
-            userPayload
+            userPayload,
+            antiCsrfToken
         };
     } catch (err) {
         throw generateError(AuthError.TRY_REFRESH_TOKEN, err);
@@ -102,6 +106,7 @@ export async function createNewAccessToken(
     sessionHandle: string,
     userId: string,
     refreshTokenHash1: string,
+    antiCsrfToken: string,
     parentRefreshTokenHash1: string | undefined,
     userPayload: any
 ): Promise<{ token: string; expiry: number }> {
@@ -113,6 +118,7 @@ export async function createNewAccessToken(
             sessionHandle,
             userId,
             rt: refreshTokenHash1,
+            antiCsrfToken,
             prt: parentRefreshTokenHash1,
             expiryTime: expiry,
             userPayload

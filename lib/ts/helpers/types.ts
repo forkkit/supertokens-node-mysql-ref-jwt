@@ -35,7 +35,6 @@ export type TypeInputConfig = {
         domain: string;
         secure?: boolean;
     };
-    onTokenTheftDetection?: (userId: string, sessionHandle: string) => void;
 };
 
 export type TypeConfig = {
@@ -75,7 +74,6 @@ export type TypeConfig = {
         domain: string;
         secure: boolean;
     };
-    onTokenTheftDetection: (userId: string, sessionHandle: string) => void;
 };
 
 export type TypeGetSigningKeyUserFunction = () => Promise<string>;

@@ -15,10 +15,12 @@ describe(`Access Token: ${printPath("[test/accessToken.test.js]")}`, function() 
         const refreshTokenHash1 = "refreshTokenHash1";
         const parentRefreshTokenHash1 = "parentRefreshTokenHash1";
         const userPayload = { a: "a" };
+        const antiCsrfToken = "";
         const token = await accessToken.createNewAccessToken(
             sessionHandle,
             userId,
             refreshTokenHash1,
+            antiCsrfToken,
             parentRefreshTokenHash1,
             userPayload
         );
@@ -29,7 +31,8 @@ describe(`Access Token: ${printPath("[test/accessToken.test.js]")}`, function() 
             refreshTokenHash1,
             parentRefreshTokenHash1,
             userPayload,
-            expiryTime: token.expiry
+            expiryTime: token.expiry,
+            antiCsrfToken
         });
     });
 
@@ -56,10 +59,12 @@ describe(`Access Token: ${printPath("[test/accessToken.test.js]")}`, function() 
         const refreshTokenHash1 = "refreshTokenHash1";
         const parentRefreshTokenHash1 = "parentRefreshTokenHash1";
         const userPayload = { a: "a" };
+        const antiCsrfToken = "csrf";
         const token = await accessToken.createNewAccessToken(
             sessionHandle,
             userId,
             refreshTokenHash1,
+            antiCsrfToken,
             parentRefreshTokenHash1,
             userPayload
         );
@@ -83,10 +88,12 @@ describe(`Access Token: ${printPath("[test/accessToken.test.js]")}`, function() 
         const refreshTokenHash1 = "refreshTokenHash1";
         const parentRefreshTokenHash1 = "parentRefreshTokenHash1";
         const userPayload = { a: "a" };
+        const antiCsrfToken = "csrf";
         const token = await accessToken.createNewAccessToken(
             sessionHandle,
             userId,
             refreshTokenHash1,
+            antiCsrfToken,
             parentRefreshTokenHash1,
             userPayload
         );

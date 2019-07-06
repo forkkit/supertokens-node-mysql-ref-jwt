@@ -21,7 +21,7 @@ export declare function createNewSession(res: express.Response, userId: string, 
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
  * @sideEffects may remove cookies, or change the accessToken.
  */
-export declare function getSession(req: express.Request, res: express.Response): Promise<Session>;
+export declare function getSession(req: express.Request, res: express.Response, enableCsrfProtection: boolean): Promise<Session>;
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED

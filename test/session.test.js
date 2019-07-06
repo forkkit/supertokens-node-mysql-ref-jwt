@@ -296,7 +296,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             await session.refreshSession(newSession.refreshToken.value);
             throw Error("token theft did not get detected");
         } catch (err) {
-            if (err.errType !== errors.AuthError.UNAUTHORISED) {
+            if (err.errType !== errors.AuthError.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED) {
                 throw err;
             }
             assert.strictEqual(typeof err.err.sessionHandle, "string");
@@ -334,7 +334,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
             await session.refreshSession(newSession.refreshToken.value);
             throw Error("token theft did not get detected");
         } catch (err) {
-            if (err.errType !== errors.AuthError.UNAUTHORISED) {
+            if (err.errType !== errors.AuthError.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED) {
                 throw err;
             }
             assert.strictEqual(typeof err.err.sessionHandle, "string");
