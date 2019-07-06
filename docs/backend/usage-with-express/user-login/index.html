@@ -73,8 +73,8 @@
 <li>Creates a new access and a new refresh token for this session.</li>
 <li>This function will set the following cookies and headers in the <code>res</code> object for you:
 <ul>
-<li>Sets <code>saccesstokenp2</code> header that contains half of the access token. This header should be sent for all API calls that require authentication.</li>
-<li>Sets <code>sAccessToken</code> in cookies with the other half of the access token. This cookie has <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> depending on your passed config. This cookie should be sent for all API calls that require authentication.</li>
+<li>Sets <code>anti-csrf</code> header that contains an anti-csrf token. This header should be sent for all non-GET API calls that require authentication.</li>
+<li>Sets <code>sAccessToken</code> in cookies with the access token. This cookie has <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> depending on your passed config. This cookie should be sent for all API calls that require authentication.</li>
 <li>Sets <code>sRefreshToken</code> in cookies containing the refresh token. This cookie has <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> depending on your passed config. <span class="highlighted-text">This cookie should be sent only to the refresh token API.</span></li>
 <li>Sets <code>sIdRefreshToken</code> in cookies containing a unique ID. Details for why this is needed can be found in the &quot;How it works&quot; section. This cookie has <code>HttpOnly</code> set to <code>false</code> and <code>secure</code> set to <code>false</code>. This cookie should be sent for all API calls that require authentication.</li>
 </ul></li>

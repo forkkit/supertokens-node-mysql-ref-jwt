@@ -125,7 +125,7 @@
 </ul></li>
 </ul>
 <div class="divider"></div>
-<h2><a class="anchor" aria-hidden="true" id="getsessionreq-res"></a><a href="#getsessionreq-res" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>getSession(req, res)</code></h2>
+<h2><a class="anchor" aria-hidden="true" id="getsessionreq-res-enablecsrfprotection"></a><a href="#getsessionreq-res-enablecsrfprotection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>getSession(req, res, enableCsrfProtection)</code></h2>
 <h5><a class="anchor" aria-hidden="true" id="important-1"></a><a href="#important-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Important</h5>
 <ul>
 <li>Use this only if you are importing from <code>supertokens-node-mysql-ref-jwt/express</code></li>
@@ -139,6 +139,10 @@
 <li><code>res</code>
 <ul>
 <li>Type: <code>Express.Response</code></li>
+</ul></li>
+<li><code>enableCsrfProtection</code>
+<ul>
+<li>Type: <code>boolean</code></li>
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-2"></a><a href="#returns-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
@@ -162,6 +166,7 @@
 <ul>
 <li>Type: <code>{errType: SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}</code></li>
 <li>This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.</li>
+<li>This will be thrown if <code>enableCsrfProtection</code> is <code>true</code> and <code>anti-csrf</code> token validation fails.</li>
 <li>When this is thrown, none of the auth cookies are removed - you should return a <code>session expired</code> status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.</li>
 </ul></li>
 </ul>
@@ -280,6 +285,48 @@
 <li>Type: <code>{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}</code></li>
 <li>This is thrown if the current session was revoked or has expired.</li>
 <li>When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.</li>
+</ul></li>
+</ul>
+<div class="divider"></div>
+<h2><a class="anchor" aria-hidden="true" id="refreshsessionreq-res"></a><a href="#refreshsessionreq-res" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>refreshSession(req, res)</code></h2>
+<h5><a class="anchor" aria-hidden="true" id="important-7"></a><a href="#important-7" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Important</h5>
+<ul>
+<li>Use this only if you are importing from <code>supertokens-node-mysql-ref-jwt/express</code></li>
+</ul>
+<h5><a class="anchor" aria-hidden="true" id="parameters-8"></a><a href="#parameters-8" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Parameters</h5>
+<ul>
+<li><code>req</code>
+<ul>
+<li>Type: <code>Express.Request</code></li>
+</ul></li>
+<li><code>res</code>
+<ul>
+<li>Type: <code>Express.Response</code></li>
+</ul></li>
+</ul>
+<h5><a class="anchor" aria-hidden="true" id="returns-8"></a><a href="#returns-8" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
+<ul>
+<li><code>Promise&lt;Session&gt;</code> on successful refresh.</li>
+</ul>
+<h5><a class="anchor" aria-hidden="true" id="throws-8"></a><a href="#throws-8" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
+<ul>
+<li><code>GENERAL_ERROR</code>
+<ul>
+<li>Type: <code>{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}</code></li>
+<li>Examples of when this is thrown is if the library could not connect to the MySQL instance.</li>
+</ul></li>
+<li><code>UNAUTHORISED</code>
+<ul>
+<li>Type: <code>{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}</code></li>
+<li>This is thrown if the current session was revoked or has expired, or if the provided refresh and anti-csrf token are invalid.</li>
+<li>When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.</li>
+</ul></li>
+<li><code>UNAUTHORISED_AND_TOKEN_THEFT_DETECTED</code>
+<ul>
+<li>Type: <code>{errType: SuperTokens.ERROR.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: { sessionHandle: string, userId: string }}</code></li>
+<li>This is thrown if token theft is detected.</li>
+<li>When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.</li>
+<li>Please see the token theft detection section for more information.</li>
 </ul></li>
 </ul>
 <div class="divider"></div></span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/backend/config"><span class="arrow-prev">← </span><span>Configuration</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/frontend/installation"><span>Installation</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>
