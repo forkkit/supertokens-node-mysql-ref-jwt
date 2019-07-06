@@ -162,7 +162,7 @@ sidebar_label: API Reference
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
     - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
-    - This is thrown if the current session was revoked or has expired, or if the provided refresh and anti-csrf token are invalid.
+    - This is thrown if the current session was revoked or has expired, or if the provided refresh or anti-csrf token are invalid.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
 - ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
     - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
@@ -172,5 +172,43 @@ sidebar_label: API Reference
     - This is thrown if token theft is detected.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
     - Please see the token theft detection section for more information.
+
+<div class="divider"></div>
+
+## ```getSessionData(sessionHandle)```
+##### Parameters
+- ```sessionHandle```
+    - Type: ```string```
+    - Identifies a unique session in your system. Please see the Session Handle section for more information.
+##### Returns
+- ```Promise<object | array | number | string | boolean | undefined | null>``` - The result of the resolved ```Promise``` will be deeply equal to whatever was passed to the ```createNewSession``` function.
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+- ```UNAUTHORISED```
+    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - This is thrown if the current session was revoked or has expired.
+    - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
+
+<div class="divider"></div>
+
+## ```updateSessionData(sessionHandle, data)```
+##### Parameters
+- ```sessionHandle```
+    - Type: ```string```
+    - Identifies a unique session in your system. Please see the Session Handle section for more information.
+- ```data```
+    - Type: ```object | array | number | string | boolean | undefined | null``` 
+##### Returns
+- ```Promise<void>```
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+- ```UNAUTHORISED```
+    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - This is thrown if the current session was revoked or has expired.
+    - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
 
 <div class="divider"></div>
