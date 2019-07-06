@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>User login · SuperTokens</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Best session management"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="User login · SuperTokens"/><meta property="og:type" content="website"/><meta property="og:url" content="https://supertokens.github.io/supertokens-node-mysql-ref-jwt//supertokens-node-mysql-ref-jwt/"/><meta property="og:description" content="Best session management"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/supertokens-node-mysql-ref-jwt/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>User login · SuperTokens</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;h2&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; id=&quot;call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata&quot;&gt;&lt;/a&gt;&lt;a href=&quot;#call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata&quot; aria-hidden=&quot;true&quot; class=&quot;hash-link&quot;&gt;&lt;svg class=&quot;hash-link-icon&quot; aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Call the &lt;code&gt;createNewSession&lt;/code&gt; function: &lt;a href=&quot;../api-reference#createnewsessionuserid-jwtpayload-sessiondata&quot;&gt;API Reference&lt;/a&gt;&lt;/h2&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="User login · SuperTokens"/><meta property="og:type" content="website"/><meta property="og:url" content="https://supertokens.github.io/supertokens-node-mysql-ref-jwt//supertokens-node-mysql-ref-jwt/"/><meta property="og:description" content="&lt;h2&gt;&lt;a class=&quot;anchor&quot; aria-hidden=&quot;true&quot; id=&quot;call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata&quot;&gt;&lt;/a&gt;&lt;a href=&quot;#call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata&quot; aria-hidden=&quot;true&quot; class=&quot;hash-link&quot;&gt;&lt;svg class=&quot;hash-link-icon&quot; aria-hidden=&quot;true&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Call the &lt;code&gt;createNewSession&lt;/code&gt; function: &lt;a href=&quot;../api-reference#createnewsessionuserid-jwtpayload-sessiondata&quot;&gt;API Reference&lt;/a&gt;&lt;/h2&gt;
+"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/supertokens-node-mysql-ref-jwt/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100,"backgroundColor":"#999999","textColor":"#222222"}
@@ -60,4 +62,84 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"></header><article><div><span></span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/backend/usage-without-express/initialisation"><span class="arrow-prev">← </span><span>Init &amp; Imports</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/backend/usage-without-express/verify-session"><span>Verify Session</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">User login</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata"></a><a href="#call-the-createnewsession-function-api-reference-api-reference-createnewsessionuserid-jwtpayload-sessiondata" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Call the <code>createNewSession</code> function: <a href="../api-reference#createnewsessionuserid-jwtpayload-sessiondata">API Reference</a></h2>
+<pre><code class="hljs css language-js">SuperTokens.createNewSession(userId, jwtPayload, sessionData);
+</code></pre>
+<ul>
+<li>Call this function after you have authenticated a user. Authentication can be done via any means: password, social logins, 2FA  etc.</li>
+<li>This function does the following operations:
+<ul>
+<li>Creates a new access and a new refresh token for this session.</li>
+<li>Inserts a new row in the MySQL table for this new session.</li>
+</ul></li>
+<li>This function will return the following tokens:
+<ul>
+<li><code>antiCsrfToken</code>
+<ul>
+<li>Set this in the header with the key <code>anti-csrf</code>.</li>
+<li>Our frontend SDK will store this in the localstorage (if you are using a webapp). This will then be automatically sent on each subsequent request for CSRF protection.</li>
+</ul></li>
+<li><code>accessToken</code>
+<ul>
+<li>Set <code>accessToken.value</code> in the cookie with the key <code>sAccessToken</code>.</li>
+<li>This cookie should have <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> unless you are in development / testing mode.</li>
+<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(accessToken.expires)</code></li>
+<li>The <code>path</code> of this cookie should cover all your APIs that require authentication. For example: <code>/</code></li>
+</ul></li>
+<li><code>refreshToken</code>
+<ul>
+<li>Set <code>refreshToken.value</code> in the cookie with the key <code>sRefreshToken</code>.</li>
+<li>This cookie should have <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> unless you are in development / testing mode.</li>
+<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(refreshToken.expires)</code></li>
+<li><span class="highlighted-text">The <code>path</code> of this cookie should cover only your refresh session endpoint.</span> For example: <code>/refreshsession</code></li>
+</ul></li>
+<li><code>idRefreshToken</code>
+<ul>
+<li>Set <code>idRefreshToken.value</code> in the cookie with the key <code>sIdRefreshToken</code>.</li>
+<li><span class="highlighted-text">This cookie should have <code>HttpOnly</code> set to <code>false</code> and <code>secure</code> set to <code>false</code> even in production.</span></li>
+<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(idRefreshToken.expires)</code></li>
+<li>The <code>path</code> of this cookie should cover all your APIs that require authentication. For example: <code>/</code>.</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="divider"></div>
+<h2><a class="anchor" aria-hidden="true" id="example-code"></a><a href="#example-code" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example code</h2>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> SuperTokens <span class="hljs-keyword">from</span> <span class="hljs-string">'supertokens-node-mysql-ref-jwt/express'</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loginAPI</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// ...</span>
+    <span class="hljs-comment">// assuming user has been authenticated somehow..</span>
+    <span class="hljs-keyword">let</span> userId = <span class="hljs-string">"User1"</span>;
+    <span class="hljs-keyword">let</span> jwtPayload = {userId, <span class="hljs-attr">name</span>: <span class="hljs-string">"spooky action at a distance"</span>};
+    <span class="hljs-keyword">let</span> sessionData = {<span class="hljs-attr">awesomeThings</span>: [<span class="hljs-string">"programming"</span>, <span class="hljs-string">"javascript"</span>, <span class="hljs-string">"SuperTokens"</span>]};
+    SuperTokens.createNewSession(userId, jwtPayload, sessionData).then(<span class="hljs-function"><span class="hljs-params">session</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> accessToken = session.accessToken;
+        setCookie(<span class="hljs-string">"sAccessToken"</span>, accessToken.value, <span class="hljs-string">"example.com"</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, 
+        <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(accessToken.expires), <span class="hljs-string">"/"</span>);
+        
+        <span class="hljs-keyword">let</span> refreshToken = session.refreshToken;
+        setCookie(<span class="hljs-string">"sRefreshToken"</span>, refreshToken.value, <span class="hljs-string">"example.com"</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, 
+        <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(refreshToken.expires), <span class="hljs-string">"/refreshsession"</span>);
+        
+        <span class="hljs-keyword">let</span> idRefreshToken = session.idRefreshToken;
+        setCookie(<span class="hljs-string">"sIdRefreshToken"</span>, idRefreshToken.value, <span class="hljs-string">"example.com"</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, 
+        <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(idRefreshToken.expires), <span class="hljs-string">"/"</span>);
+
+        <span class="hljs-keyword">let</span> antiCsrfToken = session.antiCsrfToken;
+        setHeader(<span class="hljs-string">"anti-csrf"</span>, antiCsrfToken);
+
+    }).catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+        <span class="hljs-comment">// session was not created. Handle error...</span>
+    });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setCookie</span>(<span class="hljs-params">key, value, domain, secure, httpOnly, expires, path</span>) </span>{
+    <span class="hljs-comment">// this will be specific to your framework...</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setHeader</span>(<span class="hljs-params">key, value</span>) </span>{
+    <span class="hljs-comment">// this will be specific to your framework...</span>
+}
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/backend/usage-without-express/initialisation"><span class="arrow-prev">← </span><span>Init &amp; Imports</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/backend/usage-without-express/verify-session"><span>Verify Session</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>

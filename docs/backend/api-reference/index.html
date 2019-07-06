@@ -436,4 +436,50 @@
 <li>Examples of when this is thrown is if the library could not connect to the MySQL instance.</li>
 </ul></li>
 </ul>
+<div class="divider"></div>
+<h2><a class="anchor" aria-hidden="true" id="createnewsessionuserid-jwtpayload-sessiondata"></a><a href="#createnewsessionuserid-jwtpayload-sessiondata" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>createNewSession(userId, jwtPayload, sessionData)</code></h2>
+<h5><a class="anchor" aria-hidden="true" id="parameters-13"></a><a href="#parameters-13" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Parameters</h5>
+<ul>
+<li><code>userId</code>
+<ul>
+<li>Type: <code>string</code></li>
+<li>Should be used to ID a user in your system.</li>
+</ul></li>
+<li><code>jwtPayload</code> (Optional)
+<ul>
+<li>Type: <code>object | array | number | string | boolean | undefined | null</code></li>
+<li>This information is stored in the JWT sent to the frontend, so <span class="highlighted-text">it should not contain any sensitive information.</span></li>
+<li>Once set, it cannot be changed during the lifetime of a session.</li>
+</ul></li>
+<li><code>sessionData</code> (Optional)
+<ul>
+<li>Type: <code>object | array | number | string | boolean | undefined | null</code></li>
+<li>This information is stored only in your database, so <span class="highlighted-text">it can contain sensitive information if needed.</span></li>
+<li>This can be freely modified during the lifetime of a session. But we do not synchronize calls to modify this - you must take care of locks yourself.</li>
+</ul></li>
+</ul>
+<h5><a class="anchor" aria-hidden="true" id="returns-13"></a><a href="#returns-13" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
+<pre><code class="hljs css language-js"><span class="hljs-built_in">Promise</span>&lt;{
+    <span class="hljs-attr">session</span>: {
+        <span class="hljs-attr">handle</span>: string,
+        <span class="hljs-attr">userId</span>: string,
+        <span class="hljs-attr">jwtPayload</span>: any
+    },
+    <span class="hljs-attr">accessToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
+    <span class="hljs-attr">refreshToken</span>: {
+        <span class="hljs-attr">value</span>: string,
+        <span class="hljs-attr">expires</span>: number,
+    },
+    <span class="hljs-attr">idRefreshToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
+    <span class="hljs-attr">antiCsrfToken</span>: string
+}&gt;
+</code></pre>
+<h5><a class="anchor" aria-hidden="true" id="throws-13"></a><a href="#throws-13" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
+<ul>
+<li><code>GENERAL_ERROR</code>
+<ul>
+<li>Type: <code>{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}</code></li>
+<li>Examples of when this is thrown is if the library could not connect to the MySQL instance.</li>
+</ul></li>
+</ul>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/backend/config"><span class="arrow-prev">← </span><span>Configuration</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/frontend/installation"><span>Installation</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>
