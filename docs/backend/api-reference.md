@@ -12,7 +12,7 @@ sidebar_label: API Reference
 - ```Promise<void>``` on successful initialization
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance, or if the ```config``` provided is invalid.
 
 <div class="divider"></div>
@@ -38,7 +38,7 @@ sidebar_label: API Reference
 - ```Promise<Session>``` on successful creation of a session
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 
 <div class="divider"></div>
@@ -57,14 +57,14 @@ sidebar_label: API Reference
 - ```Promise<Session>``` on successful verification of a session
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the ```idRefreshToken``` cookie is missing from the ```req``` object or if the session has been revoked.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
 - ```TRY_REFRESH_TOKEN```
-    - Type: ```{errType: SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}```
+    - Type: ```{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}```
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```enableCsrfProtection``` is ```true``` and ```anti-csrf``` token validation fails.
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
@@ -104,7 +104,7 @@ sidebar_label: API Reference
 - ```Promise<void>```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 
 <div class="divider"></div>
@@ -118,10 +118,10 @@ sidebar_label: API Reference
 - ```Promise<object | array | number | string | boolean | undefined | null>``` - The result of the resolved ```Promise``` will be deeply equal to whatever was passed to the ```createNewSession``` function.
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
 
@@ -137,10 +137,10 @@ sidebar_label: API Reference
 - ```Promise<void>```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
 
@@ -158,14 +158,14 @@ sidebar_label: API Reference
 - ```Promise<Session>``` on successful refresh.
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired, or if the provided refresh token is invalid.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
 - ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
             sessionHandle: string,
             userId: string
         }}```
@@ -184,10 +184,10 @@ sidebar_label: API Reference
 - ```Promise<object | array | number | string | boolean | undefined | null>``` - The result of the resolved ```Promise``` will be deeply equal to whatever was passed to the ```createNewSession``` function.
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
 
@@ -204,10 +204,10 @@ sidebar_label: API Reference
 - ```Promise<void>```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
 
@@ -224,7 +224,7 @@ sidebar_label: API Reference
     - Will be ```false``` if either the ```sessionHandle``` is invalid, or the session had already been removed.
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 
     <div class="divider"></div>
@@ -237,7 +237,7 @@ sidebar_label: API Reference
 - ```Promise<void>```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 
 <div class="divider"></div>
@@ -271,7 +271,7 @@ Promise<{
 ```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 
 <div class="divider"></div>
@@ -295,14 +295,14 @@ Promise<{
 ```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the session has been revoked.
     - When this is thrown, please be sure to remove all relevant auth cookies. See the Error Handling section for more information.
 - ```TRY_REFRESH_TOKEN```
-    - Type: ```{errType: SuperTokens.ERROR.TRY_REFRESH_TOKEN, err: any}```
+    - Type: ```{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}```
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```antiCsrfToken``` validation fails.
     - When this is thrown, you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. <span class="highlighted-text">Do not remove any auth cookie here</span> Our frontend SDK takes care of this for you in most cases.
@@ -329,17 +329,42 @@ Promise<{
 ```
 ##### Throws
 - ```GENERAL_ERROR```
-    - Type: ```{errType: SuperTokens.ERROR.GENERAL_ERROR, err: any}```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
 - ```UNAUTHORISED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED, err: any}```
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired, or if the provided refresh token is invalid.
     - When this is thrown, please be sure to remove all relevant auth cookies. See the Error Handling section for more information.
 - ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
-    - Type: ```{errType: SuperTokens.ERROR.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
+    - Type: ```{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
             sessionHandle: string,
             userId: string
         }}```
     - This is thrown if token theft is detected.
     - When this is thrown, please be sure to remove all relevant auth cookies. See the Error Handling section for more information.
     - Please see the token theft detection section for more information.
+
+<div class="divider"></div>
+
+## ```isErrorFromAuth(err)```
+##### Parameters
+- ```err```
+    - Type: ```any``` error object got from ```try catch``` block
+##### Returns
+- ```boolean```
+##### Throws
+- nothing
+
+<div class="divider"></div>
+
+## ```getAllSessionHandlesForUser(userId)```
+##### Parameters
+- ```userId```
+    - Type: ```string```
+##### Returns
+- ```Promise<string[]>```
+    - Each element in the ```string``` array is a ```sessionHandle```
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if the library could not connect to the MySQL instance.

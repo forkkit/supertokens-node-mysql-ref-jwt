@@ -25,6 +25,10 @@
         "title": "Backend Installation",
         "sidebar_label": "Installation"
       },
+      "backend/jwt-key-rotation": {
+        "title": "JWT Signing key rotation",
+        "sidebar_label": "JWT Signing key rotation"
+      },
       "backend/session-handle": {
         "title": "Session Handle",
         "sidebar_label": "Session Handle"

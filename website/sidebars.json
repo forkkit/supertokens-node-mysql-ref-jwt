@@ -37,6 +37,7 @@
             "backend/session-handle",
             "backend/token-theft",
             "backend/blacklisting",
+            "backend/jwt-key-rotation",
             "backend/config",
             "backend/api-reference"
         ],

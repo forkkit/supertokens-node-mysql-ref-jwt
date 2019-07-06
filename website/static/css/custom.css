@@ -224,3 +224,27 @@ a.docs-prev.button {
     margin-top: 40px; 
     margin-bottom: 40px;
 }
+
+.fixedHeaderContainer a.header-version-text h3 {
+    color: #dddddd; 
+    font-size: 1em; 
+    font-weight: normal; 
+    line-height: 1.2em; 
+    align-items: center; 
+    justify-content: center;
+}
+
+body { 
+    background-color: #141414;
+}
+
+.version-documentation {
+    margin-left: 13vw; 
+    color: #dddddd;
+    text-decoration: none;
+}
+
+.version-documentation:hover {
+    color: #ffffff; 
+    text-decoration: underline;
+}
