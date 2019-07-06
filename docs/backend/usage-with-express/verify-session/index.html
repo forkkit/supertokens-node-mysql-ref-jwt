@@ -68,7 +68,7 @@
 <ul>
 <li>Call this function in any API that requires user authentication.</li>
 <li>You can also use this to build your own middleware. Please see our <a href="../../migration/migration">Migration</a> guide on how to do this.</li>
-<li>This function will mostly never require a database call since we are using JWT access tokens.</li>
+<li>This function will mostly never require a database call since we are using JWT access tokens - if <code>blacklisting</code> is disabled.</li>
 <li>This function does the following operations:
 <ul>
 <li>Verifies the current session using the <code>req</code> object.</li>

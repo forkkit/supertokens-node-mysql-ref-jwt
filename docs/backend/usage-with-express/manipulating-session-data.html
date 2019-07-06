@@ -104,11 +104,17 @@ These functions should only be used if absolutely necessary, since they do not h
 <pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> SuperTokens <span class="hljs-keyword">from</span> <span class="hljs-string">'supertokens-node-mysql-ref-jwt/express'</span>;
 
 <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeSessionDataAPI</span>(<span class="hljs-params">req: express.Request, res: express.Response</span>) </span>{
+    <span class="hljs-keyword">let</span> session;
     <span class="hljs-keyword">try</span> {
-        <span class="hljs-keyword">let</span> session = <span class="hljs-keyword">await</span> SuperTokens.getSession(req, res, <span class="hljs-literal">true</span>);
+        session = <span class="hljs-keyword">await</span> SuperTokens.getSession(req, res, <span class="hljs-literal">true</span>);
+    } <span class="hljs-keyword">catch</span> (err) {
+        <span class="hljs-comment">//...</span>
+    }
+    <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">let</span> jwtPayload = session.getJWTPayload();
         <span class="hljs-keyword">let</span> sessionData = <span class="hljs-keyword">await</span> session.getSessionData();
         <span class="hljs-keyword">await</span> session.updateSessionData({<span class="hljs-attr">comment</span>: <span class="hljs-string">"new session data"</span>});
+        res.send(<span class="hljs-string">"Success!"</span>);
     } <span class="hljs-keyword">catch</span> (err) {
         <span class="hljs-keyword">if</span> (SuperTokens.Error.isErrorFromAuth(err)) {
             <span class="hljs-keyword">if</span> (err.errType === SuperTokens.Error.GENERAL_ERROR) {
