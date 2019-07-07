@@ -72,12 +72,13 @@
 <li>This function does the following operations:
 <ul>
 <li>Verifies the current session using input tokens.</li>
-<li>If <code>antiCsrfToken</code> is not <code>null</code>, also gives CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs.</li>
+<li>If <code>antiCsrfToken</code> is not <code>null</code>, also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).</li>
 <li>May return a new access token. Please see How it works section for more information about this.</li>
 </ul></li>
 <li><code>accessToken</code> can be obtained from the cookies with the key <code>sAccessToken</code>. If this cookie is missing, then you should treat it as an error of type <code>TRY_REFRESH_TOKEN</code>.</li>
 <li><code>antiCsrfToken</code> can be obtained from the headers with the key <code>anti-csrf</code>. If this is missing and you do not expect it to be there then pass <code>null</code> to this function. Otherwise treat this like a <code>TRY_REFRESH_TOKEN</code> error.</li>
 <li>This function may return a <code>newAccessToken</code>. If that happens, please update the access token cookies as mentioned in the <a href="user-login">User login</a> section.</li>
+<li>For <code>antiCsrfToken</code>, we chose to use <code>null</code> instead of <code>undefined</code> so that if you do not want to use CSRF protection, you have to consciously give <code>null</code> as opposed to making a mistake of not passing a parameter.</li>
 </ul>
 <div class="divider"></div>
 <h2><a class="anchor" aria-hidden="true" id="example-code"></a><a href="#example-code" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example code</h2>

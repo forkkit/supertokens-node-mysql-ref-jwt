@@ -72,7 +72,7 @@
 <li>This function does the following operations:
 <ul>
 <li>Verifies the current session using the <code>req</code> object.</li>
-<li>If <code>enableCsrfProtection</code> is <code>true</code>, the function checks for the <code>anti-csrf</code> header in the <code>req</code> object and verifies that. We strongly recommend that you set it to true for any non-GET API that requires user auth.</li>
+<li>If <code>enableCsrfProtection</code> is <code>true</code>, the function checks for the <code>anti-csrf</code> header in the <code>req</code> object and verifies that. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).</li>
 <li>May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.</li>
 </ul></li>
 </ul>
