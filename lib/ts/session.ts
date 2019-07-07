@@ -119,7 +119,10 @@ export async function getSession(
     let accessTokenInfo = await getInfoFromAccessToken(accessToken); // if access token is invalid, this will throw TRY_REFRESH_TOKEN error.
     let sessionHandle = accessTokenInfo.sessionHandle;
     if (antiCsrfToken === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("provided antiCsrfToken is undefined"));
+        throw generateError(
+            AuthError.GENERAL_ERROR,
+            new Error("provided antiCsrfToken is undefined. Please pass null instead")
+        );
     }
     if (antiCsrfToken !== null) {
         if (antiCsrfToken !== accessTokenInfo.antiCsrfToken) {

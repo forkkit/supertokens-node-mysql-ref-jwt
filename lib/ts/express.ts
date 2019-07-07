@@ -79,7 +79,7 @@ export async function getSession(
         if (typeof enableCsrfProtection !== "boolean") {
             throw generateError(AuthError.GENERAL_ERROR, Error("you need to pass enableCsrfProtection boolean"));
         }
-        let antiCsrfToken = getAntiCsrfTokenFromHeaders(req);
+        let antiCsrfToken = enableCsrfProtection ? getAntiCsrfTokenFromHeaders(req) : undefined;
         if (enableCsrfProtection && antiCsrfToken === undefined) {
             throw generateError(AuthError.TRY_REFRESH_TOKEN, Error("anit-csrf token not found in headers"));
         }
