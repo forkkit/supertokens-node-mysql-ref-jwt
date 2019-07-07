@@ -24,7 +24,7 @@ SuperTokens.refreshSession(refreshToken);
 ```
 - Refreshes the session by generating new access and new refresh tokens.
 - If token theft is detected, then it throws a special ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED``` error. Using this error object, you can see who the affected user is and can choose to revoke their affected session. Fore more information, please see the [Token theft detection](../token-theft) section along with the API reference.
-- <span class="highlighted-text">This function should only be called in a special API endpoint whose job is to only refresh the session.</span>.
+- <span class="highlighted-text">This function should only be called in a special ```POST``` API endpoint whose job is to only refresh the session.</span>.
 - This function will return a new set of auth and anti-csrf tokens. Please see the [User login](user-login) section or the example code below on how to use these tokens.
 
 <div class="divider"></div>
@@ -33,6 +33,7 @@ SuperTokens.refreshSession(refreshToken);
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
+// Should be a POST API
 function refreshSessionAPI() {
     let refreshToken = getCookieValue("sRefreshToken");
     if (refreshToken === undefined) {
