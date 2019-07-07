@@ -101,7 +101,7 @@ export async function getSession(
 
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED, UNAUTHORISED_AND_TOKEN_THEFT_DETECTED
  * @sideEffects may remove cookies, or change the accessToken and refreshToken.
  */
 export async function refreshSession(req: express.Request, res: express.Response): Promise<Session> {

@@ -214,7 +214,7 @@ export async function getSession(
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
  * @sideEffects calls onTokenTheftDetection if token theft is detected.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED. If UNAUTHORISED, and token has been stolen, then err has type {message: string, sessionHandle: string, userId: string}
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED, UNAUTHORISED_AND_TOKEN_THEFT_DETECTED
  */
 export async function refreshSession(
     refreshToken: string
@@ -239,7 +239,7 @@ export async function refreshSession(
 
 /**
  * @description this function exists since we need to recurse on it. It has the actual logic for creating child tokens given the parent refresh token.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED. If UNAUTHORISED, and token has been stolen, then err has type {message: string, sessionHandle: string, userId: string}
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED, UNAUTHORISED_AND_TOKEN_THEFT_DETECTED
  */
 async function refreshSessionHelper(
     refreshToken: string,

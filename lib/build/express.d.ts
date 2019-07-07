@@ -1,5 +1,5 @@
-import * as express from "express";
-import { TypeInputConfig } from "./helpers/types";
+import * as express from 'express';
+import { TypeInputConfig } from './helpers/types';
 export { AuthError as Error } from "./error";
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
@@ -24,7 +24,7 @@ export declare function createNewSession(res: express.Response, userId: string, 
 export declare function getSession(req: express.Request, res: express.Response, enableCsrfProtection: boolean): Promise<Session>;
 /**
  * @description generates new access and refresh tokens for a given refresh token. Called when client's access token has expired.
- * @throws AuthError, GENERAL_ERROR, UNAUTHORISED
+ * @throws AuthError, GENERAL_ERROR, UNAUTHORISED, UNAUTHORISED_AND_TOKEN_THEFT_DETECTED
  * @sideEffects may remove cookies, or change the accessToken and refreshToken.
  */
 export declare function refreshSession(req: express.Request, res: express.Response): Promise<Session>;
