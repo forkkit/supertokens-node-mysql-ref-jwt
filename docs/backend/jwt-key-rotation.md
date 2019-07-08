@@ -15,5 +15,5 @@ Changing the JWT signing key would immediately invalidate all existing JWTs. Thi
 One problem with the argument above is that it keeps your system secure only if you know that a key theft has occurred. It is very possible that you may not even realise that that has happened! Hence, we have a feature of <span class="highlighted-text">automatic JWT signing key rotation - if you let us manage your JWT signing key, we will keep changing it every fixed time period</span>. To set this time period, or entirely switch off this feature see the [Configurations](config) section.
 
 <div class="specialNote">
-If you decide to manually change the JWT key, it is best to then restart all your node processes so that they can all be in sync. It is OK even if you do not do this, but it may result in many more calls to your refresh token API.
+If you decide to manually change the JWT key, it is best to then restart all your node processes so that they can all be in sync. It is OK even if you do not do this, but it may result in many more calls to your refresh session API.
 </div>

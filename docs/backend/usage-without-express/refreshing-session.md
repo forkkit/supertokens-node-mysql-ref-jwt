@@ -9,7 +9,7 @@ sidebar_label: Refreshing Session
 - In that API, your backend calls the ```SuperTokens.getSession(accessToken, antiCsrfToken)``` function which throws a ```TRY_REFRESH_TOKEN``` error.
 - Your backend replies with a ```session expired``` status code to your frontend.
 - Your frontend detects this code and calls an API on your backend that will refresh the session (let's call this API ```/refreshSession```).
-- In this API, you call the ```SuperTokens.refreshSession(refreshToken)``` function that "refreshes" the session.
+- In this API, you call the ```SuperTokens.refreshSession(refreshToken)``` function that "refreshes" the session. This will result in the generation of a new access and a new refresh token. The lifetime of these new tokens starts from the point when they were generated (Please contact us if this is unclear).
 - Your frontend then calls the ```/getHomeFeed``` API once again with the new access token yielding a successful response.
 
 Our frontend SDK takes care of calling your refresh endpoint and managing the auth tokens on your frontend. It also does a few more operations to handle race conditions when changing tokens.
