@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Backend Migration · SuperTokens</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Best session management"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Backend Migration · SuperTokens"/><meta property="og:type" content="website"/><meta property="og:url" content="https://supertokens.github.io/supertokens-node-mysql-ref-jwt//supertokens-node-mysql-ref-jwt/"/><meta property="og:description" content="Best session management"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/supertokens-node-mysql-ref-jwt/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Backend Migration · SuperTokens</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;pre&gt;&lt;code class=&quot;hljs css language-js&quot;&gt;&lt;/code&gt;&lt;/pre&gt;
+"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Backend Migration · SuperTokens"/><meta property="og:type" content="website"/><meta property="og:url" content="https://supertokens.github.io/supertokens-node-mysql-ref-jwt//supertokens-node-mysql-ref-jwt/"/><meta property="og:description" content="&lt;pre&gt;&lt;code class=&quot;hljs css language-js&quot;&gt;&lt;/code&gt;&lt;/pre&gt;
+"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/supertokens-node-mysql-ref-jwt/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100,"backgroundColor":"#999999","textColor":"#222222"}
@@ -60,4 +62,35 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Backend Migration</h1></header><article><div><span></span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/migration/database"><span class="arrow-prev">← </span><span>Database</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/migration/website"><span>Website</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Backend Migration</h1></header><article><div><span><pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> SuperTokens <span class="hljs-keyword">from</span> <span class="hljs-string">'supertokens-node-mysql-ref-jwt/express'</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">superTokensMiddleware</span> (<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-keyword">if</span> ( <span class="hljs-comment">/* current API is refresh token endpoint */</span>) {
+        next();
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">let</span> session = <span class="hljs-keyword">await</span> SuperTokens.getSession(req, res, <span class="hljs-literal">true</span>);
+        req.superTokensSession = session;
+        next();
+    } <span class="hljs-keyword">catch</span> (err) {
+        <span class="hljs-keyword">if</span> (SuperTokens.Error.isAuthError(err)) {
+            <span class="hljs-keyword">if</span> (err.errType === SuperTokens.Error.GENERAL_ERROR) {
+                next(err);
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (err.errType === SuperTokens.Error.UNAUTHORISED) {
+                <span class="hljs-comment">// redirect to login page</span>
+            } <span class="hljs-keyword">else</span> {    <span class="hljs-comment">// TRY_REFRESH_TOKEN</span>
+                res.status(<span class="hljs-number">440</span>).send(<span class="hljs-string">"Please call the refresh token endpoint"</span>);
+            }
+        } <span class="hljs-keyword">else</span> {
+            next(err);
+        }
+    }
+}
+
+app.use(superTokensMiddleware);
+
+<span class="hljs-comment">// other routes / middlewares</span>
+app.use(...);
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/supertokens-node-mysql-ref-jwt/docs/migration/database"><span class="arrow-prev">← </span><span>Database</span></a><a class="docs-next button" href="/supertokens-node-mysql-ref-jwt/docs/migration/website"><span>Website</span><span class="arrow-next"> →</span></a></div></div></div></div></div></body></html>
