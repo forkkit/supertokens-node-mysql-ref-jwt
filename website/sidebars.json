@@ -82,7 +82,9 @@
             "limitations/limitations"
         ],
         "Migration": [
-            "migration/migration"
+            "migration/database",
+            "migration/backend",
+            "migration/website"
         ]
     }
 }

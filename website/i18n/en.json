@@ -161,9 +161,21 @@
         "title": "Limitations",
         "sidebar_label": "Limitations"
       },
+      "migration/backend": {
+        "title": "Backend Migration",
+        "sidebar_label": "Backend"
+      },
+      "migration/database": {
+        "title": "Database Migration",
+        "sidebar_label": "Database"
+      },
       "migration/migration": {
         "title": "Migration",
         "sidebar_label": "Migration"
+      },
+      "migration/website": {
+        "title": "Website Migration",
+        "sidebar_label": "Website"
       },
       "try-it-out/docker": {
         "title": "Docker",
