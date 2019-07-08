@@ -162,19 +162,15 @@
         "sidebar_label": "Limitations"
       },
       "migration/backend": {
-        "title": "Backend Migration",
+        "title": "Add SuperTokens to an existing system",
         "sidebar_label": "Backend"
       },
       "migration/database": {
         "title": "Database Migration",
         "sidebar_label": "Database"
       },
-      "migration/migration": {
-        "title": "Migration",
-        "sidebar_label": "Migration"
-      },
       "migration/website": {
-        "title": "Website Migration",
+        "title": "Add SuperTokens to an existing website",
         "sidebar_label": "Website"
       },
       "try-it-out/docker": {

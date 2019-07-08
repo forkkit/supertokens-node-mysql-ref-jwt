@@ -253,6 +253,10 @@ a.highlighted-link {
     color: #6ab1fd;
 }
 
+a.highlighted-link.orange{
+    color: #ff9933;
+}
+
 a.highlighted-text {
     color: #ff9933;
 }

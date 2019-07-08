@@ -6,9 +6,7 @@ sidebar_label: Website
 
 ### Install the supertokens-website package
 
-```js
-npm i --save supertokens-website
-```
+For more details visit the [installation](../frontend/installation) section
 
 ### Convert all network calls to SuperTokens function calls
 
