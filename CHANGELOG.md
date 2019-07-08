@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2019-07-09
+### Breaking Changes
+- Implements CSRF protection
+- Makes handing token theft via an error as opposed to a callback
+
 ## [3.0.0] - 2019-06-15
 ### Breaking Changes
 - Reorganises lib so that express related functions are access via /express. By default, you get the raw functions so that you can use them with any non express frameworks as well.
