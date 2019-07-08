@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "TEST_MODE=testing npx mocha \" test/**/*.test.js\" --exit --slow=10000 --timeout=20000",
+    "test": "TEST_MODE=testing npx mocha",
     "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit",
     "build": "cd lib && npx tsc -p tsconfig.json",
     "pretty": "cd lib && npx prettier --write --config .prettierrc \"ts/**/*.ts\" \"build/**/*.js\" \"../test/**/*.js\"",

@@ -92,7 +92,11 @@ export function getHeader(req: express.Request, key: string): string | undefined
 }
 
 export function setHeader(res: express.Response, key: string, value: string) {
-    res.header(key, value);
+    try {
+        res.header(key, value);
+    } catch (err) {
+        throw generateError(AuthError.GENERAL_ERROR, err);
+    }
 }
 
 /**
@@ -125,7 +129,11 @@ export function setCookie(
         expires: new Date(expires),
         path
     };
-    res.cookie(key, value, cookieOptions);
+    try {
+        res.cookie(key, value, cookieOptions);
+    } catch (err) {
+        throw generateError(AuthError.GENERAL_ERROR, err);
+    }
 }
 
 /**

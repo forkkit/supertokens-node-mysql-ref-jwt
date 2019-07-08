@@ -43,6 +43,15 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo.session.userId, "string");
         assert.deepStrictEqual(sessionInfo.session.userId, userId);
+
+        try {
+            await session.getSession(newSession.accessToken, "wrong-anti-csrf-token");
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
     });
 
     it("create and get session: [access token expires after 1 secs]", async function() {
@@ -99,7 +108,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
         assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
         assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
-        assert.strictEqual(newRefreshedSession.newAntiCsrfToken !== newSession.antiCsrfToken, true);
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
         const sessionInfo = await session.getSession(
             newRefreshedSession.newAccessToken.value,
             newRefreshedSession.newAntiCsrfToken

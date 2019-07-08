@@ -17,11 +17,13 @@ describe(`Config: ${printPath("[test/config.test.js]")}`, function() {
     });
 
     it("testing if table signing key table is created", async function() {
+        await SuperTokens.init(config.minConfigTest);
         const tableExists = await checkIfSigningKeyTableExists();
         assert.strictEqual(tableExists, true);
     });
 
     it("testing if table refresh token table is created", async function() {
+        await SuperTokens.init(config.minConfigTest);
         const tableExists = await checkIfRefreshTokensTableExists();
         assert.strictEqual(tableExists, true);
     });
