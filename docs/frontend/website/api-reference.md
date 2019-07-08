@@ -13,7 +13,7 @@ sidebar_label: API Reference
     - Type: ```number```
     - HTTP status code that indicates session expiry - as sent by your APIs. By default the value is ```440```.
 ##### Returns
-- ```Promise<void>``` on successful initialization
+- nothing
 ##### Throws
 - nothing
 
