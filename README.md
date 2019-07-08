@@ -37,7 +37,8 @@ The library has the following features:
 - [Support, questions and bugs](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#support-questions-and-bugs)
 - [Authors](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#authors)
 
-## Documentation: Click [here](https://supertokens.github.io/supertokens-node-mysql-ref-jwt/)
+## Documentation: 
+Please see our [Documentation website](https://supertokens.github.io/supertokens-node-mysql-ref-jwt/)
 
 ## Making changes
 Please see our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/CONTRIBUTING.md) guide
