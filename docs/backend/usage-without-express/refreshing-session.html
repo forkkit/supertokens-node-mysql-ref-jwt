@@ -68,7 +68,7 @@
 <li>In that API, your backend calls the <code>SuperTokens.getSession(accessToken, antiCsrfToken)</code> function which throws a <code>TRY_REFRESH_TOKEN</code> error.</li>
 <li>Your backend replies with a <code>session expired</code> status code to your frontend.</li>
 <li>Your frontend detects this code and calls an API on your backend that will refresh the session (let's call this API <code>/refreshSession</code>).</li>
-<li>In this API, you call the <code>SuperTokens.refreshSession(refreshToken)</code> function that &quot;refreshes&quot; the session.</li>
+<li>In this API, you call the <code>SuperTokens.refreshSession(refreshToken)</code> function that &quot;refreshes&quot; the session. This will result in the generation of a new access and a new refresh token. The lifetime of these new tokens starts from the point when they were generated (Please contact us if this is unclear).</li>
 <li>Your frontend then calls the <code>/getHomeFeed</code> API once again with the new access token yielding a successful response.</li>
 </ul>
 <p>Our frontend SDK takes care of calling your refresh endpoint and managing the auth tokens on your frontend. It also does a few more operations to handle race conditions when changing tokens.</p>
