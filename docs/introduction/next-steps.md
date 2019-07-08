@@ -19,4 +19,4 @@ sidebar_label: Next Steps
 - Synchronizes calls to the refresh token API to prevent <a href="https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460#e81c" target="_blank">this race condition</a>
 
 ## Already have your own session management implemented?
-Please see our [Migration](../migration/migration) guide.
+Please see our [Migration](../migration/backend) guide.

@@ -82,8 +82,8 @@
             "limitations/limitations"
         ],
         "Migration": [
-            "migration/database",
             "migration/backend",
+            "migration/database",
             "migration/website"
         ]
     }
