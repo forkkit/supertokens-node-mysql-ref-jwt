@@ -98,11 +98,11 @@
         "sidebar_label": "Verify Session"
       },
       "frontend/android/coming-soon": {
-        "title": "Coming Soon",
+        "title": "Android",
         "sidebar_label": "Coming Soon"
       },
       "frontend/ios/coming-soon": {
-        "title": "Coming Soon",
+        "title": "iOS",
         "sidebar_label": "Coming Soon"
       },
       "frontend/react-native/coming-soon": {

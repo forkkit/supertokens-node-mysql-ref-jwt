@@ -16,7 +16,7 @@ Let's walk through an example for this:
         try {
             let session = await SuperTokens.getSession(req, res, true);
             let userId = session.getUserId();
-            // return some HTML / JS displaying this user's home page
+            res.send("<html><body>Welcome user: " + userId + "</body></html>");
         } catch (err) {
             if (SuperTokens.Error.isErrorFromAuth(err)) {
                 if (err.errType === SuperTokens.Error.TRY_REFRESH_TOKEN) {
@@ -37,7 +37,19 @@ Let's walk through an example for this:
       <body>
           <!-- some pretty UI -->
           <script>
-              
+              // load supertokens-website lib as SuperTokensRequest
+              SuperTokensRequest.init("/refreshsession", 440);
+              SuperTokensRequest.attemptRefreshingSession().then(success => {
+                  if (success) {
+                      // we have successfully refreshed the session. Now we can reload the home page and it should work!
+                      window.location = "/home";
+                  } else {
+                      // session has expired and the user should login again.
+                      window.location = "/login";
+                  }
+              }).catch(err => {
+                  // display some error message and tell user to reload the page.
+              });
           </script>
       </body>
   </html>

@@ -1,7 +1,8 @@
 ---
 id: coming-soon
-hide_title: true
-title: Coming Soon
+title: iOS
 sidebar_label: Coming Soon
 ---
+
+We are actively working on an iOS sdk.
 
