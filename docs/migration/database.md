@@ -1,6 +1,6 @@
 ---
 id: database
-title: Database Migration
+title: Add SuperTokens to an exisiting Database
 sidebar_label: Database
 ---
 
