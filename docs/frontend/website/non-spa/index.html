@@ -72,7 +72,7 @@
       <span class="hljs-keyword">try</span> {
           <span class="hljs-keyword">let</span> session = <span class="hljs-keyword">await</span> SuperTokens.getSession(req, res, <span class="hljs-literal">true</span>);
           <span class="hljs-keyword">let</span> userId = session.getUserId();
-          <span class="hljs-comment">// return some HTML / JS displaying this user's home page</span>
+          res.send(<span class="hljs-string">"&lt;html&gt;&lt;body&gt;Welcome user: "</span> + userId + <span class="hljs-string">"&lt;/body&gt;&lt;/html&gt;"</span>);
       } <span class="hljs-keyword">catch</span> (err) {
           <span class="hljs-keyword">if</span> (SuperTokens.Error.isErrorFromAuth(err)) {
               <span class="hljs-keyword">if</span> (err.errType === SuperTokens.Error.TRY_REFRESH_TOKEN) {
@@ -91,9 +91,21 @@
 <pre><code class="hljs css language-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
         <span class="hljs-comment">&lt;!-- some pretty UI --&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>
-            
-        <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+            <span class="hljs-comment">// load supertokens-website lib as SuperTokensRequest</span>
+            SuperTokensRequest.init(<span class="hljs-string">"/refreshsession"</span>, <span class="hljs-number">440</span>);
+            SuperTokensRequest.attemptRefreshingSession().then(<span class="hljs-function"><span class="hljs-params">success</span> =&gt;</span> {
+                <span class="hljs-keyword">if</span> (success) {
+                    <span class="hljs-comment">// we have successfully refreshed the session. Now we can reload the home page and it should work!</span>
+                    <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/home"</span>;
+                } <span class="hljs-keyword">else</span> {
+                    <span class="hljs-comment">// session has expired and the user should login again.</span>
+                    <span class="hljs-built_in">window</span>.location = <span class="hljs-string">"/login"</span>;
+                }
+            }).catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+                <span class="hljs-comment">// display some error message and tell user to reload the page.</span>
+            });
+        </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre></li>
