@@ -4,7 +4,7 @@ title: Limitations
 sidebar_label: Limitations
 ---
 
-<span class="highlighted-text">Supertokens currently does not support multiple sub-domains.</span>
+## Supertokens currently does not support multiple sub-domains
 
 For example if you have two sub-domains A and B. And user John is logged into both domains.
 
@@ -15,6 +15,6 @@ This is because our library uses localstorage to keep track of the anti-CSRF tok
 </div>
 <br/>
 
-<span class="highlighted-text">Supertokens currently supports only one instance of MySQL</span>
+## Supertokens currently supports only one instance of MySQL
 
 If you require a solution that works with multiple instances of MySQL please visit the enterprise section of the <a href="https://supertokens.io" class="highlighted-link" target="_blank">SuperTokens website</a>
