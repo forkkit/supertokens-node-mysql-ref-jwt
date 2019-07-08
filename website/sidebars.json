@@ -42,13 +42,17 @@
             "backend/api-reference"
         ],
         "Frontend": [
-            "frontend/installation",
+            "frontend/why",
             {
                 "type": "subcategory",
                 "label": "Website",
                 "ids": [
+                    "frontend/website/installation",
                     "frontend/website/initialisation",
                     "frontend/website/sending-requests",
+                    "frontend/website/manually-refresh",
+                    "frontend/website/non-spa",
+                    "frontend/website/graphql-usage",
                     "frontend/website/cookies-and-localstorage",
                     "frontend/website/api-reference"
                 ]

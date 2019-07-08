@@ -101,10 +101,6 @@
         "title": "Coming Soon",
         "sidebar_label": "Coming Soon"
       },
-      "frontend/installation": {
-        "title": "Frontend Installation",
-        "sidebar_label": "Installation"
-      },
       "frontend/ios/coming-soon": {
         "title": "Coming Soon",
         "sidebar_label": "Coming Soon"
@@ -121,13 +117,33 @@
         "title": "Cookies and Localstorage",
         "sidebar_label": "Cookies and Localstorage"
       },
+      "frontend/website/graphql-usage": {
+        "title": "Usage with GraphQL",
+        "sidebar_label": "Usage with GraphQL"
+      },
       "frontend/website/initialisation": {
-        "title": "Init",
-        "sidebar_label": "Init"
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
+      },
+      "frontend/website/installation": {
+        "title": "Installation",
+        "sidebar_label": "Installation"
+      },
+      "frontend/website/manually-refresh": {
+        "title": "Manual refresh",
+        "sidebar_label": "Manual refresh"
+      },
+      "frontend/website/non-spa": {
+        "title": "For non-SPA websites",
+        "sidebar_label": "For non-SPA websites"
       },
       "frontend/website/sending-requests": {
         "title": "Sending Requests",
         "sidebar_label": "Sending Requests"
+      },
+      "frontend/why": {
+        "title": "Why is this needed",
+        "sidebar_label": "Why is this needed"
       },
       "how-it-works/details": {
         "title": "How it works",
