@@ -248,3 +248,11 @@ body {
     color: #ffffff; 
     text-decoration: underline;
 }
+
+a.highlighted-link {
+    color: #6ab1fd;
+}
+
+a.highlighted-text {
+    color: #ff9933;
+}

@@ -75,9 +75,8 @@
         "How it works": [
             "how-it-works/details"
         ],
-        "Try it out": [
-            "try-it-out/example",
-            "try-it-out/docker"
+        "Example Project": [
+            "try-it-out/example"
         ],
         "Limitations": [
             "limitations/limitations"
