@@ -82,7 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
         let path = splittedUrl.filter((x, i) => i >= 3).join("/");
         let base = splittedUrl.filter((x, i) => i < 3).join("/");
         let currLocation = window.location.origin;
-        if (base === currLocation && splittedUrl.length === 5) {
+        let lastPath = splittedUrl[splittedUrl.length - 1];
+        if (lastPath === "versions") {
+            element.className = "header-version-text";
+        }
+
+        if (base === currLocation && splittedUrl.length === 5 && lastPath === "") {
             element.href = "https://supertokens.io";
             element.target = "_blank";
         }
