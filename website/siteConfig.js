@@ -78,7 +78,7 @@ const siteConfig = {
   //   copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ['https://buttons.github.io/buttons.js', "/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"],
+  scripts: ['https://buttons.github.io/buttons.js', "https://www.googletagmanager.com/gtag/js?id=UA-143540696-1", "/supertokens-node-mysql-ref-jwt/scripts/homeButtonListener.js"],
 
   // On page navigation for the current documentation page.
   //   onPageNav: 'separate',
