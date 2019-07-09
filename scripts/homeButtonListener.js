@@ -122,6 +122,12 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     `;
 
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-143540696-1');
+
     let body = document.getElementsByTagName("body")[0];
     body.style.display = "block";
 });
