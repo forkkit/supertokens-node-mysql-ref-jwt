@@ -6,12 +6,10 @@ original_id: backend
 ---
 
 ### Install the SuperTokens package
-
-For more details visit the [installation](../backend/installation) section
+You will first need to install our library and setup your project to work with it. Please visit the [installation](../backend/installation) section for a step by step guide.
 
 
 ### Middleware
-
 If you use a middleware for authentication, you can replace that by creating your own middleware using SuperTokens. An example of how to do that would be:
 
 ```js

@@ -5,7 +5,7 @@ sidebar_label: Next Steps
 original_id: next-steps
 ---
 
-<span class="highlighted-text">For our solution to work, you have to use our backend and frontend libraries.</span> Please follow the backend and frontend installation guides.
+<span class="highlighted-text">To implement SuperTokens, please install and use our frontend and backend libraries found in the subsequent sections</span>
 
 ## What does the backend SDK do?
 - Provides a flexible and intuitive API to manage sessions.

@@ -5,7 +5,7 @@ sidebar_label: What and Why
 original_id: what-and-why
 ---
 
-<span class="highlighted-text">This library works with <b>NodeJS</b> and <b>MySQL</b>.</span> If you are using a different technology stack, please visit the [SuperTokens](https://supertokens.io) home page.
+<span class="highlighted-text">This library works with <b>NodeJS</b> and <b>MySQL</b>.</span> If you are using a different technology stack, please visit the [SuperTokens](https://supertokens.io#tech-stack) home page.
 
 ## What does this library do?
 - This library implements the most secure session management flow that uses rotating refresh tokens to detect session theft. 
@@ -23,4 +23,8 @@ We protect against all session related attacks and vulnerabilities:
 - Session fixation
 - JWT signing key compromise
 - Data theft from database
-- Session hijacking - we detect stolen tokens.
+- Preventing session hijacking via <span class="highlighted-text">token theft detection</span>.
+
+### How do we detect auth token theft?
+- We use [rotating refresh tokens](https://tools.ietf.org/html/rfc6819#section-5.2.2.3) to detect if an older refresh token is being used when it should not be. 
+- Our implementation does not have to explicitly store any old tokens, keeping space usage to a minimum.

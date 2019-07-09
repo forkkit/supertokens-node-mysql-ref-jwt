@@ -4,6 +4,9 @@ title: Add SuperTokens to an exisiting Database
 sidebar_label: Database
 ---
 
-- Our library will create two tables for you as mentioned [here](../backend/installation#3-optionally-create-tables-in-the-mysql-database). You can either give it a new database, or your existing database. 
+- SuperTokens will create two tables for you as mentioned [here](../backend/installation#3-optionally-create-tables-in-the-mysql-database). You can configure the database our library uses.  
 
-- We recommend giving it a new database as this way you can create MySQL users specifically for that database. This will ensure to you that our library will not have access to any of your existing data. 
+- We recommend that you provide a new database for the following reasons:
+  - You can more easily keep track of the data we generate.
+  - Our library will only have access to that database and no other information stored in your MySQL instance.
+  - Any future changes to the database will be easier for you to implement.

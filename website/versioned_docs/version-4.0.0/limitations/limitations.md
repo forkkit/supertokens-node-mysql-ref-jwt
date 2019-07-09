@@ -18,4 +18,4 @@ This is because our library uses localstorage to keep track of the anti-CSRF tok
 
 ## Supertokens currently supports only one instance of MySQL
 
-If you require a solution that works with multiple instances of MySQL please visit the enterprise section of the <a href="https://supertokens.io" class="highlighted-link" target="_blank">SuperTokens website</a>
+A version that works with multiple instances of MySQL will be available in our [enterprise solution](https://supertokens.io/enterprise).
