@@ -9,7 +9,7 @@ const errors = require("../../lib/build/error");
 
 const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
-    it("create, get and refresh session (includes token theft)", async function() {
+    it("create, get and refresh session (includes token theft and anti-csrf)", async function() {
         await reset(config.configWithShortValidityForAccessToken);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
@@ -118,6 +118,14 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .set("anti-csrf", antiCsrfHeader)
             .expect(200);
         if (!response.body.success) {
+            throw Error("test failed");
+        }
+
+        response = await supertest(app)
+            .get("/")
+            .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .expect(200);
+        if (response.body.errCode !== errors.AuthError.TRY_REFRESH_TOKEN) {
             throw Error("test failed");
         }
 

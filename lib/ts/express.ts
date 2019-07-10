@@ -81,7 +81,7 @@ export async function getSession(
         }
         let antiCsrfToken = enableCsrfProtection ? getAntiCsrfTokenFromHeaders(req) : undefined;
         if (enableCsrfProtection && antiCsrfToken === undefined) {
-            throw generateError(AuthError.TRY_REFRESH_TOKEN, Error("anit-csrf token not found in headers"));
+            throw generateError(AuthError.TRY_REFRESH_TOKEN, Error("anti-csrf token not found in headers"));
         }
         let response = await SessionFunctions.getSession(
             accessToken,
