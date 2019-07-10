@@ -55,7 +55,7 @@ All other issues like quote styles, spacing etc.. will be taken care of by the f
     npm run build-pretty
     ```
 
-2) If you have edited ```/index.ts``` or ```/indexRaw.ts```, please make the corresponding changes to ```/index.js``` or ```indexRaw.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
+2) If you have edited ```/index.ts``` or ```/express.ts```, please make the corresponding changes to ```/index.js``` or ```express.js```. In the ```.js``` files, be sure to change any ```import/export``` statements to use ```/lib/build/``` and not ```/lib/ts``` 
 
 
 ## Pre push
