@@ -148,7 +148,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         }
     });
 
-    it("refresh session", async function() {
+    it("refresh session (with anti-csrf)", async function() {
         assert.strictEqual(typeof session.createNewSession, "function");
         assert.strictEqual(typeof session.getSession, "function");
         await reset(config.configWithShortValidityForAccessToken);
@@ -194,7 +194,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
         assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
         assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
-        assert.strictEqual(newRefreshedSession.newAntiCsrfToken !== newSession.antiCsrfToken, true);
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
         const sessionInfo = await session.getSession(
             newRefreshedSession.newAccessToken.value,
             newRefreshedSession.newAntiCsrfToken
@@ -237,7 +237,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newRefreshedSession2.newAccessToken.value, "string");
         assert.notDeepStrictEqual(newRefreshedSession2.newAccessToken.value, sessionInfo.newAccessToken.value);
         assert.strictEqual(typeof newRefreshedSession2.newAntiCsrfToken, "string");
-        assert.strictEqual(newRefreshedSession2.newAntiCsrfToken !== newRefreshedSession.antiCsrfToken, true);
+        assert.notStrictEqual(newRefreshedSession2.newAntiCsrfToken, newRefreshedSession.antiCsrfToken);
         const sessionInfo2 = await session.getSession(
             newRefreshedSession2.newAccessToken.value,
             newRefreshedSession2.newAntiCsrfToken
