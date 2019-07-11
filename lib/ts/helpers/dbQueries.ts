@@ -1,6 +1,7 @@
 import Config from "../config";
 import { AuthError, generateError } from "../error";
 import { Connection, getConnection } from "./mysql";
+import { stringifyUserId, parseUserIdToCorrectFormat } from "./utils";
 
 /**
  * @description contains all the mysql queries.
@@ -120,12 +121,13 @@ export async function deleteSession(connection: Connection, sessionHandle: strin
 export async function createNewSession(
     connection: Connection,
     sessionHandle: string,
-    userId: string,
+    userId: any,
     refreshTokenHash2: string,
     sessionData: any,
     expiresAt: number,
     jwtPayload: any
 ) {
+    userId = stringifyUserId(userId);
     const config = Config.get();
     let query = `INSERT INTO ${config.mysql.tables.refreshTokens} 
     (session_handle, user_id, refresh_token_hash_2,
@@ -152,7 +154,7 @@ export async function getSessionInfo_Transaction(
     sessionHandle: string
 ): Promise<
     | {
-          userId: string;
+          userId: any;
           refreshTokenHash2: string;
           sessionData: any;
           expiresAt: number;
@@ -171,7 +173,7 @@ export async function getSessionInfo_Transaction(
     }
     let row = result[0];
     return {
-        userId: row.user_id.toString(),
+        userId: parseUserIdToCorrectFormat(row.user_id),
         refreshTokenHash2: row.refresh_token_hash_2,
         sessionData: unserialiseSessionData(row.session_info),
         expiresAt: Number(row.expires_at),
@@ -199,7 +201,8 @@ export async function updateSessionInfo_Transaction(
     return result.affectedRows;
 }
 
-export async function getAllSessionHandlesForUser(connection: Connection, userId: string): Promise<string[]> {
+export async function getAllSessionHandlesForUser(connection: Connection, userId: any): Promise<string[]> {
+    userId = stringifyUserId(userId);
     const config = Config.get();
     let query = `SELECT session_handle FROM ${config.mysql.tables.refreshTokens} WHERE user_id = ?`;
     let result = await connection.executeQuery(query, [userId]);

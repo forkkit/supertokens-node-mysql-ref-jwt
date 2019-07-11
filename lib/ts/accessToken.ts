@@ -44,12 +44,12 @@ export async function getInfoFromAccessToken(
     retry: boolean = true
 ): Promise<{
     sessionHandle: string;
-    userId: string;
+    userId: any;
     refreshTokenHash1: string;
     expiryTime: number;
     parentRefreshTokenHash1: string | undefined;
     userPayload: any;
-    antiCsrfToken: string;
+    antiCsrfToken: string | undefined;
 }> {
     let signingKey = await SigningKey.getKey();
     try {
@@ -65,7 +65,7 @@ export async function getInfoFromAccessToken(
             }
         }
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
-        let userId = sanitizeStringInput(payload.userId);
+        let userId = payload.userId;
         let refreshTokenHash1 = sanitizeStringInput(payload.rt);
         let expiryTime = sanitizeNumberInput(payload.expiryTime);
         let parentRefreshTokenHash1 = sanitizeStringInput(payload.prt);
@@ -76,7 +76,7 @@ export async function getInfoFromAccessToken(
             userId === undefined ||
             refreshTokenHash1 === undefined ||
             expiryTime === undefined ||
-            antiCsrfToken === undefined
+            (antiCsrfToken === undefined && Config.get().tokens.enableAntiCsrf)
         ) {
             // it would come here if we change the structure of the JWT.
             throw Error("invalid access token payload");
@@ -104,9 +104,9 @@ export async function getInfoFromAccessToken(
  */
 export async function createNewAccessToken(
     sessionHandle: string,
-    userId: string,
+    userId: any,
     refreshTokenHash1: string,
-    antiCsrfToken: string,
+    antiCsrfToken: string | undefined,
     parentRefreshTokenHash1: string | undefined,
     userPayload: any
 ): Promise<{ token: string; expiry: number }> {

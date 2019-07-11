@@ -119,7 +119,6 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
               validity: number | undefined;
               blacklisting: boolean | undefined;
               accessTokenPath: string | undefined;
-              antiCsrf: boolean | undefined;
           }
         | undefined;
     if (accessTokenInputConfig !== undefined) {
@@ -189,15 +188,14 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         }
         let blacklisting = sanitizeBooleanInput(accessTokenInputConfig.blacklisting);
         let accessTokenPath = sanitizeStringInput(accessTokenInputConfig.accessTokenPath);
-        let antiCsrf = sanitizeBooleanInput(accessTokenInputConfig.antiCsrf);
         accessToken = {
             signingKey,
             validity,
             blacklisting,
-            accessTokenPath,
-            antiCsrf
+            accessTokenPath
         };
     }
+    let enableAntiCsrf = sanitizeBooleanInput(tokensInputConfig.enableAntiCsrf);
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
     if (typeof refreshTokenInputConfig !== "object") {
         throw generateError(
@@ -245,7 +243,8 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     };
     const tokens = {
         accessToken,
-        refreshToken
+        refreshToken,
+        enableAntiCsrf
     };
     let loggingInputConfig = config.logging;
     let logging;
@@ -319,8 +318,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                           },
                           validity: defaultConfig.tokens.accessToken.validity.default * 1000,
                           blacklisting: defaultConfig.tokens.accessToken.blacklisting,
-                          accessTokenPath: defaultConfig.tokens.accessToken.accessTokenPath,
-                          antiCsrf: defaultConfig.tokens.accessToken.antiCsrf
+                          accessTokenPath: defaultConfig.tokens.accessToken.accessTokenPath
                       }
                     : {
                           signingKey:
@@ -357,11 +355,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                           accessTokenPath:
                               config.tokens.accessToken.accessTokenPath === undefined
                                   ? defaultConfig.tokens.accessToken.accessTokenPath
-                                  : config.tokens.accessToken.accessTokenPath,
-                          antiCsrf:
-                              config.tokens.accessToken.antiCsrf === undefined
-                                  ? defaultConfig.tokens.accessToken.antiCsrf
-                                  : config.tokens.accessToken.antiCsrf
+                                  : config.tokens.accessToken.accessTokenPath
                       },
             refreshToken: {
                 validity:
@@ -374,7 +368,11 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                         ? defaultConfig.tokens.refreshToken.removalCronjobInterval
                         : config.tokens.refreshToken.removalCronjobInterval,
                 renewTokenPath: config.tokens.refreshToken.renewTokenPath
-            }
+            },
+            enableAntiCsrf:
+                config.tokens.enableAntiCsrf === undefined
+                    ? defaultConfig.tokens.enableAntiCsrf
+                    : config.tokens.enableAntiCsrf
         },
         cookie: {
             secure: config.cookie.secure === undefined ? defaultConfig.cookie.secure : config.cookie.secure,
@@ -415,9 +413,9 @@ const defaultConfig = {
                 default: 3600
             },
             blacklisting: false,
-            accessTokenPath: "/",
-            antiCsrf: true
+            accessTokenPath: "/"
         },
+        enableAntiCsrf: true,
         refreshToken: {
             validity: {
                 // in hours.

@@ -40,7 +40,7 @@ export async function getInfoFromRefreshToken(
     token: string
 ): Promise<{
     sessionHandle: string;
-    userId: string;
+    userId: any;
     parentRefreshTokenHash1: string | undefined;
 }> {
     let key = await Key.getKey();
@@ -52,7 +52,7 @@ export async function getInfoFromRefreshToken(
         let nonce = splittedToken[1];
         let payload = JSON.parse(await decrypt(splittedToken[0], key));
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
-        let userId = sanitizeStringInput(payload.userId);
+        let userId = payload.userId;
         let prt = sanitizeStringInput(payload.prt);
         let nonceFromEnc = sanitizeStringInput(payload.nonce);
         if (sessionHandle === undefined || userId === undefined || nonceFromEnc !== nonce) {
@@ -76,7 +76,7 @@ export async function getInfoFromRefreshToken(
  */
 export async function createNewRefreshToken(
     sessionHandle: string,
-    userId: string,
+    userId: any,
     parentRefreshTokenHash1: string | undefined
 ): Promise<{ token: string; expiry: number }> {
     // token = key1({funcArgs + nonce}).nonce where key1(a) = a encrypted using key1

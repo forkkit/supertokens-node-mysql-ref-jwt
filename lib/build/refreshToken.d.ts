@@ -16,7 +16,7 @@ export declare function getKeyForTesting(): Promise<string>;
  */
 export declare function getInfoFromRefreshToken(token: string): Promise<{
     sessionHandle: string;
-    userId: string;
+    userId: any;
     parentRefreshTokenHash1: string | undefined;
 }>;
 /**
@@ -25,7 +25,7 @@ export declare function getInfoFromRefreshToken(token: string): Promise<{
  * than what is desired. We can easily fix this by adding the expiry time in the token
  * @throws AuthError GENERAL_ERROR
  */
-export declare function createNewRefreshToken(sessionHandle: string, userId: string, parentRefreshTokenHash1: string | undefined): Promise<{
+export declare function createNewRefreshToken(sessionHandle: string, userId: any, parentRefreshTokenHash1: string | undefined): Promise<{
     token: string;
     expiry: number;
 }>;

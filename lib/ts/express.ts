@@ -37,7 +37,7 @@ export async function init(config: TypeInputConfig) {
  */
 export async function createNewSession(
     res: express.Response,
-    userId: string,
+    userId: any,
     jwtPayload?: any,
     sessionData?: any
 ): Promise<Session> {
@@ -80,7 +80,7 @@ export async function getSession(
             throw generateError(AuthError.GENERAL_ERROR, Error("you need to pass enableCsrfProtection boolean"));
         }
         let config = Config.get();
-        enableCsrfProtection = enableCsrfProtection && config.tokens.accessToken.antiCsrf;
+        enableCsrfProtection = enableCsrfProtection && config.tokens.enableAntiCsrf;
         let antiCsrfToken = enableCsrfProtection ? getAntiCsrfTokenFromHeaders(req) : undefined;
         if (enableCsrfProtection && antiCsrfToken === undefined) {
             throw generateError(AuthError.TRY_REFRESH_TOKEN, Error("anti-csrf token not found in headers"));
@@ -141,7 +141,7 @@ export async function refreshSession(req: express.Request, res: express.Response
  * Access tokens cannot be immediately invalidated, unless we enable a blacklisting. Or changed the private key to sign them.
  * @throws AuthError, GENERAL_ERROR
  */
-export async function revokeAllSessionsForUser(userId: string) {
+export async function revokeAllSessionsForUser(userId: any) {
     return SessionFunctions.revokeAllSessionsForUser(userId);
 }
 
@@ -185,11 +185,11 @@ export async function updateSessionData(sessionHandle: string, newSessionData: a
  */
 export class Session {
     private sessionHandle: string;
-    private userId: string;
+    private userId: any;
     private jwtUserPayload: any;
     private res: express.Response;
 
-    constructor(sessionHandle: string, userId: string, jwtUserPayload: any, res: express.Response) {
+    constructor(sessionHandle: string, userId: any, jwtUserPayload: any, res: express.Response) {
         this.sessionHandle = sessionHandle;
         this.userId = userId;
         this.jwtUserPayload = jwtUserPayload;

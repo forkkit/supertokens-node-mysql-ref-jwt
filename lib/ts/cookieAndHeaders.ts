@@ -85,9 +85,15 @@ export function getAntiCsrfTokenFromHeaders(req: express.Request): string | unde
     return getHeader(req, antiCsrfHeaderKey);
 }
 
-export function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string) {
+export function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string | undefined) {
     let config = Config.get();
-    if (config.tokens.accessToken.antiCsrf) {
+    if (config.tokens.enableAntiCsrf) {
+        if (antiCsrfToken === undefined) {
+            throw generateError(
+                AuthError.GENERAL_ERROR,
+                Error("BUG: anti-csrf token is undefined. if you are getting this error, please report it as bug.")
+            );
+        }
         setHeader(res, antiCsrfHeaderKey, antiCsrfToken);
     }
 }

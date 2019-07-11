@@ -16,6 +16,25 @@ const mysqlCommonConfig = {
 module.exports.minConfigTest = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
+        accessToken: {
+            signingKey: {
+                dynamic: false
+            }
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh"
+        }
+    },
+    cookie: {
+        domain: "supertokens.io"
+    }
+};
+
+module.exports.minConfigTestWithAntiCsrfDisabled = {
+    mysql: mysqlCommonConfig,
+    tokens: {
+        enableAntiCsrf: false,
         accessToken: {
             signingKey: {
                 dynamic: false
@@ -33,6 +52,7 @@ module.exports.minConfigTest = {
 module.exports.minConfigTestWithBlacklisting = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
         accessToken: {
             signingKey: {
                 dynamic: false
@@ -51,6 +71,7 @@ module.exports.minConfigTestWithBlacklisting = {
 module.exports.configWithSigningKeyFunction = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
         accessToken: {
             signingKey: {
                 get: () => {
@@ -70,6 +91,7 @@ module.exports.configWithSigningKeyFunction = {
 module.exports.configWithShortSigningKeyUpdateInterval = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
         accessToken: {
             signingKey: {
                 updateInterval: 0.0005
@@ -87,6 +109,23 @@ module.exports.configWithShortSigningKeyUpdateInterval = {
 module.exports.configWithShortValidityForAccessToken = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
+        accessToken: {
+            validity: 1
+        },
+        refreshToken: {
+            renewTokenPath: "/refersh"
+        }
+    },
+    cookie: {
+        domain: "supertokens.io"
+    }
+};
+
+module.exports.configWithShortValidityForAccessTokenAndAntiCsrfDisabled = {
+    mysql: mysqlCommonConfig,
+    tokens: {
+        enableAntiCsrf: false,
         accessToken: {
             validity: 1
         },
@@ -102,6 +141,7 @@ module.exports.configWithShortValidityForAccessToken = {
 module.exports.configWithShortValidityForRefreshToken = {
     mysql: mysqlCommonConfig,
     tokens: {
+        enableAntiCsrf: true,
         accessToken: {
             signingKey: {
                 dynamic: false

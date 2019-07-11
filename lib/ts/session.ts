@@ -35,7 +35,7 @@ export async function init(config: TypeInputConfig) {
  * @throws GENERAL_ERROR in case anything fails.
  */
 export async function createNewSession(
-    userId: string,
+    userId: any,
     jwtPayload?: any,
     sessionData?: any
 ): Promise<{
@@ -50,21 +50,14 @@ export async function createNewSession(
         expires: number;
     };
     idRefreshToken: { value: string; expires: number };
-    antiCsrfToken: string;
+    antiCsrfToken: string | undefined;
 }> {
-    if (typeof userId !== "string") {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error(
-                "UserId must have type string. If you want to use numbers instead, you can convert that to a string and pass it, and then convert it back to a number when you call getUserId()"
-            )
-        );
-    }
     let sessionHandle = generateSessionHandle();
 
     // generate tokens:
     let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
-    let antiCsrfToken = generateUUID();
+    let config = Config.get();
+    let antiCsrfToken = config.tokens.enableAntiCsrf ? generateUUID() : undefined;
     let accessToken = await createNewAccessToken(
         sessionHandle,
         userId,
@@ -126,6 +119,7 @@ export async function getSession(
 
     let accessTokenInfo = await getInfoFromAccessToken(accessToken); // if access token is invalid, this will throw TRY_REFRESH_TOKEN error.
     let sessionHandle = accessTokenInfo.sessionHandle;
+    antiCsrfToken = config.tokens.enableAntiCsrf ? antiCsrfToken : null;
     if (antiCsrfToken === undefined) {
         throw generateError(
             AuthError.GENERAL_ERROR,
@@ -238,7 +232,7 @@ export async function refreshSession(
     newAccessToken: { value: string; expires: number };
     newRefreshToken: { value: string; expires: number };
     newIdRefreshToken: { value: string; expires: number };
-    newAntiCsrfToken: string;
+    newAntiCsrfToken: string | undefined;
 }> {
     let config = Config.get();
 
@@ -268,7 +262,7 @@ async function refreshSessionHelper(
     newAccessToken: { value: string; expires: number };
     newRefreshToken: { value: string; expires: number };
     newIdRefreshToken: { value: string; expires: number };
-    newAntiCsrfToken: string;
+    newAntiCsrfToken: string | undefined;
 }> {
     let config = Config.get();
     let connection = await getConnection();
@@ -304,7 +298,8 @@ async function refreshSessionHelper(
                 refreshTokenInfo.userId,
                 hash(refreshToken)
             );
-            let newAntiCsrfToken = generateUUID();
+            let config = Config.get();
+            let newAntiCsrfToken = config.tokens.enableAntiCsrf ? generateUUID() : undefined;
             let newAccessToken = await createNewAccessToken(
                 sessionHandle,
                 refreshTokenInfo.userId,

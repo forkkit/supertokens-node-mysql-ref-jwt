@@ -9,7 +9,7 @@ export declare function init(config: TypeInputConfig): Promise<void>;
  * @description call this to "login" a user.
  * @throws GENERAL_ERROR in case anything fails.
  */
-export declare function createNewSession(userId: string, jwtPayload?: any, sessionData?: any): Promise<{
+export declare function createNewSession(userId: any, jwtPayload?: any, sessionData?: any): Promise<{
     session: {
         handle: string;
         userId: string;
@@ -27,7 +27,7 @@ export declare function createNewSession(userId: string, jwtPayload?: any, sessi
         value: string;
         expires: number;
     };
-    antiCsrfToken: string;
+    antiCsrfToken: string | undefined;
 }>;
 /**
  * @description authenticates a session. To be used in APIs that require authentication
@@ -67,7 +67,7 @@ export declare function refreshSession(refreshToken: string): Promise<{
         value: string;
         expires: number;
     };
-    newAntiCsrfToken: string;
+    newAntiCsrfToken: string | undefined;
 }>;
 /**
  * @description deletes session info of a user from db. This only invalidates the refresh token. Not the access token.

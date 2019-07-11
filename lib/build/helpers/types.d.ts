@@ -21,13 +21,13 @@ export declare type TypeInputConfig = {
             validity?: number;
             blacklisting?: boolean;
             accessTokenPath?: string;
-            antiCsrf?: boolean;
         };
         refreshToken: {
             validity?: number;
             removalCronjobInterval?: string;
             renewTokenPath: string;
         };
+        enableAntiCsrf?: boolean;
     };
     logging?: {
         info?: (info: any) => void;
@@ -61,13 +61,13 @@ export declare type TypeConfig = {
             validity: number;
             blacklisting: boolean;
             accessTokenPath: string;
-            antiCsrf: boolean;
         };
         refreshToken: {
             validity: number;
             removalCronjobInterval: string;
             renewTokenPath: string;
         };
+        enableAntiCsrf: boolean;
     };
     logging: {
         info?: (info: any) => void;

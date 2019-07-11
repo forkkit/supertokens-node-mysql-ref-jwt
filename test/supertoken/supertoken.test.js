@@ -157,6 +157,116 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         }
     });
 
+    it("create, get and refresh session (with anti-csrf disabled)", async function() {
+        await reset(config.configWithShortValidityForAccessTokenAndAntiCsrfDisabled);
+        assert.strictEqual(typeof SuperTokens.createNewSession, "function");
+        const userId = "testing";
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+        let sAccessTokenCookie = undefined;
+        let sRefreshTokenCookie = undefined;
+        let sIdRefreshTokenCookie = undefined;
+
+        // login | signup
+        let response = await supertest(app)
+            .post("/login")
+            .send({
+                userId,
+                jwtPayload,
+                sessionData
+            })
+            .expect(200);
+        let cookies = response.headers["set-cookie"];
+        let antiCsrfHeader = response.headers["anti-csrf"];
+        let sAccessTokenCookieFound = false;
+        let sRefreshTokenCookieFound = false;
+        let sIdRefreshTokenCookieFound = false;
+        assert.deepStrictEqual(antiCsrfHeader, undefined);
+        assert.strictEqual(Array.isArray(cookies), true);
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=")) {
+                sAccessTokenCookieFound = true;
+                sAccessTokenCookie = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken")) {
+                sRefreshTokenCookieFound = true;
+                sRefreshTokenCookie = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken")) {
+                sIdRefreshTokenCookieFound = true;
+                sIdRefreshTokenCookie = cookies[i];
+            }
+        }
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
+
+        response = await supertest(app)
+            .get("/")
+            .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .expect(200);
+
+        if (!response.body.success) {
+            throw Error("test failed");
+        }
+        await delay(1500);
+        response = await supertest(app)
+            .get("/")
+            .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .expect(200);
+        if (response.body.errCode !== errors.AuthError.TRY_REFRESH_TOKEN) {
+            throw Error("test failed");
+        }
+
+        response = await supertest(app)
+            .post("/refresh")
+            .set("Cookie", [sRefreshTokenCookie, sAccessTokenCookie, sIdRefreshTokenCookie])
+            .expect(200);
+        cookies = response.headers["set-cookie"];
+        sAccessTokenCookieFound = false;
+        sRefreshTokenCookieFound = false;
+        sIdRefreshTokenCookieFound = false;
+        antiCsrfHeader = response.headers["anti-csrf"];
+        assert.deepStrictEqual(antiCsrfHeader, undefined);
+        assert.strictEqual(Array.isArray(cookies), true);
+        let oldAccessTokenCookie = undefined;
+        let oldRefreshTokenCookie = undefined;
+        let oldIdRefreshTokenCookie = undefined;
+        for (let i = 0; i < cookies.length; i++) {
+            if (cookies[i].includes("sAccessToken=")) {
+                sAccessTokenCookieFound = true;
+                if (cookies[i] === sAccessTokenCookie) {
+                    throw Error("access token still same as last access token");
+                }
+                oldAccessTokenCookie = sAccessTokenCookie;
+                sAccessTokenCookie = cookies[i];
+            } else if (cookies[i].includes("sRefreshToken")) {
+                sRefreshTokenCookieFound = true;
+                if (cookies[i] === sRefreshTokenCookie) {
+                    throw Error("refresh token still same as last refresh token");
+                }
+                oldRefreshTokenCookie = sRefreshTokenCookie;
+                sRefreshTokenCookie = cookies[i];
+            } else if (cookies[i].includes("sIdRefreshToken")) {
+                sIdRefreshTokenCookieFound = true;
+                if (cookies[i] === sIdRefreshTokenCookie) {
+                    throw Error("id refresh token still same as last id refresh token");
+                }
+                oldIdRefreshTokenCookie = sIdRefreshTokenCookie;
+                sIdRefreshTokenCookie = cookies[i];
+            }
+        }
+        if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
+            throw Error("");
+        }
+
+        response = await supertest(app)
+            .get("/")
+            .set("Cookie", [sAccessTokenCookie, sIdRefreshTokenCookie])
+            .expect(200);
+        if (!response.body.success) {
+            throw Error("test failed");
+        }
+    });
+
     it("revoke session (without blacklisting)", async function() {
         await reset(config.minConfigTest);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");

@@ -9,6 +9,7 @@ import { init } from "../session";
 import { resetTables } from "./dbQueries";
 import { getConnection, Mysql } from "./mysql";
 import { TypeInputConfig } from "./types";
+import { AuthError, generateError } from "../error";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
@@ -216,4 +217,54 @@ export function delay(timeInMilliseconds: number) {
 
 export function generateSessionHandle() {
     return generateUUID();
+}
+
+export function checkUserIdNotNullOrUndefined(userId: string) {
+    if (userId === undefined || typeof userId === "object") {
+        // checking for type object will also take care for null and array
+        throw generateError(
+            AuthError.GENERAL_ERROR,
+            new Error("UserId should not be an object, array, null or undefined")
+        );
+    }
+}
+
+export function stringifyUserId(userId: any): string {
+    checkUserIdNotNullOrUndefined(userId);
+    if (typeof userId === "string") {
+        let nonParsingError = false;
+        try {
+            let jsonFromUserId = JSON.parse(userId);
+            nonParsingError = true;
+            let keys = Object.keys(jsonFromUserId);
+            if (keys.includes("i") && keys.length === 1) {
+                throw generateError(
+                    AuthError.GENERAL_ERROR,
+                    Error("passed userId cannot be stringified version of object type {i: string}")
+                );
+            }
+            return userId; // JSON parse succeed and object does not have i as the only key
+        } catch (err) {
+            if (nonParsingError) {
+                throw err;
+            }
+            return userId; // JSON parse failed
+        }
+    }
+    return JSON.stringify({ i: userId });
+}
+
+export function parseUserIdToCorrectFormat(userId: string): any {
+    try {
+        let id = JSON.parse(userId);
+        if (typeof id !== "object") {
+            return userId;
+        }
+        if (Array.isArray(id) || id === null || Object.keys(id).length !== 1 || id.i === undefined) {
+            return userId;
+        }
+        return id.i;
+    } catch (err) {
+        return userId;
+    }
 }

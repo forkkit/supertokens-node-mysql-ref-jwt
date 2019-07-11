@@ -15,7 +15,7 @@ export declare function init(config: TypeInputConfig): Promise<void>;
  * @throws GENERAL_ERROR in case anything fails.
  * @sideEffect sets cookies in res
  */
-export declare function createNewSession(res: express.Response, userId: string, jwtPayload?: any, sessionData?: any): Promise<Session>;
+export declare function createNewSession(res: express.Response, userId: any, jwtPayload?: any, sessionData?: any): Promise<Session>;
 /**
  * @description authenticates a session. To be used in APIs that require authentication
  * @throws AuthError, GENERAL_ERROR, UNAUTHORISED and TRY_REFRESH_TOKEN
@@ -33,7 +33,7 @@ export declare function refreshSession(req: express.Request, res: express.Respon
  * Access tokens cannot be immediately invalidated, unless we enable a blacklisting. Or changed the private key to sign them.
  * @throws AuthError, GENERAL_ERROR
  */
-export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
+export declare function revokeAllSessionsForUser(userId: any): Promise<void>;
 /**
  * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
  * @throws AuthError, GENERAL_ERROR
@@ -65,7 +65,7 @@ export declare class Session {
     private userId;
     private jwtUserPayload;
     private res;
-    constructor(sessionHandle: string, userId: string, jwtUserPayload: any, res: express.Response);
+    constructor(sessionHandle: string, userId: any, jwtUserPayload: any, res: express.Response);
     /**
      * @description call this to logout the current user.
      * This only invalidates the refresh token. The access token can still be used after
@@ -87,6 +87,6 @@ export declare class Session {
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
     updateSessionData: (newSessionData: any) => Promise<void>;
-    getUserId: () => string;
+    getUserId: () => any;
     getJWTPayload: () => any;
 }
