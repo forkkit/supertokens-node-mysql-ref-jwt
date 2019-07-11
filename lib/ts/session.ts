@@ -52,6 +52,14 @@ export async function createNewSession(
     idRefreshToken: { value: string; expires: number };
     antiCsrfToken: string;
 }> {
+    if (typeof userId !== "string") {
+        throw generateError(
+            AuthError.GENERAL_ERROR,
+            new Error(
+                "UserId must have type string. If you want to use numbers instead, you can convert that to a string and pass it, and then convert it back to a number when you call getUserId()"
+            )
+        );
+    }
     let sessionHandle = generateSessionHandle();
 
     // generate tokens:

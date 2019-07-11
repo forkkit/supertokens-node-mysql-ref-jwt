@@ -142,7 +142,12 @@ export function setCookie(
  */
 export function getCookieValue(req: express.Request, key: string): string | undefined {
     if (req.cookies === undefined) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("did you forget to use cookie-parser middleware?"));
+        throw generateError(
+            AuthError.GENERAL_ERROR,
+            new Error(
+                "did you forget to use cookie-parser middleware? Also please make sure that you use cookieParser BEFORE any of your API routes."
+            )
+        );
     }
     return req.cookies[key];
 }

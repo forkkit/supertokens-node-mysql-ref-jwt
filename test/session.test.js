@@ -7,6 +7,21 @@ const { printPath } = require("./utils");
 const errors = require("../lib/build/error");
 
 describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
+    it("testing non-string userId", async function() {
+        await reset(config.minConfigTest);
+        const userId = 1;
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+        try {
+            await session.createNewSession(userId, jwtPayload, sessionData);
+            throw Error();
+        } catch (err) {
+            if (err.errType !== errors.AuthError.GENERAL_ERROR) {
+                throw err;
+            }
+        }
+    });
+
     it("create and get session", async function() {
         assert.strictEqual(typeof session.createNewSession, "function");
         assert.strictEqual(typeof session.getSession, "function");
