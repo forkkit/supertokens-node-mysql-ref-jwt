@@ -260,3 +260,36 @@ a.highlighted-link.orange{
 a.highlighted-text {
     color: #ff9933;
 }
+
+.feedback-button-happy {
+    height: 30px;
+    width: 40px;
+    content: url("../img/happyUnselected.png");
+    background-size: 30px 40px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.feedback-button-happy.selected {
+    content: url("../img/happySelected.png");
+}
+
+.feedback-button-happy:hover {
+    content: url("../img/happySelected.png");
+}
+
+.feedback-button-sad {
+    height: 30px;
+    width: 40px;
+    content: url("../img/sadUnselected.png");
+    background-size: 30px 40px;
+    cursor: pointer;
+}
+
+.feedback-button-sad.selected {
+    content: url("../img/sadSelected.png");
+}
+
+.feedback-button-sad:hover {
+    content: url("../img/sadSelected.png");
+}

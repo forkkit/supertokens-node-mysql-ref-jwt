@@ -1,8 +1,129 @@
+async function sendFeedback(uuid, url, happy) {
+    try {
+        fetch("https://api-jdhry57disoejch.qually.com/0/supertokens/documentation/feedback", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "api-version": "0",
+            },
+            body: JSON.stringify({
+                url,
+                userId: uuid,
+                helpful: happy,
+            }),
+        });
+    } catch {
+        // IGNORING
+    }
+}
+
+function feedbackSelected(happy) {
+    let uuid = getUUID();
+    let url = window.location.href;
+    if ( happy ) {
+        // happy selected
+        sendFeedback(uuid, url, true);
+        let happyImage = document.getElementById("feedback-happy");
+        let sadImage = document.getElementById("feedback-sad");
+
+        happyImage.className = "feedback-button-happy selected";
+        sadImage.className = "feedback-button-sad";
+    } else {
+        // sad selected
+        sendFeedback(uuid, url, false);
+        let happyImage = document.getElementById("feedback-happy");
+        let sadImage = document.getElementById("feedback-sad");
+
+        happyImage.className = "feedback-button-happy";
+        sadImage.className = "feedback-button-sad selected";
+    }
+}
+
 function goToGithub() {
     window.open(
         'https://github.com/supertokens/supertokens-node-mysql-ref-jwt',
         '_blank'
     );
+}
+
+function create_UUID(){
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
+function getUUID() {
+    let userId = localStorage.getItem("uuid");
+    if ( userId === null || userId === undefined ) {
+        // generate new one
+        userId = create_UUID();
+        localStorage.setItem("uuid", userId);
+    }
+    return userId;
+}
+
+function getFeedbackButtons(mode) {
+    let alignItems = "center";
+    let justifyContent = "center";
+
+    if ( mode === 'mobile' ) {
+        alignItems = "left";
+        justifyContent = "left";
+    }
+
+    let splittedCurrPath = window.location.pathname.split("/");
+    let happySelected = ["", splittedCurrPath[1], "img", "happySelected.png"].join("/");
+    let sadSelected = ["", splittedCurrPath[1], "img", "sadSelected.png"].join("/");
+    return `
+        <div
+            style="display: flex; flex: 1; flex-direction: column; align-items: `+alignItems+`; justify-content: `+justifyContent+`">
+            <div
+                style="display: flex;">
+                <img
+                    id="feedback-sad"
+                    src="`+sadSelected+`"
+                    class="feedback-button-sad"
+                    onClick="feedbackSelected(false)"/>
+
+                <img
+                    id="feedback-happy"
+                    src="`+happySelected+`"
+                    class="feedback-button-happy"
+                    onClick="feedbackSelected(true)"/>
+            </div>
+            <div
+                style="font-size: 16px; color: #dddddd; margin-top: 10px">
+                Was it helpful?
+            </div>
+        </div>
+    `;
+}
+
+function addFeedbackButtons() {
+    let prevNextContainer = document.getElementsByClassName("docs-prevnext")[0];
+    if ( window.screen.width <= 735 ) {
+        // MOBILE
+        let feedbackButton = getFeedbackButtons("mobile");
+        prevNextContainer.innerHTML = `
+            <div style="position: relative">
+                `+feedbackButton+`
+                `+prevNextContainer.innerHTML+`
+            </div>
+        `;
+    } else {
+        // WEB
+        let feedbackButton = getFeedbackButtons("web");
+        prevNextContainer.innerHTML = `
+            <div style="position: relative">
+                `+prevNextContainer.innerHTML+`
+                `+feedbackButton+`
+            </div>
+        `;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -121,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </img>
     </div>
     `;
+    addFeedbackButtons();
 
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
