@@ -1,7 +1,8 @@
 ---
-id: user-login
+id: version-4.0.X-user-login
 title: User login
 sidebar_label: User login
+original_id: user-login
 ---
 
 ## Call the ```createNewSession``` function: [API Reference](../api-reference#createnewsessionres-userid-jwtpayload-sessiondata)
