@@ -11,6 +11,7 @@ import * as CookieParser from 'cookie-parser';
 ```
 
 ## Use the ```CookieParser``` middleware with ```Express```
+<span class="highlighted-text">Please make sure to call this before any of your API routes</span>. Otherwise ```getSession``` function will not work.
 ```js
 app.use(CookieParser());
 ```
