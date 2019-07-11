@@ -118,6 +118,8 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                   | undefined;
               validity: number | undefined;
               blacklisting: boolean | undefined;
+              accessTokenPath: string | undefined;
+              antiCsrf: boolean | undefined;
           }
         | undefined;
     if (accessTokenInputConfig !== undefined) {
@@ -186,10 +188,14 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             }
         }
         let blacklisting = sanitizeBooleanInput(accessTokenInputConfig.blacklisting);
+        let accessTokenPath = sanitizeStringInput(accessTokenInputConfig.accessTokenPath);
+        let antiCsrf = sanitizeBooleanInput(accessTokenInputConfig.antiCsrf);
         accessToken = {
             signingKey,
             validity,
-            blacklisting
+            blacklisting,
+            accessTokenPath,
+            antiCsrf
         };
     }
     let refreshTokenInputConfig = tokensInputConfig.refreshToken;
@@ -312,7 +318,9 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                               get: undefined
                           },
                           validity: defaultConfig.tokens.accessToken.validity.default * 1000,
-                          blacklisting: defaultConfig.tokens.accessToken.blacklisting
+                          blacklisting: defaultConfig.tokens.accessToken.blacklisting,
+                          accessTokenPath: defaultConfig.tokens.accessToken.accessTokenPath,
+                          antiCsrf: defaultConfig.tokens.accessToken.antiCsrf
                       }
                     : {
                           signingKey:
@@ -345,7 +353,15 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                           blacklisting:
                               config.tokens.accessToken.blacklisting === undefined
                                   ? defaultConfig.tokens.accessToken.blacklisting
-                                  : config.tokens.accessToken.blacklisting
+                                  : config.tokens.accessToken.blacklisting,
+                          accessTokenPath:
+                              config.tokens.accessToken.accessTokenPath === undefined
+                                  ? defaultConfig.tokens.accessToken.accessTokenPath
+                                  : config.tokens.accessToken.accessTokenPath,
+                          antiCsrf:
+                              config.tokens.accessToken.antiCsrf === undefined
+                                  ? defaultConfig.tokens.accessToken.antiCsrf
+                                  : config.tokens.accessToken.antiCsrf
                       },
             refreshToken: {
                 validity:
@@ -398,7 +414,9 @@ const defaultConfig = {
                 max: 1000 * 24 * 3600,
                 default: 3600
             },
-            blacklisting: false
+            blacklisting: false,
+            accessTokenPath: "/",
+            antiCsrf: true
         },
         refreshToken: {
             validity: {

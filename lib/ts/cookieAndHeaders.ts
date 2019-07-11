@@ -32,7 +32,16 @@ export function clearSessionFromCookie(res: express.Response) {
  */
 export function attachAccessTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
-    setCookie(res, accessTokenCookieKey, token, config.cookie.domain, config.cookie.secure, true, expiry, "/");
+    setCookie(
+        res,
+        accessTokenCookieKey,
+        token,
+        config.cookie.domain,
+        config.cookie.secure,
+        true,
+        expiry,
+        config.tokens.accessToken.accessTokenPath
+    );
 }
 
 /**
@@ -77,7 +86,10 @@ export function getAntiCsrfTokenFromHeaders(req: express.Request): string | unde
 }
 
 export function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string) {
-    setHeader(res, antiCsrfHeaderKey, antiCsrfToken);
+    let config = Config.get();
+    if (config.tokens.accessToken.antiCsrf) {
+        setHeader(res, antiCsrfHeaderKey, antiCsrfToken);
+    }
 }
 
 export function getHeader(req: express.Request, key: string): string | undefined {

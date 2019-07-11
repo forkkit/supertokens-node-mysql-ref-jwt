@@ -20,6 +20,8 @@ export declare type TypeInputConfig = {
             };
             validity?: number;
             blacklisting?: boolean;
+            accessTokenPath?: string;
+            antiCsrf?: boolean;
         };
         refreshToken: {
             validity?: number;
@@ -58,6 +60,8 @@ export declare type TypeConfig = {
             };
             validity: number;
             blacklisting: boolean;
+            accessTokenPath: string;
+            antiCsrf: boolean;
         };
         refreshToken: {
             validity: number;
