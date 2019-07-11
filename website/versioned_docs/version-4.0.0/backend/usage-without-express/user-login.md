@@ -13,7 +13,7 @@ SuperTokens.createNewSession(userId, jwtPayload, sessionData);
 - ```userId``` must be of type ```string```. If you want to use another datatype, then you have to create convertors for them from that datatype to a string. For example to use with ```number```:
   ```js
   let userId = 1; // is a number
-  let session = await SuperTokens.createNewSession(res, userId + "", jwtPayload, sessionData); // we convert 1 to a string
+  let session = await SuperTokens.createNewSession(userId + "", jwtPayload, sessionData); // we convert 1 to a string
   let userFromSession = Number(session.getUserId());
   ```
 - This function does the following operations:
