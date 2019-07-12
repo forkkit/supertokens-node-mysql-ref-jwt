@@ -105,6 +105,9 @@ function getFeedbackButtons(mode) {
 
 function addFeedbackButtons() {
     let prevNextContainer = document.getElementsByClassName("docs-prevnext")[0];
+    if ( prevNextContainer === null || prevNextContainer === undefined ) {
+        return;
+    }
     if ( window.screen.width <= 735 ) {
         // MOBILE
         let feedbackButton = getFeedbackButtons("mobile");
