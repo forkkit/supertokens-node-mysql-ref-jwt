@@ -57,9 +57,34 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
     });
 
-    it("testing stringified JSON userId", async function() {
+    it("testing stringified JSON userId (single field)", async function() {
         await reset(config.minConfigTest);
         const userId = JSON.stringify({ a: "testing" });
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+        const newSession = await session.createNewSession(userId, jwtPayload, sessionData);
+        assert.strictEqual(typeof newSession, "object");
+        assert.strictEqual(typeof newSession.accessToken, "object");
+        assert.strictEqual(typeof newSession.accessToken.value, "string");
+        assert.strictEqual(typeof newSession.accessToken.expires, "number");
+        assert.strictEqual(typeof newSession.idRefreshToken, "object");
+        assert.strictEqual(typeof newSession.idRefreshToken.value, "string");
+        assert.strictEqual(typeof newSession.idRefreshToken.expires, "number");
+        assert.strictEqual(typeof newSession.refreshToken, "object");
+        assert.strictEqual(typeof newSession.refreshToken.value, "string");
+        assert.strictEqual(typeof newSession.refreshToken.expires, "number");
+        assert.strictEqual(typeof newSession.session, "object");
+        assert.strictEqual(typeof newSession.session.handle, "string");
+        assert.strictEqual(typeof newSession.session.jwtPayload, "object");
+        assert.deepStrictEqual(newSession.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newSession.session.userId, "string");
+        assert.deepStrictEqual(newSession.session.userId, userId);
+        assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
+    });
+
+    it("testing stringified JSON userId (multiple fields)", async function() {
+        await reset(config.minConfigTest);
+        const userId = JSON.stringify({ a: "testing", i: "supertokens" });
         const jwtPayload = { a: "testing" };
         const sessionData = { s: "session" };
         const newSession = await session.createNewSession(userId, jwtPayload, sessionData);
