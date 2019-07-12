@@ -35,13 +35,13 @@ export async function init(config: TypeInputConfig) {
  * @throws GENERAL_ERROR in case anything fails.
  */
 export async function createNewSession(
-    userId: any,
+    userId: string | number,
     jwtPayload?: any,
     sessionData?: any
 ): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     accessToken: { value: string; expires: number };
@@ -111,7 +111,7 @@ export async function getSession(
 ): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     newAccessToken: { value: string; expires: number } | undefined;
@@ -227,7 +227,7 @@ export async function refreshSession(
 ): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     newAccessToken: { value: string; expires: number };
@@ -251,13 +251,13 @@ async function refreshSessionHelper(
     refreshToken: string,
     refreshTokenInfo: {
         sessionHandle: string;
-        userId: string;
+        userId: string | number;
         parentRefreshTokenHash1: string | undefined;
     }
 ): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     newAccessToken: { value: string; expires: number };
@@ -376,7 +376,7 @@ async function refreshSessionHelper(
  * Access tokens cannot be immediately invalidated. Unless we add a bloacklisting method. Or changed the private key to sign them.
  * @throws AuthError, GENERAL_ERROR
  */
-export async function revokeAllSessionsForUser(userId: string) {
+export async function revokeAllSessionsForUser(userId: string | number) {
     let connection = await getConnection();
     try {
         let sessionHandleList = await getAllSessionHandlesForUserDB(connection, userId);
@@ -392,7 +392,7 @@ export async function revokeAllSessionsForUser(userId: string) {
  * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
  * @throws AuthError, GENERAL_ERROR
  */
-export async function getAllSessionHandlesForUser(userId: string): Promise<string[]> {
+export async function getAllSessionHandlesForUser(userId: string | number): Promise<string[]> {
     let connection = await getConnection();
     try {
         return await getAllSessionHandlesForUserDB(connection, userId);

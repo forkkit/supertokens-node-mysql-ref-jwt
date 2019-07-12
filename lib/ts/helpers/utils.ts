@@ -219,13 +219,9 @@ export function generateSessionHandle() {
     return generateUUID();
 }
 
-export function assertUserIdHasCorrectType(userId: string) {
-    if (userId === undefined || typeof userId === "object" || typeof userId === "boolean") {
-        // checking for type object will also take care for null and array
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error("UserId should not be an object, array, null, boolean or undefined")
-        );
+export function assertUserIdHasCorrectType(userId: any) {
+    if (typeof userId !== "string" && typeof userId !== "number") {
+        throw generateError(AuthError.GENERAL_ERROR, new Error("UserId must be a string or a number"));
     }
 }
 
@@ -255,7 +251,7 @@ export function stringifyUserId(userId: any): string {
     return JSON.stringify({ i: userId });
 }
 
-export function parseUserIdToCorrectFormat(userId: string): any {
+export function parseUserIdToCorrectFormat(userId: string): string | number {
     try {
         let id = JSON.parse(userId);
         if (typeof id !== "object") {

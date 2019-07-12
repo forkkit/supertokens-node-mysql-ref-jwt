@@ -44,7 +44,7 @@ export async function getInfoFromAccessToken(
     retry: boolean = true
 ): Promise<{
     sessionHandle: string;
-    userId: any;
+    userId: string | number;
     refreshTokenHash1: string;
     expiryTime: number;
     parentRefreshTokenHash1: string | undefined;
@@ -65,7 +65,10 @@ export async function getInfoFromAccessToken(
             }
         }
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
-        let userId = payload.userId;
+        let userId =
+            sanitizeNumberInput(payload.userId) === undefined
+                ? sanitizeStringInput(payload.userId)
+                : sanitizeNumberInput(payload.userId);
         let refreshTokenHash1 = sanitizeStringInput(payload.rt);
         let expiryTime = sanitizeNumberInput(payload.expiryTime);
         let parentRefreshTokenHash1 = sanitizeStringInput(payload.prt);
@@ -104,7 +107,7 @@ export async function getInfoFromAccessToken(
  */
 export async function createNewAccessToken(
     sessionHandle: string,
-    userId: any,
+    userId: string | number,
     refreshTokenHash1: string,
     antiCsrfToken: string | undefined,
     parentRefreshTokenHash1: string | undefined,

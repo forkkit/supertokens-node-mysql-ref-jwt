@@ -9,10 +9,10 @@ export declare function init(config: TypeInputConfig): Promise<void>;
  * @description call this to "login" a user.
  * @throws GENERAL_ERROR in case anything fails.
  */
-export declare function createNewSession(userId: any, jwtPayload?: any, sessionData?: any): Promise<{
+export declare function createNewSession(userId: string | number, jwtPayload?: any, sessionData?: any): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     accessToken: {
@@ -36,7 +36,7 @@ export declare function createNewSession(userId: any, jwtPayload?: any, sessionD
 export declare function getSession(accessToken: string, antiCsrfToken: string | null): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     newAccessToken: {
@@ -52,7 +52,7 @@ export declare function getSession(accessToken: string, antiCsrfToken: string | 
 export declare function refreshSession(refreshToken: string): Promise<{
     session: {
         handle: string;
-        userId: string;
+        userId: string | number;
         jwtPayload: any;
     };
     newAccessToken: {
@@ -74,12 +74,12 @@ export declare function refreshSession(refreshToken: string): Promise<{
  * Access tokens cannot be immediately invalidated. Unless we add a bloacklisting method. Or changed the private key to sign them.
  * @throws AuthError, GENERAL_ERROR
  */
-export declare function revokeAllSessionsForUser(userId: string): Promise<void>;
+export declare function revokeAllSessionsForUser(userId: string | number): Promise<void>;
 /**
  * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
  * @throws AuthError, GENERAL_ERROR
  */
-export declare function getAllSessionHandlesForUser(userId: string): Promise<string[]>;
+export declare function getAllSessionHandlesForUser(userId: string | number): Promise<string[]>;
 /**
  * @description call to destroy one session
  * @returns true if session was deleted from db. Else false in case there was nothing to delete

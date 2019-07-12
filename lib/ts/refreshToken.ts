@@ -2,7 +2,15 @@ import Config from "./config";
 import { AuthError, generateError } from "./error";
 import { getKeyValueFromKeyName_Transaction, insertKeyValueForKeyName_Transaction } from "./helpers/dbQueries";
 import { getConnection } from "./helpers/mysql";
-import { decrypt, encrypt, generateNewSigningKey, generateUUID, hash, sanitizeStringInput } from "./helpers/utils";
+import {
+    decrypt,
+    encrypt,
+    generateNewSigningKey,
+    generateUUID,
+    hash,
+    sanitizeNumberInput,
+    sanitizeStringInput
+} from "./helpers/utils";
 
 /**
  * @description: called during library init. Should be called after initing Config and MySQL.
@@ -40,7 +48,7 @@ export async function getInfoFromRefreshToken(
     token: string
 ): Promise<{
     sessionHandle: string;
-    userId: any;
+    userId: string | number;
     parentRefreshTokenHash1: string | undefined;
 }> {
     let key = await Key.getKey();
@@ -52,7 +60,10 @@ export async function getInfoFromRefreshToken(
         let nonce = splittedToken[1];
         let payload = JSON.parse(await decrypt(splittedToken[0], key));
         let sessionHandle = sanitizeStringInput(payload.sessionHandle);
-        let userId = payload.userId;
+        let userId =
+            sanitizeNumberInput(payload.userId) === undefined
+                ? sanitizeStringInput(payload.userId)
+                : sanitizeNumberInput(payload.userId);
         let prt = sanitizeStringInput(payload.prt);
         let nonceFromEnc = sanitizeStringInput(payload.nonce);
         if (sessionHandle === undefined || userId === undefined || nonceFromEnc !== nonce) {
@@ -76,7 +87,7 @@ export async function getInfoFromRefreshToken(
  */
 export async function createNewRefreshToken(
     sessionHandle: string,
-    userId: any,
+    userId: string | number,
     parentRefreshTokenHash1: string | undefined
 ): Promise<{ token: string; expiry: number }> {
     // token = key1({funcArgs + nonce}).nonce where key1(a) = a encrypted using key1

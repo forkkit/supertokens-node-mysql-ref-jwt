@@ -28,17 +28,17 @@ export declare function getSessionData(connection: Connection, sessionHandle: st
     data: any;
 }>;
 export declare function deleteSession(connection: Connection, sessionHandle: string): Promise<number>;
-export declare function createNewSession(connection: Connection, sessionHandle: string, userId: any, refreshTokenHash2: string, sessionData: any, expiresAt: number, jwtPayload: any): Promise<void>;
+export declare function createNewSession(connection: Connection, sessionHandle: string, userId: string | number, refreshTokenHash2: string, sessionData: any, expiresAt: number, jwtPayload: any): Promise<void>;
 export declare function isSessionBlacklisted(connection: Connection, sessionHandle: string): Promise<boolean>;
 export declare function getSessionInfo_Transaction(connection: Connection, sessionHandle: string): Promise<{
-    userId: any;
+    userId: string | number;
     refreshTokenHash2: string;
     sessionData: any;
     expiresAt: number;
     jwtPayload: any;
 } | undefined>;
 export declare function updateSessionInfo_Transaction(connection: Connection, sessionHandle: string, refreshTokenHash2: string, sessionData: any, expiresAt: number): Promise<number>;
-export declare function getAllSessionHandlesForUser(connection: Connection, userId: any): Promise<string[]>;
+export declare function getAllSessionHandlesForUser(connection: Connection, userId: string | number): Promise<string[]>;
 export declare function deleteAllExpiredSessions(connection: Connection): Promise<void>;
 export declare function resetTables(connection: Connection): Promise<void>;
 export declare function getNumberOfRowsInRefreshTokensTable(): Promise<number>;

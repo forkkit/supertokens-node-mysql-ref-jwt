@@ -17,7 +17,7 @@ export declare function getKeyForTesting(): Promise<string>;
  */
 export declare function getInfoFromAccessToken(token: string, retry?: boolean): Promise<{
     sessionHandle: string;
-    userId: any;
+    userId: string | number;
     refreshTokenHash1: string;
     expiryTime: number;
     parentRefreshTokenHash1: string | undefined;
@@ -28,7 +28,7 @@ export declare function getInfoFromAccessToken(token: string, retry?: boolean): 
  * @description given token payload, it creates a new token that is signed by a key stored in the DB.
  * @throws AuthError GENERAL_ERROR
  */
-export declare function createNewAccessToken(sessionHandle: string, userId: any, refreshTokenHash1: string, antiCsrfToken: string | undefined, parentRefreshTokenHash1: string | undefined, userPayload: any): Promise<{
+export declare function createNewAccessToken(sessionHandle: string, userId: string | number, refreshTokenHash1: string, antiCsrfToken: string | undefined, parentRefreshTokenHash1: string | undefined, userPayload: any): Promise<{
     token: string;
     expiry: number;
 }>;

@@ -1,7 +1,7 @@
 import Config from "../config";
 import { AuthError, generateError } from "../error";
 import { Connection, getConnection } from "./mysql";
-import { stringifyUserId, parseUserIdToCorrectFormat } from "./utils";
+import { parseUserIdToCorrectFormat, stringifyUserId } from "./utils";
 
 /**
  * @description contains all the mysql queries.
@@ -121,7 +121,7 @@ export async function deleteSession(connection: Connection, sessionHandle: strin
 export async function createNewSession(
     connection: Connection,
     sessionHandle: string,
-    userId: any,
+    userId: string | number,
     refreshTokenHash2: string,
     sessionData: any,
     expiresAt: number,
@@ -154,7 +154,7 @@ export async function getSessionInfo_Transaction(
     sessionHandle: string
 ): Promise<
     | {
-          userId: any;
+          userId: string | number;
           refreshTokenHash2: string;
           sessionData: any;
           expiresAt: number;
@@ -201,7 +201,7 @@ export async function updateSessionInfo_Transaction(
     return result.affectedRows;
 }
 
-export async function getAllSessionHandlesForUser(connection: Connection, userId: any): Promise<string[]> {
+export async function getAllSessionHandlesForUser(connection: Connection, userId: string | number): Promise<string[]> {
     userId = stringifyUserId(userId);
     const config = Config.get();
     let query = `SELECT session_handle FROM ${config.mysql.tables.refreshTokens} WHERE user_id = ?`;

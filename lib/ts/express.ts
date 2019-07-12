@@ -37,7 +37,7 @@ export async function init(config: TypeInputConfig) {
  */
 export async function createNewSession(
     res: express.Response,
-    userId: any,
+    userId: string | number,
     jwtPayload?: any,
     sessionData?: any
 ): Promise<Session> {
@@ -141,7 +141,7 @@ export async function refreshSession(req: express.Request, res: express.Response
  * Access tokens cannot be immediately invalidated, unless we enable a blacklisting. Or changed the private key to sign them.
  * @throws AuthError, GENERAL_ERROR
  */
-export async function revokeAllSessionsForUser(userId: any) {
+export async function revokeAllSessionsForUser(userId: string | number) {
     return SessionFunctions.revokeAllSessionsForUser(userId);
 }
 
@@ -149,7 +149,7 @@ export async function revokeAllSessionsForUser(userId: any) {
  * @description gets all session handles for current user. Please do not call this unless this user is authenticated.
  * @throws AuthError, GENERAL_ERROR
  */
-export async function getAllSessionHandlesForUser(userId: string): Promise<string[]> {
+export async function getAllSessionHandlesForUser(userId: string | number): Promise<string[]> {
     return SessionFunctions.getAllSessionHandlesForUser(userId);
 }
 
@@ -185,11 +185,11 @@ export async function updateSessionData(sessionHandle: string, newSessionData: a
  */
 export class Session {
     private sessionHandle: string;
-    private userId: any;
+    private userId: string | number;
     private jwtUserPayload: any;
     private res: express.Response;
 
-    constructor(sessionHandle: string, userId: any, jwtUserPayload: any, res: express.Response) {
+    constructor(sessionHandle: string, userId: string | number, jwtUserPayload: any, res: express.Response) {
         this.sessionHandle = sessionHandle;
         this.userId = userId;
         this.jwtUserPayload = jwtUserPayload;
