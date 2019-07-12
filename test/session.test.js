@@ -32,7 +32,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
     });
 
-    it("testing non-string userId (number as string)", async function() {
+    it("testing number as string userId", async function() {
         await reset(config.minConfigTest);
         const userId = "1";
         const jwtPayload = { a: "testing" };
@@ -57,7 +57,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
     });
 
-    it("testing non-string userId (stringified JSON)", async function() {
+    it("testing stringified JSON userId", async function() {
         await reset(config.minConfigTest);
         const userId = JSON.stringify({ a: "testing" });
         const jwtPayload = { a: "testing" };
@@ -82,7 +82,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
     });
 
-    it("testing non-string userId (invalid stringified JSON)", async function() {
+    it("testing invalid stringified JSON userId", async function() {
         await reset(config.minConfigTest);
         const userId = JSON.stringify({ i: "testing" });
         const jwtPayload = { a: "testing" };
