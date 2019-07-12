@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.1] - 2019-07-12
+### Changes
+- CSRF protection can be disabled (by default it will be enabled)
+- userId can be either string or number
+
 ## [4.0.0] - 2019-07-09
 ### Breaking Changes
 - Implements CSRF protection
