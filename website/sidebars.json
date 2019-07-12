@@ -49,8 +49,8 @@
                 "ids": [
                     "frontend/website/installation",
                     "frontend/website/initialisation",
-                    "frontend/website/initialisation-axios",
                     "frontend/website/sending-requests",
+                    "frontend/website/initialisation-axios",
                     "frontend/website/sending-requests-axios",
                     "frontend/website/manually-refresh",
                     "frontend/website/non-spa",

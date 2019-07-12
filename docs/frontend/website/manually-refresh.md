@@ -18,7 +18,7 @@ SuperTokensRequest.attemptRefreshingSession();
 
 ## Example code
 ```js
-import * as SuperTokensRequest from 'supertokens-website';
+import SuperTokensRequest from 'supertokens-website';
 
 SuperTokensRequest.attemptRefreshingSession().then(success => {
     if (success) {

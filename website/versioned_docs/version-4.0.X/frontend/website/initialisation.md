@@ -10,7 +10,7 @@ original_id: initialisation
 import SuperTokensRequest from 'supertokens-website';
 ```
 
-## Call the ```init``` function: [API Reference](api-reference#initrefreshtokenurl-sessionexpiredstatuscode)
+## Call the ```init``` function: [API Reference](api-reference#supertokensfetchinitrefreshtokenurl-sessionexpiredstatuscode-viainterceptor)
 ```js
 SuperTokensRequest.init("https://api.example.com/api/refreshsession", 440, true);
 ```
@@ -22,7 +22,7 @@ SuperTokensRequest.init("https://api.example.com/api/refreshsession", 440, true)
 
 ## Example code
 ```js
-import * as SuperTokensRequest from 'supertokens-website';
+import SuperTokensRequest from 'supertokens-website';
 import React from "react";
 
 class RootComponent extends React.Component {

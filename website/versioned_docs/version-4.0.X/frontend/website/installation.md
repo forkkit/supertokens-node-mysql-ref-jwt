@@ -7,10 +7,10 @@ original_id: installation
 
 ## Install SuperTokens website package
 ```js
-npm i --save supertokens-website@^3.0.1
+npm i --save supertokens-website@^3.0.2
 ```
 
-This library provides a wrapper around the <code>fetch</code> API.
+This library provides a wrapper around ```fetch``` or ```axios```.
 
 <div class="specialNote">
 If you are not using a single page application website framework, or using server side rendering, please be sure to see the "For non-SPA websites" section.
