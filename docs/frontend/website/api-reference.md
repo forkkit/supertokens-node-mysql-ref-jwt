@@ -4,7 +4,7 @@ title: API Reference
 sidebar_label: API Reference
 ---
 
-## ```init(refreshTokenUrl, sessionExpiredStatusCode?)```
+## ```init(refreshTokenUrl, sessionExpiredStatusCode?, viaInterceptor?)```
 ##### Parameters
 - ```refreshTokenUrl```
     - Type: ```string```
@@ -12,6 +12,9 @@ sidebar_label: API Reference
 - ```sessionExpiredStatusCode``` (Optional)
     - Type: ```number```
     - HTTP status code that indicates session expiry - as sent by your APIs. By default the value is ```440```.
+- ```viaInterceptor``` (Optional)
+    - Type: ```boolean```
+    - If ```true```, all network calls made using ```fetch``` are intercepted by SuperTokens. The package will append ```anti-CSRF tokens``` to the header and handle calling the refresh token endpoint in the case of access token expiry. ```false``` by default.
 ##### Returns
 - nothing
 ##### Throws
@@ -19,37 +22,7 @@ sidebar_label: API Reference
 
 <div class="divider"></div>
 
-## ```get(url, config?)```
-##### Parameters
-- ```url```
-    - Type: ```string``` - same as what the ```fetch``` expects.
-    - URL to send a ```GET``` request to.
-- ```config``` (Optional) - same as what the ```fetch``` expects.
-    - Type: ```object```
-##### Returns
-- Identical to the ```fetch``` API.
-##### Throws
-- Identical to the ```fetch``` API.
-- An ```Error``` object if the ```init``` function is not called.
-
-<div class="divider"></div>
-
-## ```post(url, config?)```
-##### Parameters
-- ```url```
-    - Type: ```string``` - same as what the ```fetch``` expects.
-    - URL to send a ```POST``` request to.
-- ```config``` (Optional) - same as what the ```fetch``` expects.
-    - Type: ```object```
-##### Returns
-- Identical to the ```fetch``` API.
-##### Throws
-- Identical to the ```fetch``` API.
-- An ```Error``` object if the ```init``` function is not called.
-
-<div class="divider"></div>
-
-## ```put(url, config?)```
+## ```fetch(url, config?)```
 ##### Parameters
 - ```url```
     - Type: ```string``` - same as what the ```fetch``` expects.
@@ -62,35 +35,23 @@ sidebar_label: API Reference
 - Identical to the ```fetch``` API.
 - An ```Error``` object if the ```init``` function is not called.
 
+## ```get(url, config?)```
+#### Deprecated: Use fetch instead
+
+<div class="divider"></div>
+
+## ```post(url, config?)```
+#### Deprecated: Use fetch instead
+
+<div class="divider"></div>
+
+## ```put(url, config?)```
+#### Deprecated: Use fetch instead
+
 <div class="divider"></div>
 
 ## ```delete(url, config?)```
-##### Parameters
-- ```url```
-    - Type: ```string``` - same as what the ```fetch``` expects.
-    - URL to send a ```DELETE``` request to.
-- ```config``` (Optional) - same as what the ```fetch``` expects.
-    - Type: ```object```
-##### Returns
-- Identical to the ```fetch``` API.
-##### Throws
-- Identical to the ```fetch``` API.
-- An ```Error``` object if the ```init``` function is not called.
-
-<div class="divider"></div>
-
-## ```doRequest(httpCall, config?)```
-##### Parameters
-- ```httpCall```
-    - Type: ```(config?: RequestInit) => Promise<Response>```
-    - ```Response``` refers to ```fetch``` response.
-- ```config``` (Optional) - same as what the ```fetch``` expects.
-    - Type: ```object```
-##### Returns
-- Identical to the ```fetch``` API.
-##### Throws
-- Identical to the ```fetch``` API.
-- An ```Error``` object if the ```init``` function is not called.
+#### Deprecated: Use fetch instead
 
 <div class="divider"></div>
 

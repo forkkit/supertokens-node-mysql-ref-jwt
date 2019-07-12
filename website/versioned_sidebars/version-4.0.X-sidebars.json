@@ -49,7 +49,9 @@
         "ids": [
           "version-4.0.X-frontend/website/installation",
           "version-4.0.X-frontend/website/initialisation",
+          "version-4.0.X-frontend/website/initialisation-axios",
           "version-4.0.X-frontend/website/sending-requests",
+          "version-4.0.X-frontend/website/sending-requests-axios",
           "version-4.0.X-frontend/website/manually-refresh",
           "version-4.0.X-frontend/website/non-spa",
           "version-4.0.X-frontend/website/graphql-usage",

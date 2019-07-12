@@ -31,12 +31,9 @@ We highly recommend that you create a wrapper around the provided APIs. This wil
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
-let app = express();
 let config = {...};
 SuperTokens.init(config).then(() => {
-    app.use(...);
-    let server = http.createServer(app);
-    server.listen(8080, "0.0.0.0");
+    // setup your API routes
 }).catch((err: any) => {
     console.log("Oops!! Something went wrong :(", err);
 });

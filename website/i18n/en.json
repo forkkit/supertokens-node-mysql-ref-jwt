@@ -121,9 +121,13 @@
         "title": "Usage with GraphQL",
         "sidebar_label": "Usage with GraphQL"
       },
+      "frontend/website/initialisation-axios": {
+        "title": "Initialisation & Imports Using Axios",
+        "sidebar_label": "Init & Imports Using Axios"
+      },
       "frontend/website/initialisation": {
-        "title": "Initialisation & Imports",
-        "sidebar_label": "Init & Imports"
+        "title": "Initialisation & Imports Using Fetch",
+        "sidebar_label": "Init & Imports Using Fetch"
       },
       "frontend/website/installation": {
         "title": "Installation",
@@ -137,9 +141,13 @@
         "title": "For non-SPA websites",
         "sidebar_label": "For non-SPA websites"
       },
+      "frontend/website/sending-requests-axios": {
+        "title": "Sending Requests with Axios",
+        "sidebar_label": "Sending Requests with Axios"
+      },
       "frontend/website/sending-requests": {
-        "title": "Sending Requests",
-        "sidebar_label": "Sending Requests"
+        "title": "Sending Requests with Fetch",
+        "sidebar_label": "Sending Requests with Fetch"
       },
       "frontend/why": {
         "title": "Why is this needed",
@@ -297,9 +305,13 @@
         "title": "Usage with GraphQL",
         "sidebar_label": "Usage with GraphQL"
       },
+      "version-4.0.X/frontend/website/version-4.0.X-initialisation-axios": {
+        "title": "Initialisation & Imports Using Axios",
+        "sidebar_label": "Init & Imports Using Axios"
+      },
       "version-4.0.X/frontend/website/version-4.0.X-initialisation": {
-        "title": "Initialisation & Imports",
-        "sidebar_label": "Init & Imports"
+        "title": "Initialisation & Imports Using Fetch",
+        "sidebar_label": "Init & Imports Using Fetch"
       },
       "version-4.0.X/frontend/website/version-4.0.X-installation": {
         "title": "Installation",
@@ -313,9 +325,13 @@
         "title": "For non-SPA websites",
         "sidebar_label": "For non-SPA websites"
       },
+      "version-4.0.X/frontend/website/version-4.0.X-sending-requests-axios": {
+        "title": "Sending Requests with Axios",
+        "sidebar_label": "Sending Requests with Axios"
+      },
       "version-4.0.X/frontend/website/version-4.0.X-sending-requests": {
-        "title": "Sending Requests",
-        "sidebar_label": "Sending Requests"
+        "title": "Sending Requests with Fetch",
+        "sidebar_label": "Sending Requests with Fetch"
       },
       "version-4.0.X/frontend/version-4.0.X-why": {
         "title": "Why is this needed",

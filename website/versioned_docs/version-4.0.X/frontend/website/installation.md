@@ -7,7 +7,7 @@ original_id: installation
 
 ## Install SuperTokens website package
 ```js
-npm i --save supertokens-website@^3.0.0
+npm i --save supertokens-website@^3.0.1
 ```
 
 This library provides a wrapper around the <code>fetch</code> API.
