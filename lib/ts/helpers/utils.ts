@@ -4,12 +4,12 @@ import * as validator from "validator";
 
 import { reset as accessTokenReset } from "../accessToken";
 import Config from "../config";
+import { AuthError, generateError } from "../error";
 import { reset as refreshTokenReset } from "../refreshToken";
 import { init } from "../session";
 import { resetTables } from "./dbQueries";
 import { getConnection, Mysql } from "./mysql";
 import { TypeInputConfig } from "./types";
-import { AuthError, generateError } from "../error";
 
 /**
  * number of iterations is 32 here. To make this "more random", increase this value. But know that doing so will increase the amount of time it takes to generate a key.
@@ -219,19 +219,20 @@ export function generateSessionHandle() {
     return generateUUID();
 }
 
-export function checkUserIdNotNullOrUndefined(userId: string) {
-    if (userId === undefined || typeof userId === "object") {
+export function assertUserIdHasCorrectType(userId: string) {
+    if (userId === undefined || typeof userId === "object" || typeof userId === "boolean") {
         // checking for type object will also take care for null and array
         throw generateError(
             AuthError.GENERAL_ERROR,
-            new Error("UserId should not be an object, array, null or undefined")
+            new Error("UserId should not be an object, array, null, boolean or undefined")
         );
     }
 }
 
 export function stringifyUserId(userId: any): string {
-    checkUserIdNotNullOrUndefined(userId);
+    assertUserIdHasCorrectType(userId);
     if (typeof userId === "string") {
+        // we check that the string is not JSONified {i: ...};
         let nonParsingError = false;
         try {
             let jsonFromUserId = JSON.parse(userId);

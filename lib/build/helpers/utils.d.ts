@@ -46,6 +46,6 @@ export declare function reset(newConfig?: TypeInputConfig): Promise<void>;
  */
 export declare function delay(timeInMilliseconds: number): Promise<unknown>;
 export declare function generateSessionHandle(): string;
-export declare function checkUserIdNotNullOrUndefined(userId: string): void;
+export declare function assertUserIdHasCorrectType(userId: string): void;
 export declare function stringifyUserId(userId: any): string;
 export declare function parseUserIdToCorrectFormat(userId: string): any;

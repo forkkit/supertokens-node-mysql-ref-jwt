@@ -85,7 +85,7 @@ export function getAntiCsrfTokenFromHeaders(req: express.Request): string | unde
     return getHeader(req, antiCsrfHeaderKey);
 }
 
-export function setAntiCsrfTokenInHeaders(res: express.Response, antiCsrfToken: string | undefined) {
+export function setAntiCsrfTokenInHeadersIfRequired(res: express.Response, antiCsrfToken: string | undefined) {
     let config = Config.get();
     if (config.tokens.enableAntiCsrf) {
         if (antiCsrfToken === undefined) {

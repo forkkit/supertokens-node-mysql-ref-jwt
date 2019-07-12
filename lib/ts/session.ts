@@ -14,7 +14,7 @@ import {
 } from "./helpers/dbQueries";
 import { getConnection, Mysql } from "./helpers/mysql";
 import { TypeInputConfig } from "./helpers/types";
-import { generateSessionHandle, generateUUID, hash } from "./helpers/utils";
+import { assertUserIdHasCorrectType, generateSessionHandle, generateUUID, hash } from "./helpers/utils";
 import { createNewRefreshToken, getInfoFromRefreshToken, init as refreshTokenInit } from "./refreshToken";
 
 /**
@@ -52,6 +52,7 @@ export async function createNewSession(
     idRefreshToken: { value: string; expires: number };
     antiCsrfToken: string | undefined;
 }> {
+    assertUserIdHasCorrectType(userId);
     let sessionHandle = generateSessionHandle();
 
     // generate tokens:

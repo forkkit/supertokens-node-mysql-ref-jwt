@@ -10,7 +10,7 @@ import {
     getAntiCsrfTokenFromHeaders,
     getIdRefreshTokenFromCookie,
     getRefreshTokenFromCookie,
-    setAntiCsrfTokenInHeaders
+    setAntiCsrfTokenInHeadersIfRequired
 } from "./cookieAndHeaders";
 import { AuthError, generateError } from "./error";
 import { TypeInputConfig } from "./helpers/types";
@@ -47,7 +47,7 @@ export async function createNewSession(
     attachAccessTokenToCookie(res, response.accessToken.value, response.accessToken.expires);
     attachRefreshTokenToCookie(res, response.refreshToken.value, response.refreshToken.expires);
     attachIdRefreshTokenToCookie(res, response.idRefreshToken.value, response.idRefreshToken.expires);
-    setAntiCsrfTokenInHeaders(res, response.antiCsrfToken);
+    setAntiCsrfTokenInHeadersIfRequired(res, response.antiCsrfToken);
 
     return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
 }
@@ -122,7 +122,7 @@ export async function refreshSession(req: express.Request, res: express.Response
         attachAccessTokenToCookie(res, response.newAccessToken.value, response.newAccessToken.expires);
         attachRefreshTokenToCookie(res, response.newRefreshToken.value, response.newRefreshToken.expires);
         attachIdRefreshTokenToCookie(res, response.newIdRefreshToken.value, response.newIdRefreshToken.expires);
-        setAntiCsrfTokenInHeaders(res, response.newAntiCsrfToken);
+        setAntiCsrfTokenInHeadersIfRequired(res, response.newAntiCsrfToken);
 
         return new Session(response.session.handle, response.session.userId, response.session.jwtPayload, res);
     } catch (err) {
