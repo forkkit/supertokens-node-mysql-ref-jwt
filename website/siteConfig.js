@@ -29,7 +29,7 @@ const siteConfig = {
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
-
+  ogImage: "img/ogImage.png",
   // Used for publishing and more
   projectName: 'supertokens-node-mysql-ref-jwt',
   organizationName: 'supertokens',

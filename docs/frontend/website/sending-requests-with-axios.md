@@ -15,12 +15,12 @@ If you call the ```makeSuper``` function using your instance of axios ([See init
 ```js
 import SuperTokensRequest from 'supertokens-website/axios';
 import axios from "axios";
+SuperTokensRequest.makeSuper(axios);
 
 const SESSION_EXPIRED_STATUS_CODE = 440;
 
 async function doAPICalls() {
     SuperTokensRequest.init("refreshTokenUrl", SESSION_EXPIRED_STATUS_CODE);
-    SuperTokensRequest.makeSuper(axios);
     try {
         let postData = { ... };
         let response = await axios({url: "someAPI", method: "post", postData });
