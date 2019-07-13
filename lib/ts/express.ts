@@ -186,7 +186,7 @@ export async function updateSessionData(sessionHandle: string, newSessionData: a
 /**
  * @description Sets relevant Access-Control-Allow-Headers and Access-Control-Allow-Credentials headers
  */
-export async function setRelevantHeadersForOptionAPI(res: express.Response) {
+export async function setRelevantHeadersForOptionsAPI(res: express.Response) {
     setOptionsAPIHeader(res);
 }
 
