@@ -95,6 +95,7 @@ export function setAntiCsrfTokenInHeadersIfRequired(res: express.Response, antiC
             );
         }
         setHeader(res, antiCsrfHeaderKey, antiCsrfToken);
+        setHeader(res, "Access-Control-Expose-Headers", antiCsrfHeaderKey);
     }
 }
 
