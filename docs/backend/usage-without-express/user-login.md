@@ -9,17 +9,12 @@ sidebar_label: User login
 SuperTokens.createNewSession(userId, jwtPayload, sessionData);
 ```
 - Call this function after you have authenticated a user. Authentication can be done via any means: password, social logins, 2FA  etc.
-- ```userId``` must be of type ```string```. If you want to use another datatype, then you have to create convertors for them from that datatype to a string. For example to use with ```number```:
-  ```js
-  let userId = 1; // is a number
-  let session = await SuperTokens.createNewSession(userId + "", jwtPayload, sessionData); // we convert 1 to a string
-  let userFromSession = Number(session.getUserId());
-  ```
+- ```userId``` must be of type ```string``` or ```number```.
 - This function does the following operations:
     - Creates a new access and a new refresh token for this session.
     - Inserts a new row in the MySQL table for this new session.
 - This function will return the following tokens:
-    - ```antiCsrfToken```
+    - ```antiCsrfToken``` <span class="highlighted-text" style="font-size: 0.8em">(If ```enableAntiCsrf``` in the ```config``` object is set to ```true```)</span>
         - Set this in the header with the key ```anti-csrf```.
         - Our frontend SDK will store this in the localstorage (if you are using a webapp). This will then be automatically sent on each subsequent request for CSRF protection.
     - ```accessToken```

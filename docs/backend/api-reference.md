@@ -24,7 +24,7 @@ sidebar_label: API Reference
 - ```res```
     - Type: ```Express.Response```
 - ```userId```
-    - Type: ```string```
+    - Type: ```string | number```
     - Should be used to ID a user in your system.
 - ```jwtPayload``` (Optional)
     - Type: ```object | array | number | string | boolean | undefined | null``` 
@@ -53,6 +53,7 @@ sidebar_label: API Reference
     - Type: ```Express.Response```
 - ```enableCsrfProtection```
     - Type: ```boolean```
+    - If ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```, this value will be considered as ```false``` even if value ```true``` is passed
 ##### Returns
 - ```Promise<Session>``` on successful verification of a session
 ##### Throws
@@ -66,7 +67,7 @@ sidebar_label: API Reference
 - ```TRY_REFRESH_TOKEN```
     - Type: ```{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}```
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
-    - This will be thrown if ```enableCsrfProtection``` is ```true``` and ```anti-csrf``` token validation fails.
+    - This will be thrown if ```enableCsrfProtection``` is ```true```, ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```anti-csrf``` token validation fails.
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
 
 <div class="divider"></div>
@@ -77,7 +78,7 @@ sidebar_label: API Reference
 ##### Parameters
 - none
 ##### Returns
-- ```string``` - unique ID passed to the library when creating this session.
+- ```string | number``` - unique ID passed to the library when creating this session.
 ##### Throws
 - nothing
 
@@ -167,7 +168,7 @@ sidebar_label: API Reference
 - ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
             sessionHandle: string,
-            userId: string
+            userId: string | number
         }}```
     - This is thrown if token theft is detected.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
@@ -232,7 +233,7 @@ sidebar_label: API Reference
 ## ```revokeAllSessionsForUser(userId)```
 ##### Parameters
 - ```userId```
-    - Type: ```string```
+    - Type: ```string | number```
 ##### Returns
 - ```Promise<void>```
 ##### Throws
@@ -245,7 +246,7 @@ sidebar_label: API Reference
 ## ```createNewSession(userId, jwtPayload?, sessionData?)```
 ##### Parameters
 - ```userId```
-    - Type: ```string```
+    - Type: ```string | number```
     - Should be used to ID a user in your system.
 - ```jwtPayload``` (Optional)
     - Type: ```object | array | number | string | boolean | undefined | null``` 
@@ -260,7 +261,7 @@ sidebar_label: API Reference
 Promise<{
     session: {
         handle: string,
-        userId: string,
+        userId: string | number,
         jwtPayload: any
     },
     accessToken: { value: string, expires: number },
@@ -283,12 +284,13 @@ Promise<{
 - ```antiCsrfToken```
     - Type: ```string | null```
     - Pass ```null``` if you do not want to have CSRF protection for this auth call.
+    - If ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```, this value will be considered as ```null``` even if a ```string``` value is passed
 ##### Returns
 ```js
 Promise<{
     session: {
         handle: string,
-        userId: string,
+        userId: string | number,
         jwtPayload: any
     };
     newAccessToken: { value: string, expires: number } | undefined;
@@ -305,7 +307,7 @@ Promise<{
 - ```TRY_REFRESH_TOKEN```
     - Type: ```{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}```
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
-    - This will be thrown if ```antiCsrfToken``` validation fails.
+    - This will be thrown if ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```antiCsrfToken``` validation fails.
     - When this is thrown, you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. <span class="highlighted-text">Do not remove any auth cookie here</span> Our frontend SDK takes care of this for you in most cases.
 
 <div class="divider"></div>
@@ -319,13 +321,13 @@ Promise<{
 Promise<{
     session: {
         handle: string,
-        userId: string,
+        userId: string | number,
         jwtPayload: any,
     },
     newAccessToken: { value: string, expires: number },
     newRefreshToken: { value: string, expires: number },
     newIdRefreshToken: { value: string, expires: number },
-    newAntiCsrfToken: string
+    newAntiCsrfToken: string | null
 }>
 ```
 ##### Throws
@@ -339,7 +341,7 @@ Promise<{
 - ```UNAUTHORISED_AND_TOKEN_THEFT_DETECTED```
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: {
             sessionHandle: string,
-            userId: string
+            userId: string | number
         }}```
     - This is thrown if token theft is detected.
     - When this is thrown, please be sure to remove all relevant auth cookies. See the Error Handling section for more information.
@@ -361,7 +363,7 @@ Promise<{
 ## ```getAllSessionHandlesForUser(userId)```
 ##### Parameters
 - ```userId```
-    - Type: ```string```
+    - Type: ```string | number```
 ##### Returns
 - ```Promise<string[]>```
     - Each element in the ```string``` array is a ```sessionHandle```

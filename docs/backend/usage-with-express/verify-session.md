@@ -14,7 +14,7 @@ SuperTokens.getSession(req, res, enableCsrfProtection);
 - This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
 - This function does the following operations:
     - Verifies the current session using the ```req``` object.
-    - If ```enableCsrfProtection``` is ```true```, the function checks for the ```anti-csrf``` header in the ```req``` object and verifies that. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
+    - If ```enableCsrfProtection``` is ```true``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, the function checks for the ```anti-csrf``` header in the ```req``` object and verifies that. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
     - May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.
 
 <div class="divider"></div>
