@@ -110,9 +110,20 @@ export function getHeader(req: express.Request, key: string): string | undefined
     return value;
 }
 
-export function setHeader(res: express.Response, key: string, value: string) {
+export function setOptionsAPIHeader(res: express.Response) {
+    setHeader(res, "Access-Control-Allow-Headers", antiCsrfHeaderKey);
+    setHeader(res, "Access-Control-Allow-Credentials", "true");
+}
+
+function setHeader(res: express.Response, key: string, value: string) {
     try {
-        res.header(key, value);
+        let existingHeaders = res.getHeaders();
+        let existingValue = existingHeaders[key.toLowerCase()];
+        if (existingValue === undefined) {
+            res.header(key, value);
+        } else {
+            res.header(key, existingValue + ", " + value);
+        }
     } catch (err) {
         throw generateError(AuthError.GENERAL_ERROR, err);
     }

@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 /**
  * @description clears all the auth cookies from the response
  */
@@ -21,7 +21,7 @@ export declare function getIdRefreshTokenFromCookie(req: express.Request): strin
 export declare function getAntiCsrfTokenFromHeaders(req: express.Request): string | undefined;
 export declare function setAntiCsrfTokenInHeadersIfRequired(res: express.Response, antiCsrfToken: string | undefined): void;
 export declare function getHeader(req: express.Request, key: string): string | undefined;
-export declare function setHeader(res: express.Response, key: string, value: string): void;
+export declare function setOptionsAPIHeader(res: express.Response): void;
 /**
  * @param res
  * @param key

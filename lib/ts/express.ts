@@ -10,7 +10,8 @@ import {
     getAntiCsrfTokenFromHeaders,
     getIdRefreshTokenFromCookie,
     getRefreshTokenFromCookie,
-    setAntiCsrfTokenInHeadersIfRequired
+    setAntiCsrfTokenInHeadersIfRequired,
+    setOptionsAPIHeader
 } from "./cookieAndHeaders";
 import { AuthError, generateError } from "./error";
 import { TypeInputConfig } from "./helpers/types";
@@ -180,6 +181,13 @@ export async function getSessionData(sessionHandle: string): Promise<any> {
  */
 export async function updateSessionData(sessionHandle: string, newSessionData: any) {
     return SessionFunctions.updateSessionData(sessionHandle, newSessionData);
+}
+
+/**
+ * @description Sets relevant Access-Control-Allow-Headers and Access-Control-Allow-Credentials headers
+ */
+export async function setRelevantHeadersForOptionAPI(res: express.Response) {
+    setOptionsAPIHeader(res);
 }
 
 /**
