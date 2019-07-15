@@ -6,7 +6,7 @@ sidebar_label: Installation
 
 ## Install SuperTokens website package
 ```js
-npm i --save supertokens-website@^3.0.2
+npm i --save supertokens-website@^3.1.0
 ```
 
 This library provides a wrapper around ```fetch``` or ```axios```.
