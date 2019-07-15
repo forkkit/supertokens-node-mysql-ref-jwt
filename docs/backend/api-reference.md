@@ -270,6 +270,7 @@ Promise<{
     antiCsrfToken: string | undefined
 }>
 ```
+- ```antiCsrfToken``` will be ```undefined``` if ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```.
 ##### Throws
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
@@ -330,6 +331,7 @@ Promise<{
     newAntiCsrfToken: string | undefined
 }>
 ```
+- ```newAntiCsrfToken``` will be ```undefined``` if ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```.
 ##### Throws
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```

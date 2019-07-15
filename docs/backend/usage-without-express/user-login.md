@@ -20,17 +20,17 @@ SuperTokens.createNewSession(userId, jwtPayload, sessionData);
     - ```accessToken```
         - Set ```accessToken.value``` in the cookie with the key ```sAccessToken```. 
         - This cookie should have ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` unless you are in development / testing mode.
-        - Set the ```expiry time``` of this cookie: ```expiry: new Date(accessToken.expires)```
+        - Set the expiry time of this cookie: ```expiry: new Date(accessToken.expires)```
         - The ```path``` of this cookie should cover all your APIs that require authentication. For example: ```/```
     - ```refreshToken```
         - Set ```refreshToken.value``` in the cookie with the key ```sRefreshToken```. 
         - This cookie should have ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` unless you are in development / testing mode.
-        - Set the ```expiry time``` of this cookie: ```expiry: new Date(refreshToken.expires)```
+        - Set the expiry time of this cookie: ```expiry: new Date(refreshToken.expires)```
         - <span class="highlighted-text">The ```path``` of this cookie should cover only your refresh session endpoint.</span> For example: ```/refreshsession```
     - ```idRefreshToken```
         - Set ```idRefreshToken.value``` in the cookie with the key ```sIdRefreshToken```. 
         - <span class="highlighted-text">This cookie should have ```HttpOnly``` set to ```false``` and ```secure``` set to ```false``` even in production.</span>
-        - Set the ```expiry time``` of this cookie: ```expiry: new Date(idRefreshToken.expires)```
+        - Set the expiry time of this cookie: ```expiry: new Date(idRefreshToken.expires)```
         - The ```path``` of this cookie should cover all your APIs that require authentication. For example: ```/```. 
 
 <div class="divider"></div>
