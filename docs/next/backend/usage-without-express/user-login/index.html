@@ -67,11 +67,7 @@
 </code></pre>
 <ul>
 <li>Call this function after you have authenticated a user. Authentication can be done via any means: password, social logins, 2FA  etc.</li>
-<li><code>userId</code> must be of type <code>string</code>. If you want to use another datatype, then you have to create convertors for them from that datatype to a string. For example to use with <code>number</code>:
-<pre><code class="hljs css language-js"><span class="hljs-keyword">let</span> userId = <span class="hljs-number">1</span>; <span class="hljs-comment">// is a number</span>
-<span class="hljs-keyword">let</span> session = <span class="hljs-keyword">await</span> SuperTokens.createNewSession(userId + <span class="hljs-string">""</span>, jwtPayload, sessionData); <span class="hljs-comment">// we convert 1 to a string</span>
-<span class="hljs-keyword">let</span> userFromSession = <span class="hljs-built_in">Number</span>(session.getUserId());
-</code></pre></li>
+<li><code>userId</code> must be of type <code>string</code> or <code>number</code>.</li>
 <li>This function does the following operations:
 <ul>
 <li>Creates a new access and a new refresh token for this session.</li>
@@ -79,7 +75,7 @@
 </ul></li>
 <li>This function will return the following tokens:
 <ul>
-<li><code>antiCsrfToken</code>
+<li><code>antiCsrfToken</code> <span class="highlighted-text" style="font-size: 0.8em">(If <code>enableAntiCsrf</code> in the <code>config</code> object is set to <code>true</code>)</span>
 <ul>
 <li>Set this in the header with the key <code>anti-csrf</code>.</li>
 <li>Our frontend SDK will store this in the localstorage (if you are using a webapp). This will then be automatically sent on each subsequent request for CSRF protection.</li>
@@ -88,21 +84,21 @@
 <ul>
 <li>Set <code>accessToken.value</code> in the cookie with the key <code>sAccessToken</code>.</li>
 <li>This cookie should have <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> unless you are in development / testing mode.</li>
-<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(accessToken.expires)</code></li>
+<li>Set the expiry time of this cookie: <code>expiry: new Date(accessToken.expires)</code></li>
 <li>The <code>path</code> of this cookie should cover all your APIs that require authentication. For example: <code>/</code></li>
 </ul></li>
 <li><code>refreshToken</code>
 <ul>
 <li>Set <code>refreshToken.value</code> in the cookie with the key <code>sRefreshToken</code>.</li>
 <li>This cookie should have <code>HttpOnly</code> set to <code>true</code> and <code>secure</code> set to <code>true</code> unless you are in development / testing mode.</li>
-<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(refreshToken.expires)</code></li>
+<li>Set the expiry time of this cookie: <code>expiry: new Date(refreshToken.expires)</code></li>
 <li><span class="highlighted-text">The <code>path</code> of this cookie should cover only your refresh session endpoint.</span> For example: <code>/refreshsession</code></li>
 </ul></li>
 <li><code>idRefreshToken</code>
 <ul>
 <li>Set <code>idRefreshToken.value</code> in the cookie with the key <code>sIdRefreshToken</code>.</li>
 <li><span class="highlighted-text">This cookie should have <code>HttpOnly</code> set to <code>false</code> and <code>secure</code> set to <code>false</code> even in production.</span></li>
-<li>Set the <code>expiry time</code> of this cookie: <code>expiry: new Date(idRefreshToken.expires)</code></li>
+<li>Set the expiry time of this cookie: <code>expiry: new Date(idRefreshToken.expires)</code></li>
 <li>The <code>path</code> of this cookie should cover all your APIs that require authentication. For example: <code>/</code>.</li>
 </ul></li>
 </ul></li>

@@ -96,7 +96,7 @@
 </ul></li>
 <li><code>userId</code>
 <ul>
-<li>Type: <code>string</code></li>
+<li>Type: <code>string | number</code></li>
 <li>Should be used to ID a user in your system.</li>
 </ul></li>
 <li><code>jwtPayload</code> (Optional)
@@ -143,6 +143,7 @@
 <li><code>enableCsrfProtection</code>
 <ul>
 <li>Type: <code>boolean</code></li>
+<li>If <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>false</code>, this value will be considered as <code>false</code> even if value <code>true</code> is passed</li>
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-2"></a><a href="#returns-2" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
@@ -166,7 +167,7 @@
 <ul>
 <li>Type: <code>{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}</code></li>
 <li>This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.</li>
-<li>This will be thrown if <code>enableCsrfProtection</code> is <code>true</code> and <code>anti-csrf</code> token validation fails.</li>
+<li>This will be thrown if <code>enableCsrfProtection</code> is <code>true</code>, <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>true</code> and <code>anti-csrf</code> token validation fails.</li>
 <li>When this is thrown, none of the auth cookies are removed - you should return a <code>session expired</code> status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.</li>
 </ul></li>
 </ul>
@@ -182,7 +183,7 @@
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-3"></a><a href="#returns-3" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
 <ul>
-<li><code>string</code> - unique ID passed to the library when creating this session.</li>
+<li><code>string | number</code> - unique ID passed to the library when creating this session.</li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="throws-3"></a><a href="#throws-3" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
 <ul>
@@ -323,7 +324,7 @@
 </ul></li>
 <li><code>UNAUTHORISED_AND_TOKEN_THEFT_DETECTED</code>
 <ul>
-<li>Type: <code>{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: { sessionHandle: string, userId: string }}</code></li>
+<li>Type: <code>{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: { sessionHandle: string, userId: string | number }}</code></li>
 <li>This is thrown if token theft is detected.</li>
 <li>When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.</li>
 <li>Please see the token theft detection section for more information.</li>
@@ -421,7 +422,7 @@
 <ul>
 <li><code>userId</code>
 <ul>
-<li>Type: <code>string</code></li>
+<li>Type: <code>string | number</code></li>
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-12"></a><a href="#returns-12" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
@@ -442,7 +443,7 @@
 <ul>
 <li><code>userId</code>
 <ul>
-<li>Type: <code>string</code></li>
+<li>Type: <code>string | number</code></li>
 <li>Should be used to ID a user in your system.</li>
 </ul></li>
 <li><code>jwtPayload</code> (Optional)
@@ -459,18 +460,21 @@
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-13"></a><a href="#returns-13" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
-<pre><code class="hljs css language-js"><span class="hljs-built_in">Promise</span>&lt;{
-    <span class="hljs-attr">session</span>: {
-        <span class="hljs-attr">handle</span>: string,
-        <span class="hljs-attr">userId</span>: string,
-        <span class="hljs-attr">jwtPayload</span>: any
+<pre><code class="hljs css language-ts"><span class="hljs-built_in">Promise</span>&lt;{
+    session: {
+        handle: <span class="hljs-built_in">string</span>,
+        userId: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">number</span>,
+        jwtPayload: <span class="hljs-built_in">any</span>
     },
-    <span class="hljs-attr">accessToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">refreshToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">idRefreshToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">antiCsrfToken</span>: string
+    accessToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    refreshToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    idRefreshToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    antiCsrfToken: <span class="hljs-built_in">string</span> | <span class="hljs-literal">undefined</span>
 }&gt;
 </code></pre>
+<ul>
+<li><code>antiCsrfToken</code> will be <code>undefined</code> if <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>false</code>.</li>
+</ul>
 <h5><a class="anchor" aria-hidden="true" id="throws-13"></a><a href="#throws-13" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
 <ul>
 <li><code>GENERAL_ERROR</code>
@@ -491,16 +495,17 @@
 <ul>
 <li>Type: <code>string | null</code></li>
 <li>Pass <code>null</code> if you do not want to have CSRF protection for this auth call.</li>
+<li>If <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>false</code>, this value will be considered as <code>null</code> even if a <code>string</code> value is passed</li>
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-14"></a><a href="#returns-14" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
-<pre><code class="hljs css language-js"><span class="hljs-built_in">Promise</span>&lt;{
-    <span class="hljs-attr">session</span>: {
-        <span class="hljs-attr">handle</span>: string,
-        <span class="hljs-attr">userId</span>: string,
-        <span class="hljs-attr">jwtPayload</span>: any
+<pre><code class="hljs css language-ts"><span class="hljs-built_in">Promise</span>&lt;{
+    session: {
+        handle: <span class="hljs-built_in">string</span>,
+        userId: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">number</span>,
+        jwtPayload: <span class="hljs-built_in">any</span>
     };
-    newAccessToken: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number } | <span class="hljs-literal">undefined</span>;
+    newAccessToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> } | <span class="hljs-literal">undefined</span>;
 }&gt;
 </code></pre>
 <h5><a class="anchor" aria-hidden="true" id="throws-14"></a><a href="#throws-14" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
@@ -520,7 +525,7 @@
 <ul>
 <li>Type: <code>{errType: SuperTokens.Error.TRY_REFRESH_TOKEN, err: any}</code></li>
 <li>This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.</li>
-<li>This will be thrown if <code>antiCsrfToken</code> validation fails.</li>
+<li>This will be thrown if <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>true</code> and <code>antiCsrfToken</code> validation fails.</li>
 <li>When this is thrown, you should return a <code>session expired</code> status code and instruct your frontend to call the refresh token API endpoint. <span class="highlighted-text">Do not remove any auth cookie here</span> Our frontend SDK takes care of this for you in most cases.</li>
 </ul></li>
 </ul>
@@ -534,18 +539,21 @@
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-15"></a><a href="#returns-15" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
-<pre><code class="hljs css language-js"><span class="hljs-built_in">Promise</span>&lt;{
-    <span class="hljs-attr">session</span>: {
-        <span class="hljs-attr">handle</span>: string,
-        <span class="hljs-attr">userId</span>: string,
-        <span class="hljs-attr">jwtPayload</span>: any,
+<pre><code class="hljs css language-ts"><span class="hljs-built_in">Promise</span>&lt;{
+    session: {
+        handle: <span class="hljs-built_in">string</span>,
+        userId: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">number</span>,
+        jwtPayload: <span class="hljs-built_in">any</span>,
     },
-    <span class="hljs-attr">newAccessToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">newRefreshToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">newIdRefreshToken</span>: { <span class="hljs-attr">value</span>: string, <span class="hljs-attr">expires</span>: number },
-    <span class="hljs-attr">newAntiCsrfToken</span>: string
+    newAccessToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    newRefreshToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    newIdRefreshToken: { value: <span class="hljs-built_in">string</span>, expires: <span class="hljs-built_in">number</span> },
+    newAntiCsrfToken: <span class="hljs-built_in">string</span> | <span class="hljs-literal">undefined</span>
 }&gt;
 </code></pre>
+<ul>
+<li><code>newAntiCsrfToken</code> will be <code>undefined</code> if <code>enableAntiCsrf</code> (in the <code>config</code> object) is set to <code>false</code>.</li>
+</ul>
 <h5><a class="anchor" aria-hidden="true" id="throws-15"></a><a href="#throws-15" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Throws</h5>
 <ul>
 <li><code>GENERAL_ERROR</code>
@@ -561,7 +569,7 @@
 </ul></li>
 <li><code>UNAUTHORISED_AND_TOKEN_THEFT_DETECTED</code>
 <ul>
-<li>Type: <code>{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: { sessionHandle: string, userId: string }}</code></li>
+<li>Type: <code>{errType: SuperTokens.Error.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, err: { sessionHandle: string, userId: string | number }}</code></li>
 <li>This is thrown if token theft is detected.</li>
 <li>When this is thrown, please be sure to remove all relevant auth cookies. See the Error Handling section for more information.</li>
 <li>Please see the token theft detection section for more information.</li>
@@ -590,7 +598,7 @@
 <ul>
 <li><code>userId</code>
 <ul>
-<li>Type: <code>string</code></li>
+<li>Type: <code>string | number</code></li>
 </ul></li>
 </ul>
 <h5><a class="anchor" aria-hidden="true" id="returns-17"></a><a href="#returns-17" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Returns</h5>
