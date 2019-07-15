@@ -7,7 +7,7 @@ sidebar_label: Installation
 ### 1. Pre install NodeJS and MySQL
 
 <div class="specialNote">
-For a complete solution, you will also need to use our <a href="../frontend/why">frontend SDK</a> along with our backend SDK.
+For a complete solution, you will also need to use our <a href="../frontend/frontend">frontend SDK</a> along with our backend SDK.
 </div>
 
 ### 2. Create a database in MySQL that will store session related information

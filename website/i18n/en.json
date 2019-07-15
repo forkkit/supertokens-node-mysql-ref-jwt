@@ -97,61 +97,9 @@
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
-      "frontend/android/coming-soon": {
-        "title": "Android",
-        "sidebar_label": "Coming Soon"
-      },
-      "frontend/ios/coming-soon": {
-        "title": "iOS",
-        "sidebar_label": "Coming Soon"
-      },
-      "frontend/react-native/coming-soon": {
-        "title": "Coming Soon",
-        "sidebar_label": "Coming Soon"
-      },
-      "frontend/website/api-reference": {
-        "title": "API Reference",
-        "sidebar_label": "API Reference"
-      },
-      "frontend/website/cookies-and-localstorage": {
-        "title": "Cookies and Localstorage",
-        "sidebar_label": "Cookies and Localstorage"
-      },
-      "frontend/website/graphql-usage": {
-        "title": "Usage with GraphQL",
-        "sidebar_label": "Usage with GraphQL"
-      },
-      "frontend/website/initialisation-axios": {
-        "title": "Initialisation & Imports Using Axios",
-        "sidebar_label": "Init & Imports Using Axios"
-      },
-      "frontend/website/initialisation": {
-        "title": "Initialisation & Imports Using Fetch",
-        "sidebar_label": "Init & Imports Using Fetch"
-      },
-      "frontend/website/installation": {
-        "title": "Installation",
-        "sidebar_label": "Installation"
-      },
-      "frontend/website/manually-refresh": {
-        "title": "Manual refresh",
-        "sidebar_label": "Manual refresh"
-      },
-      "frontend/website/non-spa": {
-        "title": "For non-SPA websites",
-        "sidebar_label": "For non-SPA websites"
-      },
-      "frontend/website/sending-requests-axios": {
-        "title": "Sending Requests with Axios",
-        "sidebar_label": "Sending Requests with Axios"
-      },
-      "frontend/website/sending-requests": {
-        "title": "Sending Requests with Fetch",
-        "sidebar_label": "Sending Requests with Fetch"
-      },
-      "frontend/why": {
-        "title": "Why is this needed",
-        "sidebar_label": "Why is this needed"
+      "frontend/frontend": {
+        "title": "Choose your frontend",
+        "sidebar_label": "Choose your frontend"
       },
       "how-it-works/details": {
         "title": "How it works",
@@ -281,61 +229,9 @@
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
-      "version-4.0.X/frontend/android/version-4.0.X-coming-soon": {
-        "title": "Android",
-        "sidebar_label": "Coming Soon"
-      },
-      "version-4.0.X/frontend/ios/version-4.0.X-coming-soon": {
-        "title": "iOS",
-        "sidebar_label": "Coming Soon"
-      },
-      "version-4.0.X/frontend/react-native/version-4.0.X-coming-soon": {
-        "title": "Coming Soon",
-        "sidebar_label": "Coming Soon"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-api-reference": {
-        "title": "API Reference",
-        "sidebar_label": "API Reference"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-cookies-and-localstorage": {
-        "title": "Cookies and Localstorage",
-        "sidebar_label": "Cookies and Localstorage"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-graphql-usage": {
-        "title": "Usage with GraphQL",
-        "sidebar_label": "Usage with GraphQL"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-initialisation-axios": {
-        "title": "Initialisation & Imports Using Axios",
-        "sidebar_label": "Init & Imports Using Axios"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-initialisation": {
-        "title": "Initialisation & Imports Using Fetch",
-        "sidebar_label": "Init & Imports Using Fetch"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-installation": {
-        "title": "Installation",
-        "sidebar_label": "Installation"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-manually-refresh": {
-        "title": "Manual refresh",
-        "sidebar_label": "Manual refresh"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-non-spa": {
-        "title": "For non-SPA websites",
-        "sidebar_label": "For non-SPA websites"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-sending-requests-axios": {
-        "title": "Sending Requests with Axios",
-        "sidebar_label": "Sending Requests with Axios"
-      },
-      "version-4.0.X/frontend/website/version-4.0.X-sending-requests": {
-        "title": "Sending Requests with Fetch",
-        "sidebar_label": "Sending Requests with Fetch"
-      },
-      "version-4.0.X/frontend/version-4.0.X-why": {
-        "title": "Why is this needed",
-        "sidebar_label": "Why is this needed"
+      "version-4.0.X/frontend/version-4.0.X-frontend": {
+        "title": "Choose your frontend",
+        "sidebar_label": "Choose your frontend"
       },
       "version-4.0.X/how-it-works/version-4.0.X-details": {
         "title": "How it works",

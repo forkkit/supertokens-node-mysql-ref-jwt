@@ -42,37 +42,7 @@
             "backend/api-reference"
         ],
         "Frontend": [
-            "frontend/why",
-            {
-                "type": "subcategory",
-                "label": "Website",
-                "ids": [
-                    "frontend/website/installation",
-                    "frontend/website/initialisation",
-                    "frontend/website/sending-requests",
-                    "frontend/website/initialisation-axios",
-                    "frontend/website/sending-requests-axios",
-                    "frontend/website/manually-refresh",
-                    "frontend/website/non-spa",
-                    "frontend/website/graphql-usage",
-                    "frontend/website/cookies-and-localstorage",
-                    "frontend/website/api-reference"
-                ]
-            },
-            {
-                "type": "subcategory",
-                "label": "iOS",
-                "ids": [
-                    "frontend/ios/coming-soon"
-                ]
-            },
-            {
-                "type": "subcategory",
-                "label": "Android",
-                "ids": [
-                    "frontend/android/coming-soon"
-                ]
-            }
+            "frontend/frontend"
         ],
         "How it works": [
             "how-it-works/details"

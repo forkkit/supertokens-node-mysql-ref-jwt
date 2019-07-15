@@ -42,37 +42,7 @@
       "version-4.0.X-backend/api-reference"
     ],
     "Frontend": [
-      "version-4.0.X-frontend/why",
-      {
-        "type": "subcategory",
-        "label": "Website",
-        "ids": [
-          "version-4.0.X-frontend/website/installation",
-          "version-4.0.X-frontend/website/initialisation",
-          "version-4.0.X-frontend/website/sending-requests",
-          "version-4.0.X-frontend/website/initialisation-axios",
-          "version-4.0.X-frontend/website/sending-requests-axios",
-          "version-4.0.X-frontend/website/manually-refresh",
-          "version-4.0.X-frontend/website/non-spa",
-          "version-4.0.X-frontend/website/graphql-usage",
-          "version-4.0.X-frontend/website/cookies-and-localstorage",
-          "version-4.0.X-frontend/website/api-reference"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "iOS",
-        "ids": [
-          "version-4.0.X-frontend/ios/coming-soon"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "Android",
-        "ids": [
-          "version-4.0.X-frontend/android/coming-soon"
-        ]
-      }
+      "version-4.0.X-frontend/frontend"
     ],
     "How it works": [
       "version-4.0.X-how-it-works/details"
