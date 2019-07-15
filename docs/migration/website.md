@@ -7,7 +7,7 @@ sidebar_label: Website
 ### Install the supertokens-website package
 
 ```js
-npm i --save supertokens-website@^3.0.2
+npm i --save supertokens-website@^3.1.0
 ```
 
 For more details visit the [installation](../frontend/website/installation) section
