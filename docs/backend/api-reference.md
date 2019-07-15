@@ -257,7 +257,7 @@ sidebar_label: API Reference
     - This information is stored only in your database, so <span class="highlighted-text">it can contain sensitive information if needed.</span>
     - This can be freely modified during the lifetime of a session. But we do not synchronize calls to modify this - you must take care of locks yourself.
 ##### Returns
-```js
+```ts
 Promise<{
     session: {
         handle: string,
@@ -267,7 +267,7 @@ Promise<{
     accessToken: { value: string, expires: number },
     refreshToken: { value: string, expires: number },
     idRefreshToken: { value: string, expires: number },
-    antiCsrfToken: string
+    antiCsrfToken: string | undefined
 }>
 ```
 ##### Throws
@@ -286,7 +286,7 @@ Promise<{
     - Pass ```null``` if you do not want to have CSRF protection for this auth call.
     - If ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```, this value will be considered as ```null``` even if a ```string``` value is passed
 ##### Returns
-```js
+```ts
 Promise<{
     session: {
         handle: string,
@@ -317,7 +317,7 @@ Promise<{
 - ```refreshToken```
     - Type: ```string```
 ##### Returns
-```js
+```ts
 Promise<{
     session: {
         handle: string,
@@ -327,7 +327,7 @@ Promise<{
     newAccessToken: { value: string, expires: number },
     newRefreshToken: { value: string, expires: number },
     newIdRefreshToken: { value: string, expires: number },
-    newAntiCsrfToken: string | null
+    newAntiCsrfToken: string | undefined
 }>
 ```
 ##### Throws
