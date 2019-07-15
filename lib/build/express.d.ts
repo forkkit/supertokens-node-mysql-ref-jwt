@@ -1,5 +1,5 @@
-import * as express from "express";
-import { TypeInputConfig } from "./helpers/types";
+import * as express from 'express';
+import { TypeInputConfig } from './helpers/types';
 export { AuthError as Error } from "./error";
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
@@ -56,6 +56,10 @@ export declare function getSessionData(sessionHandle: string): Promise<any>;
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
 export declare function updateSessionData(sessionHandle: string, newSessionData: any): Promise<void>;
+/**
+ * @description Sets relevant Access-Control-Allow-Headers and Access-Control-Allow-Credentials headers
+ */
+export declare function setRelevantHeadersForOptionsAPI(res: express.Response): Promise<void>;
 /**
  * @class Session
  * @description an instance of this is created when a session is valid.

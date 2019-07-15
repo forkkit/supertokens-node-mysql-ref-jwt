@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.2] - 2019-07-14
+### Changes
+- Adds support for when API is a different subdomain to website URL by using Access-Control-Allow-Credentials, Access-Control-Allow-Headers and Access-Control-Expose-Headers.
+
 ## [4.0.1] - 2019-07-12
 ### Changes
 - CSRF protection can be disabled (by default it will be enabled)
