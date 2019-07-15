@@ -4,3 +4,4 @@ package-lock.json
 /.history
 *.js.map
 coverage
+.vscode

@@ -60,7 +60,7 @@ export async function getConnection(): Promise<Connection> {
         const mysqlConnection = await Mysql.getConnection();
         return new Connection(mysqlConnection);
     } catch (err) {
-        throw generateError(AuthError.GENERAL_ERROR, new Error("error in connecting to mysql"));
+        throw generateError(AuthError.GENERAL_ERROR, err);
     }
 }
 
