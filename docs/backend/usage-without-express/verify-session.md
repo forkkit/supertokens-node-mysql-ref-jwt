@@ -14,12 +14,12 @@ SuperTokens.getSession(accessToken, antiCsrfToken);
 - This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
 - This function does the following operations:
     - Verifies the current session using input tokens.
-    - If ```antiCsrfToken``` is not ```null```, also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).
+    - If ```antiCsrfToken``` is not ```null``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).
     - May return a new access token. Please see How it works section for more information about this.
 - ```accessToken``` can be obtained from the cookies with the key ```sAccessToken```. If this cookie is missing, then you should treat it as an error of type ```TRY_REFRESH_TOKEN```.
 - ```antiCsrfToken``` can be obtained from the headers with the key ```anti-csrf```. If this is missing and you do not expect it to be there then pass ```null``` to this function. Otherwise treat this like a ```TRY_REFRESH_TOKEN``` error.
 - This function may return a ```newAccessToken```. If that happens, please update the access token cookies as mentioned in the [User login](user-login) section.
-- For ```antiCsrfToken```, we chose to use ```null``` instead of ```undefined``` so that if you do not want to use CSRF protection, you have to consciously give ```null``` as opposed to making a mistake of not passing a parameter. 
+- For ```antiCsrfToken```, we chose to use ```null``` instead of ```undefined``` so that if you do not want to use CSRF protection, you have to consciously give ```null``` as opposed to making a mistake of not passing a parameter. If ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```, the value passed as ```antiCsrfToken``` will be treated as null.
 
 <div class="divider"></div>
 

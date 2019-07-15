@@ -39,7 +39,7 @@ Note: We recommend that you create a new database as it would become easier for 
 
 ### 4. Install SuperTokens package
 ```js
-npm i --save supertokens-node-mysql-ref-jwt@^4.0.0
+npm i --save supertokens-node-mysql-ref-jwt@^4.0.1
 ```
 
 ### 5. Install cookie-parser package if you are using Express
