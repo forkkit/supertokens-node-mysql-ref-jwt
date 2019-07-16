@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.4] - 2019-07-15
+### Fixed
+- Uses accessTokenPath for idRefreshToken as well.
+
 ## [4.0.3] - 2019-07-15
 ### Fixed
 - MySQL connection error will now show actual error that was thrown when trying to establish the connection.
