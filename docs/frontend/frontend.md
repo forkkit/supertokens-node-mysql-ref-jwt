@@ -5,13 +5,11 @@ sidebar_label: Choose your frontend
 ---
 
 ## Website: 
-See <a href="https://supertokens.github.io/supertokens-website/docs/introduction/why" target="_blank" style="color: #ff9933">documentation here</a>
+We support all website building frameworks including ReactJS, Angular, VueJS and Pure HTML / JS / CSS. Please see full <a href="https://supertokens.github.io/supertokens-website/docs/introduction/why" target="_blank" style="color: #ff9933">documentation here</a>.
 
-## iOS
-Coming soon
-
-## Android
-Coming soon
-
-## React-Native
-Coming soon
+## Others:
+We are actively working on supporting the following as well:
+- iOS
+- Android
+- React Native
+- Flutter
