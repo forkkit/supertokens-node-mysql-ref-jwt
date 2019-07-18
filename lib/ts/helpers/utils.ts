@@ -243,7 +243,7 @@ export function stringifyUserId(userId: any): string {
             return userId; // JSON parse succeed and object does not have i as the only key
         } catch (err) {
             if (nonParsingError) {
-                throw err;
+                throw generateError(AuthError.GENERAL_ERROR, err);
             }
             return userId; // JSON parse failed
         }

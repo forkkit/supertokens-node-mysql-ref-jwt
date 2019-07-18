@@ -32,7 +32,7 @@ export declare function setOptionsAPIHeader(res: express.Response): void;
  * @param maxAge
  * @param path
  */
-export declare function setCookie(res: express.Response, key: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string | undefined): void;
+export declare function setCookie(res: express.Response, key: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string): void;
 /**
  *
  * @param throws AuthError GENERAL_ERROR

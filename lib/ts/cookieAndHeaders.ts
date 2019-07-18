@@ -13,8 +13,26 @@ const antiCsrfHeaderKey = "anti-csrf";
  */
 export function clearSessionFromCookie(res: express.Response) {
     let config = Config.get();
-    setCookie(res, accessTokenCookieKey, "", config.cookie.domain, config.cookie.secure, true, 0, "/");
-    setCookie(res, idRefreshTokenCookieKey, "", config.cookie.domain, false, false, 0, "/");
+    setCookie(
+        res,
+        accessTokenCookieKey,
+        "",
+        config.cookie.domain,
+        config.cookie.secure,
+        true,
+        0,
+        config.tokens.accessToken.accessTokenPath
+    );
+    setCookie(
+        res,
+        idRefreshTokenCookieKey,
+        "",
+        config.cookie.domain,
+        false,
+        false,
+        0,
+        config.tokens.accessToken.accessTokenPath
+    );
     setCookie(
         res,
         refreshTokenCookieKey,
@@ -66,7 +84,16 @@ export function attachRefreshTokenToCookie(res: express.Response, token: string,
  */
 export function attachIdRefreshTokenToCookie(res: express.Response, token: string, expiry: number) {
     let config = Config.get();
-    setCookie(res, idRefreshTokenCookieKey, token, config.cookie.domain, false, false, expiry, "/");
+    setCookie(
+        res,
+        idRefreshTokenCookieKey,
+        token,
+        config.cookie.domain,
+        false,
+        false,
+        expiry,
+        config.tokens.accessToken.accessTokenPath
+    );
 }
 
 export function getAccessTokenFromCookie(req: express.Request): string | undefined {
@@ -147,11 +174,8 @@ export function setCookie(
     secure: boolean,
     httpOnly: boolean,
     expires: number,
-    path: string | undefined
+    path: string
 ) {
-    if (path === undefined) {
-        path = "/";
-    }
     let cookieOptions: express.CookieOptions = {
         domain,
         secure,
