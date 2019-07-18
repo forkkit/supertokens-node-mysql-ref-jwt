@@ -1,7 +1,8 @@
 ---
-id: installation
+id: version-4.1.X-installation
 title: Backend Installation
 sidebar_label: Installation
+original_id: installation
 ---
 
 ### 1. Pre install NodeJS and MySQL

@@ -40,7 +40,7 @@ const siteConfig = {
   headerLinks: [
     { doc: "introduction/what-and-why", label: "Docs" },
     { href: "https://discordapp.com/invite/zVcVeev", label: "Discord" },
-    { href: "https://medium.com/hackernoon/the-best-way-to-securely-manage-user-sessions-91f27eeef460", label: "Blog" }
+    { href: "https://supertokens.io/blog/the-best-way-to-securely-manage-user-sessions", label: "Blog" }
   ],
   disableHeaderTitle: false,
   docsSideNavCollapsible: true,
