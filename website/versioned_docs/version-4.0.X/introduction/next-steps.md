@@ -17,7 +17,7 @@ To implement SuperTokens, please install and use our frontend and backend librar
 - Provides a wrapper around http, to make calls to your server end points that require authentication.
 - Manages storage of access and refresh tokens.
 - When you call an API but your access token has expired, it silently calls your refresh token endpoint to get a new access token and then recalls your original API to give you back the expected result.
-- Synchronizes calls to the refresh token API to prevent <a href="https://medium.com/hackernoon/the-best-way-to-securely-manage-user-sessions-91f27eeef460#e81c" target="_blank">this race condition</a>
+- Synchronizes calls to the refresh token API to prevent <a href="https://supertokens.io/blog/the-best-way-to-securely-manage-user-sessions#e81c" target="_blank">this race condition</a>
 
 ## Already have your own session management implemented?
 Please see our [Migration](../migration/backend) guide.
