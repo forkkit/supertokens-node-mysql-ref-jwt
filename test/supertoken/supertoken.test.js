@@ -8,8 +8,10 @@ const { printPath } = require("../utils");
 const errors = require("../../lib/build/error");
 
 const expiredCookie = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+const accessTokenPath = "Path=/testing;";
+const refreshTokenPath = "Path=/refresh;";
 describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, function() {
-    it("create, get and refresh session (includes token theft and anti-csrf)", async function() {
+    it("create, get and refresh session (includes token theft and anti-csrf and cookie path testing)", async function() {
         await reset(config.configWithShortValidityForAccessToken);
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
@@ -49,6 +51,16 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         }
         if (!sAccessTokenCookieFound || !sRefreshTokenCookieFound || !sIdRefreshTokenCookieFound) {
             throw Error("");
+        }
+        /**
+         * cookie path testing
+         */
+        if (
+            !sAccessTokenCookie.includes(accessTokenPath) ||
+            !sRefreshTokenCookie.includes(refreshTokenPath) ||
+            !sIdRefreshTokenCookie.includes(accessTokenPath)
+        ) {
+            throw Error("cookie path not as expected");
         }
 
         response = await supertest(app)
@@ -141,11 +153,23 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(antiCsrfHeader === undefined, true); // since this is token theft. This header should not be there.
         assert.strictEqual(Array.isArray(cookies), true);
         for (let i = 0; i < cookies.length; i++) {
-            if (cookies[i].includes("sAccessToken=") && cookies[i].includes(expiredCookie)) {
+            if (
+                cookies[i].includes("sAccessToken=") &&
+                cookies[i].includes(expiredCookie) &&
+                cookies[i].includes(accessTokenPath)
+            ) {
                 sAccessTokenCookieFound = true;
-            } else if (cookies[i].includes("sRefreshToken") && cookies[i].includes(expiredCookie)) {
+            } else if (
+                cookies[i].includes("sRefreshToken") &&
+                cookies[i].includes(expiredCookie) &&
+                cookies[i].includes(refreshTokenPath)
+            ) {
                 sRefreshTokenCookieFound = true;
-            } else if (cookies[i].includes("sIdRefreshToken") && cookies[i].includes(expiredCookie)) {
+            } else if (
+                cookies[i].includes("sIdRefreshToken") &&
+                cookies[i].includes(expiredCookie) &&
+                cookies[i].includes(accessTokenPath)
+            ) {
                 sIdRefreshTokenCookieFound = true;
             }
         }

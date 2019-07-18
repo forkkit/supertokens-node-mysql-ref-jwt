@@ -23,7 +23,7 @@ module.exports.minConfigTest = {
             }
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -41,7 +41,7 @@ module.exports.minConfigTestWithAntiCsrfDisabled = {
             }
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -60,7 +60,7 @@ module.exports.minConfigTestWithBlacklisting = {
             blacklisting: true
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -80,7 +80,7 @@ module.exports.configWithSigningKeyFunction = {
             }
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -98,7 +98,7 @@ module.exports.configWithShortSigningKeyUpdateInterval = {
             }
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -111,10 +111,11 @@ module.exports.configWithShortValidityForAccessToken = {
     tokens: {
         enableAntiCsrf: true,
         accessToken: {
-            validity: 1
+            validity: 1,
+            accessTokenPath: "/testing"
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -130,7 +131,7 @@ module.exports.configWithShortValidityForAccessTokenAndAntiCsrfDisabled = {
             validity: 1
         },
         refreshToken: {
-            renewTokenPath: "/refersh"
+            renewTokenPath: "/refresh"
         }
     },
     cookie: {
@@ -148,7 +149,7 @@ module.exports.configWithShortValidityForRefreshToken = {
             }
         },
         refreshToken: {
-            renewTokenPath: "/refersh",
+            renewTokenPath: "/refresh",
             validity: 0.0008
         }
     },
