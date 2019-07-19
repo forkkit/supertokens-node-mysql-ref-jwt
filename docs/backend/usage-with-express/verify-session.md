@@ -4,18 +4,14 @@ title: Verify Session
 sidebar_label: Verify Session
 ---
 
-
 ## Call the ```getSession``` function: [API Reference](../api-reference#getsessionreq-res-enablecsrfprotection)
 ```js
 SuperTokens.getSession(req, res, enableCsrfProtection);
 ```
-- Call this function in any API that requires user authentication.
-- You can also use this to build your own middleware. Please see our [Migration](../../migration/migration) guide on how to do this.
+- Use this function at the start of each API call to authenticate the user. 
+- You can either call the function directly in each API, or create a [middleware](../../migration/backend#middleware) out of it as per your requirements. 
 - This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
-- This function does the following operations:
-    - Verifies the current session using the ```req``` object.
-    - If ```enableCsrfProtection``` is ```true``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, this function also provides CSRF protection. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
-    - May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.
+- This will return a ```Session``` object. Please see the next section for information with what you can do with this.
 
 <div class="divider"></div>
 
@@ -23,24 +19,25 @@ SuperTokens.getSession(req, res, enableCsrfProtection);
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
-function likeCommentAPI(req: express.Request, res: express.Response) {
-    // This is a POST API. So we also want to protect against CSRF attack
+app.post("/like-comment", function (req, res) {
     SuperTokens.getSession(req, res, true).then(session => {
         let userId = session.getUserId();
-        // rest of API logic...
+        /*
+         * rest of API logic...
+         */ 
+        res.send("Like successful :)");
     }).catch(err => {
         if (SuperTokens.Error.isErrorFromAuth(err)) {
             if (err.errType === SuperTokens.Error.GENERAL_ERROR) {
                 res.status(500).send("Something went wrong");
             } else if (err.errType === SuperTokens.Error.UNAUTHORISED) {
-                res.status(440).send("Session expired!");
+                res.status(440).send("Session expired! Please login again");
             } else {    // TRY_REFRESH_TOKEN
                 res.status(440).send("Please call refresh token endpoint");
-                // Our frontend SDK will take care of calling your refresh token endpoint. Please see the Frontend section to understand how the handling of this works. 
             }
         } else {
             res.status(500).send(err);  // Something went wrong.
         }
     });
-}
+});
 ```

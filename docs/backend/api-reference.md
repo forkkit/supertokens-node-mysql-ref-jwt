@@ -81,6 +81,10 @@ sidebar_label: API Reference
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```enableCsrfProtection``` is ```true```, ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```anti-csrf``` token validation fails.
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
+##### Extra information
+- Verifies the current session using the ```req``` object.
+- If ```enableCsrfProtection``` is ```true``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, this function also provides CSRF protection. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
+- May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.
 
 <div class="divider"></div>
 

@@ -89,6 +89,10 @@
         "title": "How it works",
         "sidebar_label": "How it works"
       },
+      "introduction/general-structure": {
+        "title": "General Flow",
+        "sidebar_label": "General Flow"
+      },
       "introduction/what-and-why": {
         "title": "SuperTokens",
         "sidebar_label": "Introduction"
@@ -299,11 +303,10 @@
       "Introduction": "Introduction",
       "Backend": "Backend",
       "Frontend": "Frontend",
-      "Demo Project": "Demo Project",
+      "Example Project": "Example Project",
       "Migration": "Migration",
       "Troubleshooting": "Troubleshooting",
       "How it works": "How it works",
-      "Example Project": "Example Project",
       "Limitations": "Limitations"
     }
   },

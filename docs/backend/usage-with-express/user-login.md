@@ -11,6 +11,7 @@ SuperTokens.createNewSession(res, userId, jwtPayload, sessionData);
 ```
 - Call this function after you have verified the user credentials.
 - This will override any existing session that exists in the ```res``` object with a new session.
+- ```jwtPayload``` should not contain any sensitive information.
 
 <div class="divider"></div>
 

@@ -1,7 +1,8 @@
 {
     "docs": {
         "Introduction": [
-            "introduction/what-and-why"
+            "introduction/what-and-why",
+            "introduction/general-structure"
         ],
         "Backend": [
             "backend/installation",
@@ -39,7 +40,7 @@
         "Frontend": [
             "frontend/frontend"
         ],
-        "Demo Project": [
+        "Example Project": [
             "try-it-out/example"
         ],
         "Migration": [
