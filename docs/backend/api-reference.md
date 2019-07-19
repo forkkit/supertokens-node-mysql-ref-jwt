@@ -141,6 +141,8 @@ sidebar_label: API Reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+##### Extra information
+- It does nothing to synchronize with other ```getSessionData``` or ```updateSessionData``` calls on this session. So it is up to you to handle various race conditions depending on your use case. 
 
 <div class="divider"></div>
 
@@ -160,6 +162,8 @@ sidebar_label: API Reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+##### Extra information
+- It does nothing to synchronize with other ```getSessionData``` or ```updateSessionData``` calls on this session. So it is up to you to handle various race conditions depending on your use case. 
 
 <div class="divider"></div>
 
@@ -207,6 +211,8 @@ sidebar_label: API Reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
+##### Extra information
+- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 <div class="divider"></div>
 
@@ -227,6 +233,8 @@ sidebar_label: API Reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
+##### Extra information
+- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 <div class="divider"></div>
 

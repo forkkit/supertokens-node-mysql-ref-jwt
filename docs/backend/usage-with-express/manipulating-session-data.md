@@ -18,9 +18,9 @@ sidebar_label: Manipulating Session Data
 ## If you have a session object
 Please see the [Session Object](session-object#call-the-getsessiondata-function-api-reference-api-reference-sessiongetsessiondata) section for more information.
 
-## If you only have a ```sessionHandle```
+## If you do not have a session object
 <div class="specialNote">
-These functions should only be used if absolutely necessary, since they do not handle cookies for you. So if you are able to get a <code>Session</code> object, please use the functions from the above section instead.
+These functions should only be used if absolutely necessary, since they do not handle cookies for you. So if you are able to get a <code>Session</code> object AND have not already sent a reply to the client, please use the functions from the above section instead.
 </div>
 
 ### Call the ```getSessionData``` function: [API Reference](../api-reference#getsessiondatasessionhandle)
@@ -28,7 +28,6 @@ These functions should only be used if absolutely necessary, since they do not h
 SuperTokens.getSessionData(sessionHandle);
 ```
 - This function requires a database call each time it's called.
-- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 ### Call the ```updateSessionData``` function: [API Reference](../api-reference#updatesessiondatasessionhandle-data)
 ```js
@@ -36,7 +35,6 @@ SuperTokens.updateSessionData(sessionHandle, newSessionData);
 ```
 - This function overrides the current data stored for this ```sessionHandle```.
 - This function requires a database call each time it's called.
-- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 <div class="divider"></div>
 
@@ -45,11 +43,13 @@ SuperTokens.updateSessionData(sessionHandle, newSessionData);
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
 async function changeSessionDataAPI(req: express.Request, res: express.Response) {
+    // first we get the session object
     let session;
     try {
         session = await SuperTokens.getSession(req, res, true);
     } catch (err) {
         //...
+        return;
     }
     try {
         let jwtPayload = session.getJWTPayload();
@@ -69,20 +69,20 @@ async function changeSessionDataAPI(req: express.Request, res: express.Response)
     }
 }
 
-async function changeSessionDataViaSessionHandle(sessionHandle: string) {
+async function changeSessionDataWithSessionObject(sessionHandle: string) {
     try {
         let sessionData = await SuperTokens.getSessionData(sessionHandle);
         await SuperTokens.updateSessionData(sessionHandle, {comment: "new session data"});
     } catch (err) {
         if (SuperTokens.Error.isErrorFromAuth(err)) {
             if (err.errType === SuperTokens.Error.GENERAL_ERROR) {
-                console.log("Something went wrong");
+                console.log("Something went wrong. Error from SuperTokens lib");
             } else { // UNAUTHORISED
-                // if we have access to Express response object here, be sure to remove the auth cookies - mentioned in the User Login section
-                console.log("Session expired");
+                console.log("Session expired.");
             }
+        } else {
+            console.log("Something went wrong - error from somewhere else.");
         }
-        console.log("Something went wrong");
     }
 }
 ```
