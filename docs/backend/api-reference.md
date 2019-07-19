@@ -14,6 +14,10 @@ sidebar_label: API Reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance, or if the ```config``` provided is invalid.
+##### Extra information
+- Creates the MySQL tables if they don't already exist.
+- Creates new signing keys if you do not provide one and they don't already exist. It synchronizes across all running instances of your node app to make sure all of them have the same keys.
+- Parses and loads your provided config in memory.
 
 <div class="divider"></div>
 
@@ -40,6 +44,14 @@ sidebar_label: API Reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Extra information
+- Creates a new access and a new refresh token for this session.
+- This function will set the following cookies and headers in the ```res``` object for you:
+    - If ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it sets ```anti-csrf``` header that contains an anti-csrf token. This header should be sent for all non-GET API calls that require authentication (except for the refresh session API). 
+    - Sets ```sAccessToken``` in cookies with the access token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. This cookie should be sent for all API calls that require authentication. 
+    - Sets ```sRefreshToken``` in cookies containing the refresh token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. <span class="highlighted-text">This cookie should be sent only to the refresh token API.</span>
+    - Sets ```sIdRefreshToken``` in cookies containing a unique ID. Details for why this is needed can be found in the "How it works" section. This cookie has ```HttpOnly``` set to ```false``` and ```secure``` set to ```false```. This cookie should be sent for all API calls that require authentication. 
+- Inserts a new row in the MySQL table for this new session.
 
 <div class="divider"></div>
 

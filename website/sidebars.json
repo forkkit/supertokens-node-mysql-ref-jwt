@@ -1,8 +1,7 @@
 {
     "docs": {
         "Introduction": [
-            "introduction/what-and-why",
-            "introduction/next-steps"
+            "introduction/what-and-why"
         ],
         "Backend": [
             "backend/installation",
@@ -35,28 +34,21 @@
             },
             "backend/error-handling",
             "backend/session-handle",
-            "backend/token-theft",
-            "backend/blacklisting",
-            "backend/jwt-key-rotation",
-            "backend/config",
             "backend/api-reference"
         ],
         "Frontend": [
             "frontend/frontend"
         ],
-        "How it works": [
-            "how-it-works/details"
-        ],
-        "Example Project": [
+        "Demo Project": [
             "try-it-out/example"
-        ],
-        "Limitations": [
-            "limitations/limitations"
         ],
         "Migration": [
             "migration/backend",
             "migration/database",
             "migration/website"
+        ],
+        "Troubleshooting": [
+            "troubleshooting/troubleshooting"
         ]
     }
 }

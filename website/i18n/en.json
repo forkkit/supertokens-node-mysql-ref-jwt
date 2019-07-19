@@ -9,14 +9,6 @@
         "title": "API Reference",
         "sidebar_label": "API Reference"
       },
-      "backend/blacklisting": {
-        "title": "Blacklisting",
-        "sidebar_label": "Blacklisting"
-      },
-      "backend/config": {
-        "title": "Configuration",
-        "sidebar_label": "Configuration"
-      },
       "backend/error-handling": {
         "title": "Error Handling",
         "sidebar_label": "Error Handling"
@@ -25,17 +17,9 @@
         "title": "Backend Installation",
         "sidebar_label": "Installation"
       },
-      "backend/jwt-key-rotation": {
-        "title": "JWT Signing key rotation",
-        "sidebar_label": "JWT Signing key rotation"
-      },
       "backend/session-handle": {
         "title": "Session Handle",
         "sidebar_label": "Session Handle"
-      },
-      "backend/token-theft": {
-        "title": "Token Theft Detection",
-        "sidebar_label": "Token Theft Detection"
       },
       "backend/usage-with-express/initialisation": {
         "title": "Initialisation & Imports",
@@ -105,13 +89,9 @@
         "title": "How it works",
         "sidebar_label": "How it works"
       },
-      "introduction/next-steps": {
-        "title": "Next Steps",
-        "sidebar_label": "Next Steps"
-      },
       "introduction/what-and-why": {
         "title": "SuperTokens",
-        "sidebar_label": "What and Why"
+        "sidebar_label": "Introduction"
       },
       "limitations/limitations": {
         "title": "Limitations",
@@ -128,6 +108,10 @@
       "migration/website": {
         "title": "Add SuperTokens to an existing website",
         "sidebar_label": "Website"
+      },
+      "troubleshooting/troubleshooting": {
+        "title": "Troubleshooting",
+        "sidebar_label": "Troubleshooting"
       },
       "try-it-out/docker": {
         "title": "Docker",
@@ -315,10 +299,12 @@
       "Introduction": "Introduction",
       "Backend": "Backend",
       "Frontend": "Frontend",
+      "Demo Project": "Demo Project",
+      "Migration": "Migration",
+      "Troubleshooting": "Troubleshooting",
       "How it works": "How it works",
       "Example Project": "Example Project",
-      "Limitations": "Limitations",
-      "Migration": "Migration"
+      "Limitations": "Limitations"
     }
   },
   "pages-strings": {
