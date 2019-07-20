@@ -7,7 +7,7 @@ sidebar_label: Installation
 ### 1. Create a database in MySQL that will store session related information
 This could either be existing app database or a new database.
 ```SQL
-CREATE DATABASE <database name here>; # example name: auth_session
+CREATE DATABASE DATABASE_NAME; # example name: auth_session
 ```
 
 Note: We recommend that you create a new database as it would become easier for you to monitor the data our library stores.

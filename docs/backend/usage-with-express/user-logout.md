@@ -21,9 +21,7 @@ Please see the [Session Object](session-object#call-the-revokesession-function-a
 SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
 ```
 - Use this to logout a user from their current session
-- This function deletes the session from the database
 - <span class="highlighted-text">Does not clear any cookies</span>
-- If using blacklisting, this will immediately invalidate the JWT access token. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
 ## If you have a ```userId```
 ### Call the ```revokeAllSessionsForUser``` function: [API Reference](../api-reference#revokeallsessionsforuseruserid)
@@ -31,9 +29,7 @@ SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
 SuperTokens.revokeAllSessionsForUser(userId);
 ```
 - Use this to logout a user from all their devices.
-- This function deletes many sessions from the database. If it throws an error, then some sessions may already have been deleted. 
 - <span class="highlighted-text">Does not clear any cookies</span>
-- If using blacklisting, this will immediately invalidate the JWT access tokens associated with those sessions. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
 <div class="divider"></div>
 
@@ -41,16 +37,18 @@ SuperTokens.revokeAllSessionsForUser(userId);
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
-async function logoutAPI(req: express.Request, res: express.Response) {
+// example using Session object
+app.use("/logout", function (req, res) {
+    // first we verify the session.
     let session;
     try {
         session = await SuperTokens.getSession(req, res, true);
     } catch (err) {
-        //...
+        // See verify session page to handle errors here.
     }
     try {
         await session.revokeSession();
-        res.send("Go to login page");
+        res.send("Success! Go to login page");
     } catch (err) {
         if (SuperTokens.Error.isErrorFromAuth(err)) { // GENERAL_ERROR
             res.status(500).send("Something went wrong");
@@ -58,15 +56,19 @@ async function logoutAPI(req: express.Request, res: express.Response) {
             res.status(500).send(err);  // Something went wrong.
         }
     }
-}
+});
 
-async function logoutUsingSessionHandle(sessionHandle: string) {
+//----------------------------------------
+
+// example using sessionHandle
+async function logoutUsingSessionHandle(sessionHandle) {
     try {
         let success = await SuperTokens.revokeSessionUsingSessionHandle(sessionHandle);
         if (success) {
-            // deleted a MySQL row.
+            // your code here..
         } else {
             // either sessionHandle is invalid, or session was already removed.
+            // your code here..
         }
     } catch (err) {
         if (SuperTokens.Error.isErrorFromAuth(err)) { // GENERAL_ERROR
@@ -77,7 +79,10 @@ async function logoutUsingSessionHandle(sessionHandle: string) {
     }
 }
 
-async function logoutAllSessionForUser(userId: string) {
+//----------------------------------------
+
+// example using userId
+async function logoutAllSessionForUser(userId) {
     try {
         await SuperTokens.revokeAllSessionsForUser(userId);
     } catch (err) {
