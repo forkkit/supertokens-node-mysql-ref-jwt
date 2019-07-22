@@ -15,6 +15,10 @@ original_id: api-reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance, or if the ```config``` provided is invalid.
+##### Additional information
+- Creates the MySQL tables if they don't already exist.
+- Creates new signing keys if you do not provide one and they don't already exist. It synchronizes across all running instances of your node app to make sure all of them have the same keys.
+- Parses and loads your provided config in memory.
 
 <div class="divider"></div>
 
@@ -41,6 +45,14 @@ original_id: api-reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Additional information
+- Creates a new access and a new refresh token for this session.
+- This function will set the following cookies and headers in the ```res``` object for you:
+    - If ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it sets ```anti-csrf``` header that contains an anti-csrf token. This header should be sent for all non-GET API calls that require authentication (except for the refresh session API). 
+    - Sets ```sAccessToken``` in cookies with the access token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. This cookie should be sent for all API calls that require authentication. 
+    - Sets ```sRefreshToken``` in cookies containing the refresh token. This cookie has ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` depending on your passed config. <span class="highlighted-text">This cookie should be sent only to the refresh token API.</span>
+    - Sets ```sIdRefreshToken``` in cookies containing a unique ID. Details for why this is needed can be found in the "How it works" section. This cookie has ```HttpOnly``` set to ```false``` and ```secure``` set to ```false```. This cookie should be sent for all API calls that require authentication. 
+- Inserts a new row in the MySQL table for this new session.
 
 <div class="divider"></div>
 
@@ -70,6 +82,11 @@ original_id: api-reference
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```enableCsrfProtection``` is ```true```, ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```anti-csrf``` token validation fails.
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
+##### Additional information
+- Verifies the current session using the ```req``` object.
+- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
+- If ```enableCsrfProtection``` is ```true``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, this function also provides CSRF protection. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
+- May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.
 
 <div class="divider"></div>
 
@@ -126,6 +143,8 @@ original_id: api-reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+##### Additional information
+- It does nothing to synchronize with other ```getSessionData``` or ```updateSessionData``` calls on this session. So it is up to you to handle various race conditions depending on your use case. 
 
 <div class="divider"></div>
 
@@ -145,6 +164,8 @@ original_id: api-reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - When this is thrown, all the relevant auth cookies are cleared by this function call, so you can redirect the user to a login page.
+##### Additional information
+- It does nothing to synchronize with other ```getSessionData``` or ```updateSessionData``` calls on this session. So it is up to you to handle various race conditions depending on your use case. 
 
 <div class="divider"></div>
 
@@ -192,6 +213,8 @@ original_id: api-reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
+##### Additional information
+- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 <div class="divider"></div>
 
@@ -212,6 +235,8 @@ original_id: api-reference
     - Type: ```{errType: SuperTokens.Error.UNAUTHORISED, err: any}```
     - This is thrown if the current session was revoked or has expired.
     - You must handle auth cookie management yourself here (if relevant). Please see the Error Handling section for more details.
+##### Additional information
+- It does nothing to synchronize with other getSessionData or updateSessionData calls on this ```sessionHandle```. So it is up to you to handle various race conditions depending on your use case.
 
 <div class="divider"></div>
 
@@ -228,8 +253,11 @@ original_id: api-reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Additional information
+- This function deletes the session from the database
+- If using blacklisting, this will immediately invalidate the JWT access token. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
 ## ```revokeAllSessionsForUser(userId)```
 ##### Parameters
@@ -241,6 +269,9 @@ original_id: api-reference
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Additional information
+- This function deletes many sessions from the database. If it throws an error, then some sessions may already have been deleted.
+- If using blacklisting, this will immediately invalidate the JWT access tokens associated with those sessions. If not, the user may still be able to continue using their access token to call authenticated APIs (until it expires).
 
 <div class="divider"></div>
 
@@ -276,6 +307,9 @@ Promise<{
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Additional information
+- Creates a new access and a new refresh token for this session.
+- Inserts a new row in the MySQL table for this new session.
 
 <div class="divider"></div>
 
@@ -311,6 +345,10 @@ Promise<{
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```antiCsrfToken``` validation fails.
     - When this is thrown, you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. <span class="highlighted-text">Do not remove any auth cookie here</span> Our frontend SDK takes care of this for you in most cases.
+##### Additional information
+- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
+- Verifies the current session using input tokens.
+- If ```antiCsrfToken``` is not ```null``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).
 
 <div class="divider"></div>
 
@@ -369,7 +407,7 @@ Promise<{
     - Type: ```string | number```
 ##### Returns
 - ```Promise<string[]>```
-    - Each element in the ```string``` array is a ```sessionHandle```
+    - Each element in the ```string[]``` is a ```sessionHandle```
 ##### Throws
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```

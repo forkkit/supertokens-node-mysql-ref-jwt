@@ -9,5 +9,5 @@ original_id: database
 
 - We recommend that you provide a new database for the following reasons:
   - You can more easily keep track of the data we generate.
-  - Our library will only have access to that database and no other information stored in your MySQL instance.
+  - Our library will have access only to that database and no other information stored in your MySQL instance.
   - Any future changes to the database will be easier for you to implement.

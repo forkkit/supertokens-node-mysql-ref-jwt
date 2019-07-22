@@ -25,14 +25,14 @@ npm i --save cookie-parser
 
 <div class="divider"></div>
 
-TODO: make the below seem very optional.
+<div class="additionalInformation" time="1">
 
 <div class="specialNote">
 For a complete solution, you will also need to use our frontend SDK along with our backend SDK. But you can go through that after you have setup your backend code.
 </div>
 
 
-### Optionally create tables in the MySQL database
+### 4. Optionally create tables in the MySQL database
 - If you do not create them, our library will create these two tables for you:
   ```SQL
   CREATE TABLE signing_key (
@@ -52,4 +52,6 @@ For a complete solution, you will also need to use our frontend SDK along with o
       PRIMARY KEY(session_handle)
   );    
   ```
-- Alternatively, you can create these two tables with different names (<span class="highlighted-text">keeping the column names and types the same</span>), and provide these names in the [Configuration](config) object.
+- Alternatively, you can create these two tables with different names (<span class="highlighted-text">keeping the column names and types the same</span>), and provide these names in the ```config``` object.
+
+</div>

@@ -5,18 +5,35 @@ sidebar_label: Installation
 original_id: installation
 ---
 
-### 1. Pre install NodeJS and MySQL
+### 1. Create a database in MySQL that will store session related information
+This could either be existing app database or a new database.
+```SQL
+CREATE DATABASE DATABASE_NAME; # example name: auth_session
+```
+
+Note: We recommend that you create a new database as it would become easier for you to monitor the data our library stores.
+
+### 2. Install SuperTokens package
+```js
+npm i --save supertokens-node-mysql-ref-jwt@^4.1.0
+```
+
+### 3. Install cookie-parser package if you are using Express
+Our package uses this to set and get cookies from express ```request``` and ```response``` objects.
+```js
+npm i --save cookie-parser
+```
+
+<div class="divider"></div>
+
+<div class="additionalInformation" time="1">
 
 <div class="specialNote">
-For a complete solution, you will also need to use our <a href="../frontend/frontend">frontend SDK</a> along with our backend SDK.
+For a complete solution, you will also need to use our frontend SDK along with our backend SDK. But you can go through that after you have setup your backend code.
 </div>
 
-### 2. Create a database in MySQL that will store session related information
-- This could either be your existing app database or a new database. 
-- You will have to provide this name in the [Configuration](config) object
 
-Note: We recommend that you create a new database as it would become easier for you to monitor the data our library stores. An example name for a database is ```auth_session```
-### 3. Optionally create tables in the MySQL database
+### 4. Optionally create tables in the MySQL database
 - If you do not create them, our library will create these two tables for you:
   ```SQL
   CREATE TABLE signing_key (
@@ -36,16 +53,6 @@ Note: We recommend that you create a new database as it would become easier for 
       PRIMARY KEY(session_handle)
   );    
   ```
-- Alternatively, you can create these two tables with different names (<span class="highlighted-text">keeping the column names and types the same</span>), and provide these names in the [Configuration](config) object.
+- Alternatively, you can create these two tables with different names (<span class="highlighted-text">keeping the column names and types the same</span>), and provide these names in the ```config``` object.
 
-### 4. Install SuperTokens package
-```js
-npm i --save supertokens-node-mysql-ref-jwt@^4.1.0
-```
-
-### 5. Install cookie-parser package if you are using Express
-Our package uses this to set and get cookies from express ```request``` and ```response``` objects.
-```js
-npm i --save cookie-parser
-```
-
+</div>

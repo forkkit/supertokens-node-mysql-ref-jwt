@@ -4,35 +4,41 @@ title: User login
 sidebar_label: User login
 original_id: user-login
 ---
+To login a user, you must first authenticate their credentials and then create a session for them so that they can access your APIs.
 
 ## Call the ```createNewSession``` function: [API Reference](../api-reference#createnewsessionuserid-jwtpayload-sessiondata)
 ```js
 SuperTokens.createNewSession(userId, jwtPayload, sessionData);
 ```
-- Call this function after you have authenticated a user. Authentication can be done via any means: password, social logins, 2FA  etc.
+- Call this function after you have verified the user credentials.
 - ```userId``` must be of type ```string``` or ```number```.
-- This function does the following operations:
-    - Creates a new access and a new refresh token for this session.
-    - Inserts a new row in the MySQL table for this new session.
+- ```jwtPayload``` should not contain any sensitive information.
 - This function will return the following tokens:
-    - ```antiCsrfToken``` <span class="highlighted-text" style="font-size: 0.8em">(If ```enableAntiCsrf``` in the ```config``` object is set to ```true```)</span>
-        - Set this in the header with the key ```anti-csrf```.
-        - Our frontend SDK will store this in the localstorage (if you are using a webapp). This will then be automatically sent on each subsequent request for CSRF protection.
-    - ```accessToken```
-        - Set ```accessToken.value``` in the cookie with the key ```sAccessToken```. 
-        - This cookie should have ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` unless you are in development / testing mode.
-        - Set the expiry time of this cookie: ```expiry: new Date(accessToken.expires)```
-        - The ```path``` of this cookie should cover all your APIs that require authentication. For example: ```/```
+    - ```antiCsrfToken``` (Set in response header) 
+        - Key: ```anti-csrf```.
+        - Value: ```antiCsrfToken```
+        - Will be ```undefined``` if ```enableAntiCsrf``` in the ```config``` object is set to ```false```.
+    - ```accessToken``` (Set in cookie)
+        - Key: ```sAccessToken```
+        - Value: ```accessToken.value```
+        - ```HttpOnly```: ```true```
+        - ```secure```: ```true``` (Unless in dev mode)
+        - Expiry time: ```new Date(accessToken.expires)```
+        - ```Path```: A value that covers all your API paths. For example ```"/"```
     - ```refreshToken```
-        - Set ```refreshToken.value``` in the cookie with the key ```sRefreshToken```. 
-        - This cookie should have ```HttpOnly``` set to ```true``` and ```secure``` set to ```true``` unless you are in development / testing mode.
-        - Set the expiry time of this cookie: ```expiry: new Date(refreshToken.expires)```
-        - <span class="highlighted-text">The ```path``` of this cookie should cover only your refresh session endpoint.</span> For example: ```/refreshsession```
+        - Key: ```sRefreshToken```
+        - Value: ```refreshToken.value```
+        - ```HttpOnly```: ```true```
+        - ```secure```: ```true``` (Unless in dev mode)
+        - Expiry time: ```new Date(refreshToken.expires)```
+        - ```Path```: Your refresh session API path. For example: ```"/refreshsession"```
     - ```idRefreshToken```
-        - Set ```idRefreshToken.value``` in the cookie with the key ```sIdRefreshToken```. 
-        - <span class="highlighted-text">This cookie should have ```HttpOnly``` set to ```false``` and ```secure``` set to ```false``` even in production.</span>
-        - Set the expiry time of this cookie: ```expiry: new Date(idRefreshToken.expires)```
-        - The ```path``` of this cookie should cover all your APIs that require authentication. For example: ```/```. 
+        - Key: ```sIdRefreshToken```
+        - Value: ```idRefreshToken.value```
+        - ```HttpOnly```: ```false```
+        - ```secure```: ```false```
+        - Expiry time: ```new Date(idRefreshToken.expires)```
+        - ```Path```: Same as the ```sAccessToken``` path
 
 <div class="divider"></div>
 
@@ -41,8 +47,7 @@ SuperTokens.createNewSession(userId, jwtPayload, sessionData);
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
 function loginAPI() {
-    // ...
-    // assuming user has been authenticated somehow..
+    // check for user credentials..
     let userId = "User1";
     let jwtPayload = {userId, name: "spooky action at a distance"};
     let sessionData = {awesomeThings: ["programming", "javascript", "SuperTokens"]};

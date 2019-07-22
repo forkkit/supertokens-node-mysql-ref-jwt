@@ -1,7 +1,8 @@
 ---
-id: troubleshooting
+id: version-4.1.X-troubleshooting
 title: Troubleshooting
 sidebar_label: Troubleshooting
+original_id: troubleshooting
 ---
 
 ## MySQL errors

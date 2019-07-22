@@ -117,10 +117,6 @@
         "title": "Troubleshooting",
         "sidebar_label": "Troubleshooting"
       },
-      "try-it-out/docker": {
-        "title": "Docker",
-        "sidebar_label": "Docker"
-      },
       "try-it-out/example": {
         "title": "Example code and Demo",
         "sidebar_label": "Example code and Demo"
@@ -273,25 +269,89 @@
         "title": "Backend Installation",
         "sidebar_label": "Installation"
       },
+      "version-4.1.X/backend/version-4.1.X-session-handle": {
+        "title": "Session Handle",
+        "sidebar_label": "Session Handle"
+      },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
+      },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-manipulating-session-data": {
+        "title": "Manipulating Session Data",
+        "sidebar_label": "Manipulating Session Data"
+      },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-refreshing-session": {
+        "title": "Refreshing Session",
+        "sidebar_label": "Refreshing Session"
+      },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-session-object": {
+        "title": "Session Object",
+        "sidebar_label": "Session Object"
+      },
       "version-4.1.X/backend/usage-with-express/version-4.1.X-user-login": {
         "title": "User login",
         "sidebar_label": "User login"
+      },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-user-logout": {
+        "title": "User Logout",
+        "sidebar_label": "User Logout"
       },
       "version-4.1.X/backend/usage-with-express/version-4.1.X-verify-session": {
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
+      "version-4.1.X/backend/usage-without-express/version-4.1.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
+      },
+      "version-4.1.X/backend/usage-without-express/version-4.1.X-manipulating-session-data": {
+        "title": "Manipulating Session Data",
+        "sidebar_label": "Manipulating Session Data"
+      },
+      "version-4.1.X/backend/usage-without-express/version-4.1.X-refreshing-session": {
+        "title": "Refreshing Session",
+        "sidebar_label": "Refreshing Session"
+      },
       "version-4.1.X/backend/usage-without-express/version-4.1.X-user-login": {
         "title": "User login",
         "sidebar_label": "User login"
+      },
+      "version-4.1.X/backend/usage-without-express/version-4.1.X-user-logout": {
+        "title": "User Logout",
+        "sidebar_label": "User Logout"
       },
       "version-4.1.X/backend/usage-without-express/version-4.1.X-verify-session": {
         "title": "Verify Session",
         "sidebar_label": "Verify Session"
       },
+      "version-4.1.X/frontend/version-4.1.X-frontend": {
+        "title": "Choose your frontend",
+        "sidebar_label": "Choose your frontend"
+      },
+      "version-4.1.X/introduction/version-4.1.X-general-structure": {
+        "title": "General Flow",
+        "sidebar_label": "General Flow"
+      },
+      "version-4.1.X/introduction/version-4.1.X-what-and-why": {
+        "title": "SuperTokens",
+        "sidebar_label": "Introduction"
+      },
+      "version-4.1.X/migration/version-4.1.X-backend": {
+        "title": "Add SuperTokens to an existing system",
+        "sidebar_label": "Backend"
+      },
       "version-4.1.X/migration/version-4.1.X-database": {
         "title": "Add SuperTokens to an exisiting Database",
         "sidebar_label": "Database"
+      },
+      "version-4.1.X/troubleshooting/version-4.1.X-troubleshooting": {
+        "title": "Troubleshooting",
+        "sidebar_label": "Troubleshooting"
+      },
+      "version-4.1.X/try-it-out/version-4.1.X-example": {
+        "title": "Example code and Demo",
+        "sidebar_label": "Example code and Demo"
       }
     },
     "links": {

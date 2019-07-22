@@ -10,17 +10,10 @@ original_id: verify-session
 ```js
 SuperTokens.getSession(accessToken, antiCsrfToken);
 ```
-- Call this function in any API that requires user authentication.
-- You can also use this to build your own middleware. Please see our [Migration](../../migration/migration) guide on how to do this.
-- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
-- This function does the following operations:
-    - Verifies the current session using input tokens.
-    - If ```antiCsrfToken``` is not ```null``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).
-    - May return a new access token. Please see How it works section for more information about this.
+- Use this function at the start of each API call to authenticate the user.
 - ```accessToken``` can be obtained from the cookies with the key ```sAccessToken```. If this cookie is missing, then you should treat it as an error of type ```TRY_REFRESH_TOKEN```.
-- ```antiCsrfToken``` can be obtained from the headers with the key ```anti-csrf```. If this is missing and you do not expect it to be there then pass ```null``` to this function. Otherwise treat this like a ```TRY_REFRESH_TOKEN``` error.
-- This function may return a ```newAccessToken```. If that happens, please update the access token cookies as mentioned in the [User login](user-login) section.
-- For ```antiCsrfToken```, we chose to use ```null``` instead of ```undefined``` so that if you do not want to use CSRF protection, you have to consciously give ```null``` as opposed to making a mistake of not passing a parameter. If ```enableAntiCsrf``` (in the ```config``` object) is set to ```false```, the value passed as ```antiCsrfToken``` will be treated as null.
+- ```antiCsrfToken``` can be obtained from the headers with the key ```anti-csrf```. If this is missing and you do not want CSRF protection,  pass ```null``` to this function. Otherwise treat this like a ```TRY_REFRESH_TOKEN``` error.
+- If this function returns a ```newAccessToken```, update the access token cookies as mentioned in the [User login](user-login) section.
 
 <div class="divider"></div>
 
@@ -29,15 +22,14 @@ SuperTokens.getSession(accessToken, antiCsrfToken);
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
 function likeCommentAPI() {
+    // extract accessToken and antiCsrfToken
     let accessToken = getCookieValue("sAccessToken");
-    if (accessToken === undefined) {
-        // access token has probably expired.
-        // send session expired response, and call the refresh token API.
-        // Our frontend SDK will take care of calling your refresh token endpoint. Please see the Frontend section to understand how the handling of this works. 
+    let antiCsrfToken = getHeaderValue("anti-csrf");
+    if (accessToken === undefined || antiCsrfToken === undefined) {
+        // access token has probably expired. Send session expired response.
         return;
     }
-    // This is a POST API. So we also want to protect against CSRF attack
-    let antiCsrfToken = getHeaderValue("anti-csrf");
+
     SuperTokens.getSession(accessToken, antiCsrfToken).then(response => {
         if (response.newAccessToken !== undefined) {
             let newAccessToken = response.newAccessToken;
@@ -54,8 +46,7 @@ function likeCommentAPI() {
                 clearAuthCookies();
                 // session has expired! You can redirect the user to a login page.
             } else {    // TRY_REFRESH_TOKEN
-                // send session expired response, and call the refresh token API.
-                // Our frontend SDK will take care of calling your refresh token endpoint. Please see the Frontend section to understand how the handling of this works. 
+                // send session expired response. 
             }
         } else {
             // send status code 500
