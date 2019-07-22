@@ -20,7 +20,7 @@ async function sendFeedback(uuid, url, happy) {
 function feedbackSelected(happy) {
     let uuid = getUUID();
     let url = window.location.href;
-    if ( happy ) {
+    if (happy) {
         // happy selected
         sendFeedback(uuid, url, true);
         let happyImage = document.getElementById("feedback-happy");
@@ -46,19 +46,19 @@ function goToGithub() {
     );
 }
 
-function create_UUID(){
+function create_UUID() {
     var dt = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (dt + Math.random()*16)%16 | 0;
-        dt = Math.floor(dt/16);
-        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (dt + Math.random() * 16) % 16 | 0;
+        dt = Math.floor(dt / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
     return uuid;
 }
 
 function getUUID() {
     let userId = localStorage.getItem("uuid");
-    if ( userId === null || userId === undefined ) {
+    if (userId === null || userId === undefined) {
         // generate new one
         userId = create_UUID();
         localStorage.setItem("uuid", userId);
@@ -70,7 +70,7 @@ function getFeedbackButtons(mode) {
     let alignItems = "center";
     let justifyContent = "center";
 
-    if ( mode === 'mobile' ) {
+    if (mode === 'mobile') {
         alignItems = "left";
         justifyContent = "left";
     }
@@ -80,18 +80,18 @@ function getFeedbackButtons(mode) {
     let sadSelected = ["", splittedCurrPath[1], "img", "sadSelected.png"].join("/");
     return `
         <div
-            style="display: flex; flex: 1; flex-direction: column; align-items: `+alignItems+`; justify-content: `+justifyContent+`">
+            style="display: flex; flex: 1; flex-direction: column; align-items: `+ alignItems + `; justify-content: ` + justifyContent + `">
             <div
                 style="display: flex;">
                 <img
                     id="feedback-sad"
-                    src="`+sadSelected+`"
+                    src="`+ sadSelected + `"
                     class="feedback-button-sad"
                     onClick="feedbackSelected(false)"/>
 
                 <img
                     id="feedback-happy"
-                    src="`+happySelected+`"
+                    src="`+ happySelected + `"
                     class="feedback-button-happy"
                     onClick="feedbackSelected(true)"/>
             </div>
@@ -105,16 +105,16 @@ function getFeedbackButtons(mode) {
 
 function addFeedbackButtons() {
     let prevNextContainer = document.getElementsByClassName("docs-prevnext")[0];
-    if ( prevNextContainer === null || prevNextContainer === undefined ) {
+    if (prevNextContainer === null || prevNextContainer === undefined) {
         return;
     }
-    if ( window.screen.width <= 735 ) {
+    if (window.screen.width <= 735) {
         // MOBILE
         let feedbackButton = getFeedbackButtons("mobile");
         prevNextContainer.innerHTML = `
             <div style="position: relative">
-                `+feedbackButton+`
-                `+prevNextContainer.innerHTML+`
+                `+ feedbackButton + `
+                `+ prevNextContainer.innerHTML + `
             </div>
         `;
     } else {
@@ -122,8 +122,8 @@ function addFeedbackButtons() {
         let feedbackButton = getFeedbackButtons("web");
         prevNextContainer.innerHTML = `
             <div style="position: relative">
-                `+prevNextContainer.innerHTML+`
-                `+feedbackButton+`
+                `+ prevNextContainer.innerHTML + `
+                `+ feedbackButton + `
             </div>
         `;
     }
@@ -247,6 +247,43 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     addFeedbackButtons();
 
+    //---- make additional information part
+    let additionalInfo = document.getElementsByClassName("additionalInformation");
+    for (let i = 0; i < additionalInfo.length; i++) {
+        let splittedCurrPath = window.location.pathname.split("/");
+        let imgPath = ["", splittedCurrPath[1], "img", "plus.png"].join("/");
+        let curr = additionalInfo[i];
+        let time = curr.getAttribute("time");
+        if (time === undefined) {
+            continue;
+        }
+        let buttonText = time === "1" ? "Additional 1 min read" : "Additional " + time + " mins read";
+        let children = curr.innerHTML.trim();
+        let randomID = "additionalInfoRandomId" + i;
+        let html = `
+        <div class="${randomID}">
+            <div style="display: flex">
+            <div onClick=clickedAdditionalInfo("${randomID}")>
+                <h2 style="color: #ffffff;
+                    padding-top: 0px; margin-top: 0px;
+                    background-color: #333333;
+                    display: flex; cursor: pointer;
+                    align-items: center; justify-content: flex-start;
+                    padding-left: 10px; padding-right: 10px; border-radius: 6px;">
+                    <img src="${imgPath}" style="width: 12px; margin-right: 10px"></img>
+                        ${buttonText}
+                </h2>
+            </div>
+            </div>
+            <div style="display: none">
+                ${children}
+            </div>
+        </div>
+        `;
+        curr.innerHTML = html;
+    }
+    //-------------
+
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
@@ -256,3 +293,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let body = document.getElementsByTagName("body")[0];
     body.style.display = "block";
 });
+
+clickedAdditionalInfo = (randomId) => {
+    let element = document.getElementsByClassName(randomId)[0];
+    let isCollapsed = element.children[1].style.display === "none";
+    if (!isCollapsed) {
+        let splittedCurrPath = window.location.pathname.split("/");
+        let imgPath = ["", splittedCurrPath[1], "img", "plus.png"].join("/");
+        element.children[0].children[0].children[0].children[0].src = imgPath;
+        element.children[1].style.display = "none";
+    } else {
+        let splittedCurrPath = window.location.pathname.split("/");
+        let imgPath = ["", splittedCurrPath[1], "img", "minus.png"].join("/");
+        element.children[0].children[0].children[0].children[0].src = imgPath;
+        element.children[1].style.display = "block";
+    }
+}
