@@ -23,7 +23,7 @@ SuperTokens.init(config);
 - Call this function in the same place where you initialize your express server.
 
 ## Configurations
-The config object has the following shape (<span class="highlighted-text">The commented out parameters are optional</span>):
+The config object has the following parameters (<span class="highlighted-text">The commented out parameters are optional</span>):
 ```ts
 let config = {
     mysql: {

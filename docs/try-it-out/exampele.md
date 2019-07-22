@@ -9,11 +9,11 @@ You can check out the <a href="https://github.com/supertokens/auth-demo" target=
 We have created a live demo to show how SuperTokens helps prevent session theft and how it behaves in the event of an attack. You can interact with the demo on <a href="https://github.com/supertokens/auth-demo" target="_blank" class="highlighted-link">http://demo.supertokens.io</a>
 
 <div class="specialNote">
-You will need Mozilla Firefox to interact with the live demo, because only Firefox allows you to view all cookies regardless of your current URL path.
+This demo only works on Mozilla Firefox.
 </div>
 <br/>
 
-The demo is split into 2 phases, one where you are an innocent victim and another where you are a malicious attacker.
+The demo is split into 2 phases, one where you are a victim and another where you are an attacker.
 
 
 As an innocent victim:

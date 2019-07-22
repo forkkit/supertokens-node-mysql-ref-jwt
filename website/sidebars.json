@@ -14,8 +14,8 @@
                     "backend/usage-with-express/user-login",
                     "backend/usage-with-express/verify-session",
                     "backend/usage-with-express/session-object",
-                    "backend/usage-with-express/refreshing-session",
                     "backend/usage-with-express/manipulating-session-data",
+                    "backend/usage-with-express/refreshing-session",
                     "backend/usage-with-express/user-logout",
                     "backend/usage-with-express/revoking-session"
                 ]
@@ -27,8 +27,8 @@
                     "backend/usage-without-express/initialisation",
                     "backend/usage-without-express/user-login",
                     "backend/usage-without-express/verify-session",
-                    "backend/usage-without-express/refreshing-session",
                     "backend/usage-without-express/manipulating-session-data",
+                    "backend/usage-without-express/refreshing-session",
                     "backend/usage-without-express/user-logout",
                     "backend/usage-without-express/revoking-session"
                 ]

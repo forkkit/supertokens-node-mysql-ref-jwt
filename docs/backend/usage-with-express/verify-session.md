@@ -10,7 +10,6 @@ SuperTokens.getSession(req, res, enableCsrfProtection);
 ```
 - Use this function at the start of each API call to authenticate the user. 
 - You can either call the function directly in each API, or create a [middleware](../../migration/backend#middleware) out of it as per your requirements. 
-- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
 - This will return a ```Session``` object. Please see the next section for information with what you can do with this.
 
 <div class="divider"></div>

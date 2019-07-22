@@ -6,13 +6,13 @@ sidebar_label: Manipulating Session Data
 
 ## There are two types of data you can store in a session:
 - ```jwtPayload```
-    - Once set, when creating a new session, it cannot be changed further.
+    - Once set, it cannot be changed further.
     - Should not contain any sensitive information since this is sent over to the client.
-    - Once you have a ```Session``` object, fetching this does not require any database calls.
+    - Once you have a ```Session``` object, fetching the ```jwtPayload``` does not require any database calls.
 - ```sessionData```
     - This can be changed anytime during the lifetime of a session.
     - Can contain sensitive information since this is only stored in your database.
-    - Requires a database call to fetch or modify this information.
+    - Requires a database call to read or write this information.
     - Fetching or modification of this is not synchronized per session.
 
 ## If you have a session object

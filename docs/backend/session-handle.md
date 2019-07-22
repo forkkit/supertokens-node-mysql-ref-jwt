@@ -6,20 +6,20 @@ sidebar_label: Session Handle
 
 A ```sessionHandle``` is a unique ID for a session in your system. It stays the same during the entire lifetime a session - even though the actual access and refresh tokens keep changing.
 
+## How do you get a ```sessionHandle```?
+- If you are NOT using ```express```, the ```getSession``` function returns an object that contains this value.
+- You can call the ```getAllSessionHandlesForUser``` function (see below)
+- If token theft is detected, then the ```err``` object will contain a ```sessionHandle```.
+
 ## What can you do with a ```sessionHandle```?
 - Revoke a session: See "User Logout" section.
 - Update session information: See "Manipulating Session Data" section.
-
-## How do you get a ```sessionHandle```?
-- If you are not using ```express```, the ```getSession``` function returns an object that contains this value.
-- You can call the ```getAllSessionHandlesForUser``` function (see below)
-- If token theft is detected, then the ```err``` object will contain a ```sessionHandle```.
 
 ## Call the ```getAllSessionHandlesForUser``` function: [API Reference](api-reference#getallsessionhandlesforuseruserid)
 ```js
 SuperTokens.getAllSessionHandlesForUser(userId);
 ```
-- This function does a database call
+- This function requires a database call.
 
 <div class="divider"></div>
 

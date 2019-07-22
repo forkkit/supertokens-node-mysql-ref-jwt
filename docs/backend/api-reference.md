@@ -83,6 +83,7 @@ sidebar_label: API Reference
     - When this is thrown, none of the auth cookies are removed - you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. Our frontend SDK takes care of this for you in most cases.
 ##### Additional information
 - Verifies the current session using the ```req``` object.
+- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
 - If ```enableCsrfProtection``` is ```true``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, this function also provides CSRF protection. We strongly recommend that you set it to true for any non-GET API that requires user auth (except for the refresh session API).
 - May change the access token - but this is taken care of by this function and our frontend SDK. You do need to worry about handling this.
 
@@ -305,6 +306,9 @@ Promise<{
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+##### Additional information
+- Creates a new access and a new refresh token for this session.
+- Inserts a new row in the MySQL table for this new session.
 
 <div class="divider"></div>
 
@@ -340,6 +344,10 @@ Promise<{
     - This will be thrown if JWT verification fails. This happens, for example, if the token has expired or the JWT signing key has changed.
     - This will be thrown if ```enableAntiCsrf``` (in the ```config``` object) is set to ```true``` and ```antiCsrfToken``` validation fails.
     - When this is thrown, you should return a ```session expired``` status code and instruct your frontend to call the refresh token API endpoint. <span class="highlighted-text">Do not remove any auth cookie here</span> Our frontend SDK takes care of this for you in most cases.
+##### Additional information
+- This function will mostly never require a database call since we are using JWT access tokens unless ```blacklisting``` is enabled.
+- Verifies the current session using input tokens.
+- If ```antiCsrfToken``` is not ```null``` and ```enableAntiCsrf``` (in the ```config``` object) is set to ```true```, it also provides CSRF protection. We strongly recommend that you use this feature for all your non-GET APIs (except for the refresh session API).
 
 <div class="divider"></div>
 
@@ -398,7 +406,7 @@ Promise<{
     - Type: ```string | number```
 ##### Returns
 - ```Promise<string[]>```
-    - Each element in the ```string``` array is a ```sessionHandle```
+    - Each element in the ```string[]``` is a ```sessionHandle```
 ##### Throws
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
