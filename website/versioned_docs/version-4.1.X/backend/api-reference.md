@@ -412,3 +412,16 @@ Promise<{
 - ```GENERAL_ERROR```
     - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
     - Examples of when this is thrown is if the library could not connect to the MySQL instance.
+
+<div class="divider"></div>
+
+## ```setRelevantHeadersForOptionsAPI(res)```
+##### Parameters
+- ```res```
+    - Type: ```Express.Response```
+##### Returns
+- nothing
+##### Throws
+- ```GENERAL_ERROR```
+    - Type: ```{errType: SuperTokens.Error.GENERAL_ERROR, err: any}```
+    - Examples of when this is thrown is if something went wrong while setting headers.

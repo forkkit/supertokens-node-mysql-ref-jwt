@@ -42,7 +42,7 @@ SuperTokens.updateSessionData(sessionHandle, newSessionData);
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
-async function changeSessionDataAPI(req: express.Request, res: express.Response) {
+async function changeSessionDataAPI(req, res) {
     // first we get the session object
     let session;
     try {
@@ -69,7 +69,7 @@ async function changeSessionDataAPI(req: express.Request, res: express.Response)
     }
 }
 
-async function changeSessionDataWithSessionObject(sessionHandle: string) {
+async function changeSessionDataWithSessionObject(sessionHandle) {
     try {
         let sessionData = await SuperTokens.getSessionData(sessionHandle);
         await SuperTokens.updateSessionData(sessionHandle, {comment: "new session data"});

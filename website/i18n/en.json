@@ -29,6 +29,10 @@
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
       },
+      "backend/usage-with-express/options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
+      },
       "backend/usage-with-express/refreshing-session": {
         "title": "Refreshing Session",
         "sidebar_label": "Refreshing Session"
@@ -60,6 +64,10 @@
       "backend/usage-without-express/manipulating-session-data": {
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
+      },
+      "backend/usage-without-express/options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
       },
       "backend/usage-without-express/refreshing-session": {
         "title": "Refreshing Session",
@@ -281,6 +289,10 @@
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
       },
+      "version-4.1.X/backend/usage-with-express/version-4.1.X-options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
+      },
       "version-4.1.X/backend/usage-with-express/version-4.1.X-refreshing-session": {
         "title": "Refreshing Session",
         "sidebar_label": "Refreshing Session"
@@ -308,6 +320,10 @@
       "version-4.1.X/backend/usage-without-express/version-4.1.X-manipulating-session-data": {
         "title": "Manipulating Session Data",
         "sidebar_label": "Manipulating Session Data"
+      },
+      "version-4.1.X/backend/usage-without-express/version-4.1.X-options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
       },
       "version-4.1.X/backend/usage-without-express/version-4.1.X-refreshing-session": {
         "title": "Refreshing Session",

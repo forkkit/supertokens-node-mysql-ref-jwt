@@ -17,6 +17,7 @@ sidebar_label: Troubleshooting
 ## Cookie errors
 #### I cannot see any cookies in my browser
 - Make sure you have set the correct domain for the cookies. For example, is your Website domain is ```example.com``` and your API domain is ```api.example.com```, then your cookie domain should be ```.example.com```
+- Make sure the domain value given in the ```config``` object does not contain the port number.
 
 #### The cookies are showing on my browser, but not getting sent to the APIs
 - One reason could be that your cookie path does not cover your API path. For example, if your cookie path is ```/api```, then your API path must start with ```/api``` for it to receive that cookie.

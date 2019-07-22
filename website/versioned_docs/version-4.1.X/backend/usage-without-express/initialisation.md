@@ -59,7 +59,7 @@ let config = {
     //  error: undefined, // This function that has the following type: (err: any) => void. If provided, will be called for error logging purposes
 //  },
     cookie: {
-        domain: "your-domain-here.com", // this is the domain to set for all the cookies. If using a website, please make sure this domain is the common part of your website domain and your API domain.
+        domain: "your-domain-here.com", // this is the domain to set for all the cookies. If using a website, please make sure this domain is the common part of your website domain and your API domain. Do not set any port here and do not put http:// or https://
     //  secure: true // Sets if the cookies are secure or not. If you do not have https, make this false.
     }
 }

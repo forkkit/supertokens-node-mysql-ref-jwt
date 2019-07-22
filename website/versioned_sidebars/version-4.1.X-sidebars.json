@@ -15,6 +15,7 @@
           "version-4.1.X-backend/usage-with-express/verify-session",
           "version-4.1.X-backend/usage-with-express/session-object",
           "version-4.1.X-backend/usage-with-express/manipulating-session-data",
+          "version-4.1.X-backend/usage-with-express/options-api",
           "version-4.1.X-backend/usage-with-express/refreshing-session",
           "version-4.1.X-backend/usage-with-express/user-logout",
           "version-4.1.X-backend/usage-with-express/revoking-session"
@@ -28,6 +29,7 @@
           "version-4.1.X-backend/usage-without-express/user-login",
           "version-4.1.X-backend/usage-without-express/verify-session",
           "version-4.1.X-backend/usage-without-express/manipulating-session-data",
+          "version-4.1.X-backend/usage-without-express/options-api",
           "version-4.1.X-backend/usage-without-express/refreshing-session",
           "version-4.1.X-backend/usage-without-express/user-logout",
           "version-4.1.X-backend/usage-without-express/revoking-session"
