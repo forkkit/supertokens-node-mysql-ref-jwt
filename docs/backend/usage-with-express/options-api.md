@@ -26,8 +26,8 @@ SuperTokens.setRelevantHeadersForOptionsAPI(res);
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
 
 app.options("/like-comment", function (req, res) {
-    res.headers("Access-Control-Allow-Origin", "some-origin.com");
-    res.headers("Access-Control-Allow-Methods", "POST");
+    res.header("Access-Control-Allow-Origin", "some-origin.com");
+    res.header("Access-Control-Allow-Methods", "POST");
     SuperTokens.setRelevantHeadersForOptionsAPI(res);
     res.send("success");
 });
