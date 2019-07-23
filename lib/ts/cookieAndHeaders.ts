@@ -187,34 +187,32 @@ export function setCookie(
         path
     };
 
-    let val = typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
-
-    resAppend(res, "Set-Cookie", serialize(name, String(val), opts));
-    return res;
+    return append(res, "Set-Cookie", serialize(name, value, opts));
 }
 
-function resAppend(res: ServerResponse, field: any, val: any) {
-    let prev = res.getHeader(field);
+/**
+ * Append additional header `field` with value `val`.
+ *
+ * Example:
+ *
+ *    res.append('Set-Cookie', 'foo=bar; Path=/; HttpOnly');
+ *
+ * @param {ServerResponse} res
+ * @param {string} field
+ * @param {string| string[]} val
+ */
+function append(res: ServerResponse, field: string, val: string | string[]) {
+    let prev: string | string[] | undefined = res.getHeader(field) as string | string[] | undefined;
     let value = val;
 
-    if (prev) {
+    if (prev !== undefined) {
         // concat the new and prev vals
         value = Array.isArray(prev) ? prev.concat(val) : Array.isArray(val) ? [prev].concat(val) : [prev, val];
     }
 
-    return responseSet(res, field, value);
-}
+    value = Array.isArray(value) ? value.map(String) : String(value);
 
-function responseSet(res: ServerResponse, field: any, val: any): ServerResponse {
-    if (arguments.length === 3) {
-        let value = Array.isArray(val) ? val.map(String) : String(val);
-
-        res.setHeader(field, value);
-    } else {
-        for (let key in field) {
-            responseSet(res, key, field[key]);
-        }
-    }
+    res.setHeader(field, value);
     return res;
 }
 
