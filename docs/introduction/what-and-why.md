@@ -13,8 +13,11 @@ Please install and use our <span class="highlighted-text">backend and frontend l
 ## Already have your own session management implemented?
 Please visit the backend, database and frontend sections of our <a href="../migration/backend" style="color: #ff9933">Migration</a> guide. 
 
+## Having trouble implementing this library?
+For implementation issues, please visit the <a href="../troubleshooting/troubleshooting">Troubleshooting Section</a>.
+
 <div style="height: 20px"></div>
 <div class="specialNote">
-For implementation issues, please visit the <a href="../troubleshooting/troubleshooting">Troubleshooting Section</a>.
+This library only supports a single instance of MySQL. We are working on an enterprise version that will support many MySQL instances.
 </div>
 <div style="height: 20px"></div>
