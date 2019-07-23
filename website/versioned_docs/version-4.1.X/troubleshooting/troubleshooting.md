@@ -9,10 +9,9 @@ original_id: troubleshooting
 #### Error: ```Client does not support authentication protocol```
 - Run the following command in your MySQL monitor:
   ```SQL
-  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
+  ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY 'password'
   ```
     - Change the username from ```root``` to whatever you want.
-    - Change the host from ```localhost``` to your instance host.
     - Change the password from ```password``` to your actual password.
 
 ## Cookie errors
