@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2019-07-23
+### Changed
+- remove cookie-parser dependecy
+
 ## [4.1.0] - 2019-07-17
 ### Fixed
 - Throws Auth error if userId is not of correct type

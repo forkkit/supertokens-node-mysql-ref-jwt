@@ -2,6 +2,8 @@ import * as express from "express";
 
 import Config from "./config";
 import { AuthError, generateError } from "./error";
+import { ServerResponse, IncomingMessage } from "http";
+import { serialize, parse } from "cookie";
 
 const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
@@ -157,18 +159,19 @@ function setHeader(res: express.Response, key: string, value: string) {
 }
 
 /**
+ *
  * @param res
- * @param key
+ * @param name
  * @param value
  * @param domain
  * @param secure
  * @param httpOnly
- * @param maxAge
+ * @param expires
  * @param path
  */
 export function setCookie(
-    res: express.Response,
-    key: string,
+    res: ServerResponse,
+    name: string,
     value: string,
     domain: string,
     secure: boolean,
@@ -176,32 +179,105 @@ export function setCookie(
     expires: number,
     path: string
 ) {
-    let cookieOptions: express.CookieOptions = {
+    let opts = {
         domain,
         secure,
         httpOnly,
         expires: new Date(expires),
         path
     };
+
+    let val = typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
+
+    resAppend(res, "Set-Cookie", serialize(name, String(val), opts));
+    return res;
+}
+
+function resAppend(res: ServerResponse, field: any, val: any) {
+    let prev = res.getHeader(field);
+    let value = val;
+
+    if (prev) {
+        // concat the new and prev vals
+        value = Array.isArray(prev) ? prev.concat(val) : Array.isArray(val) ? [prev].concat(val) : [prev, val];
+    }
+
+    return responseSet(res, field, value);
+}
+
+function responseSet(res: ServerResponse, field: any, val: any): ServerResponse {
+    if (arguments.length === 3) {
+        let value = Array.isArray(val) ? val.map(String) : String(val);
+
+        res.setHeader(field, value);
+    } else {
+        for (let key in field) {
+            responseSet(res, key, field[key]);
+        }
+    }
+    return res;
+}
+
+export function getCookieValue(req: IncomingMessage, key: string): string | undefined {
+    if ((req as any).cookies) {
+        return (req as any).cookies[key];
+    }
+
+    let cookies: { [key: string]: string } | string | undefined = req.headers.cookie;
+
+    if (cookies === undefined) {
+        return undefined;
+    }
+
+    cookies = parse(cookies);
+
+    // parse JSON cookies
+    cookies = JSONCookies(cookies);
+
+    return (cookies as any)[key];
+}
+
+/**
+ * Parse JSON cookie string.
+ *
+ * @param {String} str
+ * @return {Object} Parsed object or undefined if not json cookie
+ * @public
+ */
+
+function JSONCookie(str: string) {
+    if (typeof str !== "string" || str.substr(0, 2) !== "j:") {
+        return undefined;
+    }
+
     try {
-        res.cookie(key, value, cookieOptions);
+        return JSON.parse(str.slice(2));
     } catch (err) {
-        throw generateError(AuthError.GENERAL_ERROR, err);
+        return undefined;
     }
 }
 
 /**
+ * Parse JSON cookies.
  *
- * @param throws AuthError GENERAL_ERROR
+ * @param {Object} obj
+ * @return {Object}
+ * @public
  */
-export function getCookieValue(req: express.Request, key: string): string | undefined {
-    if (req.cookies === undefined) {
-        throw generateError(
-            AuthError.GENERAL_ERROR,
-            new Error(
-                "did you forget to use cookie-parser middleware? Also please make sure that you use cookieParser BEFORE any of your API routes."
-            )
-        );
+
+function JSONCookies(obj: any) {
+    let cookies = Object.keys(obj);
+    let key;
+    let val;
+
+    for (let i = 0; i < cookies.length; i++) {
+        key = cookies[i];
+        val = JSONCookie(obj[key]);
+
+        if (val) {
+            obj[key] = val;
+        }
     }
-    return req.cookies[key];
+
+    return obj;
 }

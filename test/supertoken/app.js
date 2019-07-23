@@ -11,7 +11,6 @@ let jsonParser = bodyParser.json({ limit: "20mb" });
 let app = express();
 app.use(urlencodedParser);
 app.use(jsonParser);
-app.use(cookieParser());
 
 app.post("/login", async (req, res, next) => {
     const userId = req.body.userId;

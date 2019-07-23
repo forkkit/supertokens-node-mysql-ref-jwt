@@ -1,4 +1,6 @@
+/// <reference types="node" />
 import * as express from "express";
+import { ServerResponse, IncomingMessage } from "http";
 /**
  * @description clears all the auth cookies from the response
  */
@@ -23,18 +25,15 @@ export declare function setAntiCsrfTokenInHeadersIfRequired(res: express.Respons
 export declare function getHeader(req: express.Request, key: string): string | undefined;
 export declare function setOptionsAPIHeader(res: express.Response): void;
 /**
+ *
  * @param res
- * @param key
+ * @param name
  * @param value
  * @param domain
  * @param secure
  * @param httpOnly
- * @param maxAge
+ * @param expires
  * @param path
  */
-export declare function setCookie(res: express.Response, key: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string): void;
-/**
- *
- * @param throws AuthError GENERAL_ERROR
- */
-export declare function getCookieValue(req: express.Request, key: string): string | undefined;
+export declare function setCookie(res: ServerResponse, name: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string): ServerResponse;
+export declare function getCookieValue(req: IncomingMessage, key: string): string | undefined;
