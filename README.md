@@ -13,7 +13,7 @@
 
 This library implements user session management for websites and apps that run on **NodeJS** and **MySQL**. If you do not use these technologies, please checkout [our website](https://supertokens.io) to find the right library for you.
 
-**The session protocol SuperTokens uses is described in detail in [this article](https://hackernoon.com/the-best-way-to-securely-manage-user-sessions-91f27eeef460).**
+**The session protocol SuperTokens uses is described in detail in [this article](https://supertokens.io/blog/the-best-way-to-securely-manage-user-sessions).**
 
 The library has the following features:
 - It uses short-lived access tokens (JWT) and long-lived refresh tokens (Opaque).
