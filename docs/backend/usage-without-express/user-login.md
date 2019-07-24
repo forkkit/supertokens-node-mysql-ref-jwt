@@ -30,7 +30,7 @@ SuperTokens.createNewSession(userId, jwtPayload, sessionData);
         - ```HttpOnly```: ```true```
         - ```secure```: ```true``` (Unless in dev mode)
         - Expiry time: ```new Date(refreshToken.expires)```
-        - ```Path```: Your refresh session API path. For example: ```"/refreshsession"```
+        - ```Path```: Your refresh session API path. For example: ```"/api/refresh"```
     - ```idRefreshToken```
         - Key: ```sIdRefreshToken```
         - Value: ```idRefreshToken.value```
@@ -58,7 +58,7 @@ function loginAPI() {
         
         let refreshToken = session.refreshToken;
         setCookie("sRefreshToken", refreshToken.value, "example.com", true, true, 
-        new Date(refreshToken.expires), "/refreshsession");
+        new Date(refreshToken.expires), "/api/refresh");
         
         let idRefreshToken = session.idRefreshToken;
         setCookie("sIdRefreshToken", idRefreshToken.value, "example.com", false, false, 

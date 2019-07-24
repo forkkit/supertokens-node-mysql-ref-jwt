@@ -254,10 +254,16 @@ document.addEventListener("DOMContentLoaded", () => {
         let imgPath = ["", splittedCurrPath[1], "img", "plus.png"].join("/");
         let curr = additionalInfo[i];
         let time = curr.getAttribute("time");
-        if (time === undefined) {
+        let text = curr.getAttribute("text");
+        if (time === null && text === null) {
             continue;
         }
-        let buttonText = time === "1" ? "Additional 1 min read" : "Additional " + time + " mins read";
+        let buttonText = "";
+        if (text !== null) {
+            buttonText = text;
+        } else {
+            buttonText = time === "1" ? "Additional 1 min read" : "Additional " + time + " mins read";
+        }
         let children = curr.innerHTML.trim();
         let randomID = "additionalInfoRandomId" + i;
         let html = `

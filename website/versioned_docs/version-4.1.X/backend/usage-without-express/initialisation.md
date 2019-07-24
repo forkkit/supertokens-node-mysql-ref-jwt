@@ -94,3 +94,53 @@ SuperTokens.init(config).then(() => {
     console.log("Oops!! Something went wrong :(", err);
 });
 ```
+
+<div style="height: 10px"></div>
+<div class="additionalInformation" time="1" text="See configuration type">
+Below is the type of the <code>config</code> object for your reference:
+<div style="height: 10px"></div>
+
+```ts
+// "?" means that parameter is optional
+let config = {
+    mysql: {
+        host?: string,
+        port?: number,
+        user: string,
+        password: string,
+        connectionLimit?: number,
+        database: string,
+        tables?: {
+            signingKey?: string,
+            refreshTokens?: string
+        }
+    },
+    tokens: {
+        accessToken?: {
+            signingKey?: {
+                dynamic?: boolean,
+                updateInterval?: number,
+                get?: () => Promise<string>,
+                accessTokenPath?: string
+            },
+            validity?: number,
+            blacklisting?: boolean
+        },
+        refreshToken: {
+            validity?: number,
+            removalCronjobInterval?: string,
+            renewTokenPath: string
+        }
+    },
+    logging?: {
+        info?: (info: any) => void,
+        error?: (err: any) => void
+    },
+    cookie: {
+        domain: string,
+        secure?: boolean
+    }
+}
+```
+
+</div>

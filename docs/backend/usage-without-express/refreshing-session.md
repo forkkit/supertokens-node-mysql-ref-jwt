@@ -10,14 +10,14 @@ This operation is to be done whenever any function returns the ```TRY_REFRESH_TO
 - Your frontend calls an API (let's say ```/getHomeFeed```) with an access token that has expired.
 - In that API, your backend calls the ```SuperTokens.getSession(accessToken, antiCsrfToken)``` function which throws a ```TRY_REFRESH_TOKEN``` error.
 - Your backend replies with a ```session expired``` status code to your frontend.
-- Your frontend detects this status code and calls an API on your backend that will refresh the session (let's call this API ```/refreshSession```).
+- Your frontend detects this status code and calls an API on your backend that will refresh the session (let's call this API ```/api/refresh```).
 - In this API, you call the ```SuperTokens.refreshSession(refreshToken)``` function that "refreshes" the session. This will result in the generation of a new access and a new refresh token. The lifetime of these new tokens starts from the point when they were generated (Please contact us if this is unclear).
 - Your frontend then calls the ```/getHomeFeed``` API once again with the new access token yielding a successful response.
 
 Our frontend SDK takes care of calling your refresh session endpoint and managing the auth tokens on your frontend.
 
 <div class="specialNote">
-If you are building a webapp and get a <code>TRY_REFRESH_TOKEN</code> error on your backend for a <code>GET</code> request that returns <code>HTML</code>, then you should reply with  <code>HTML & JS</code> code that calls your <code>/refreshSession</code> endpoint. Once that is successful, your frontend code should redirect the browser to call again the original <code>GET</code> API. More details on this in the frontend section.
+If you are building a webapp and get a <code>TRY_REFRESH_TOKEN</code> error on your backend for a <code>GET</code> request that returns <code>HTML</code>, then you should reply with  <code>HTML & JS</code> code that calls your <code>/api/refresh</code> endpoint. Once that is successful, your frontend code should redirect the browser to call again the original <code>GET</code> API. More details on this in the frontend section.
 </div>
 
 ## Call the ```refreshSession``` function: [API Reference](../api-reference#refreshsessionrefreshtoken)
@@ -51,7 +51,7 @@ function refreshSessionAPI() {
         
         let refreshToken = session.newRefreshToken;
         setCookie("sRefreshToken", refreshToken.value, "example.com", true, true, 
-        new Date(refreshToken.expires), "/refreshsession");
+        new Date(refreshToken.expires), "/api/refresh");
         
         let idRefreshToken = session.newIdRefreshToken;
         setCookie("sIdRefreshToken", idRefreshToken.value, "example.com", false, false, 
