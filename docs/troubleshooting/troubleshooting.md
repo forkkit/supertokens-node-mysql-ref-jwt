@@ -24,3 +24,11 @@ sidebar_label: Troubleshooting
 
 #### I cannot find the ```sRefreshToken``` cookie in my browser
 - This usually happens in browsers like Google Chrome. They show cookies that apply only to the current loaded path. Try seeing the cookies in Mozilla Firefox, you will be able to see the refresh token cookie!
+
+## CORS errors
+#### Blocked by CORS policy: The value of the 'Access-Control-Allow-Credentials' header in the response is '' which must be 'true'
+- This error occurs when your API domain is different than your website domain. Here, the difference could also be in the port number.
+- To solve this error, add the following header to your response from your API: 
+  ```
+  Access-Control-Allow-Credentials: true
+  ```
