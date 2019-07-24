@@ -7,14 +7,7 @@ sidebar_label: Init & Imports
 ## Importing
 ```js
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
-import * as CookieParser from 'cookie-parser';
 ```
-
-## Use the ```CookieParser``` middleware with ```Express```
-```js
-app.use(CookieParser());
-```
-- <span class="highlighted-text">Please make sure to call this before any of your API routes</span>. Otherwise our library may not work.
 
 ## Call the ```init``` function: [API Reference](../api-reference#initconfig)
 ```js
@@ -72,10 +65,8 @@ let config = {
 ## Example code
 ```ts
 import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
-import * as CookieParser from 'cookie-parser';
 
 let app = express();
-app.use(CookieParser());
 
 // minimum config
 let config = {

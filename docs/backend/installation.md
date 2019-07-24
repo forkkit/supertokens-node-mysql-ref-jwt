@@ -14,13 +14,7 @@ Note: We recommend that you create a new database as it would become easier for 
 
 ### 2. Install SuperTokens package
 ```js
-npm i --save supertokens-node-mysql-ref-jwt@^4.1.0
-```
-
-### 3. Install cookie-parser package if you are using Express
-Our package uses this to set and get cookies from express ```request``` and ```response``` objects.
-```js
-npm i --save cookie-parser
+npm i --save supertokens-node-mysql-ref-jwt@^4.2.0
 ```
 
 <div class="divider"></div>
