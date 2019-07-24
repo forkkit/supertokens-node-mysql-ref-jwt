@@ -42,7 +42,6 @@ export async function createNewSession(
     jwtPayload?: any,
     sessionData?: any
 ): Promise<Session> {
-    res.header("Access-Control-Allow-Credentials", "true");
     let response = await SessionFunctions.createNewSession(userId, jwtPayload, sessionData);
 
     // attach tokens to cookies
@@ -64,7 +63,6 @@ export async function getSession(
     res: express.Response,
     enableCsrfProtection: boolean
 ): Promise<Session> {
-    res.header("Access-Control-Allow-Credentials", "true");
     let idRefreshToken = getIdRefreshTokenFromCookie(req);
     if (idRefreshToken === undefined) {
         // This means refresh token is not going to be there either, so the session does not exist.
@@ -110,7 +108,6 @@ export async function getSession(
  * @sideEffects may remove cookies, or change the accessToken and refreshToken.
  */
 export async function refreshSession(req: express.Request, res: express.Response): Promise<Session> {
-    res.header("Access-Control-Allow-Credentials", "true");
     let config = Config.get();
 
     let refreshToken = getRefreshTokenFromCookie(req);

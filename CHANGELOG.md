@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - remove cookie-parser dependecy
 
+### Fixed
+- userId bug when a number is passed as string in userId
+
 ## [4.1.0] - 2019-07-17
 ### Fixed
 - Throws Auth error if userId is not of correct type

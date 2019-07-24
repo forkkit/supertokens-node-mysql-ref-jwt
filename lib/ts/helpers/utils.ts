@@ -146,16 +146,6 @@ export function sanitizeNumberInput(field: any): number | undefined {
     if (typeof field === "number") {
         return field;
     }
-    if (typeof field !== "string") {
-        return undefined;
-    }
-    try {
-        let result = Number(validator.trim(field));
-        if (isNaN(result)) {
-            return undefined;
-        }
-        return result;
-    } catch (err) {}
     return undefined;
 }
 
@@ -166,12 +156,6 @@ export function sanitizeNumberInput(field: any): number | undefined {
 export function sanitizeBooleanInput(field: any): boolean | undefined {
     if (field === true || field === false) {
         return field;
-    }
-    if (field === "false") {
-        return false;
-    }
-    if (field === "true") {
-        return true;
     }
     return undefined;
 }

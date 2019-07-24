@@ -8,7 +8,7 @@ const errors = require("../lib/build/error");
 
 describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
     it("testing non-string userId (number)", async function() {
-        await reset(config.minConfigTest);
+        await reset(config.configWithShortValidityForAccessToken);
         const userId = 1;
         const jwtPayload = { a: "testing" };
         const sessionData = { s: "session" };
@@ -30,10 +30,50 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.session.userId, "number");
         assert.deepStrictEqual(newSession.session.userId, userId);
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
+        assert.strictEqual(typeof sessionInfo, "object");
+        assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
+        assert.strictEqual(typeof sessionInfo.session, "object");
+        assert.strictEqual(typeof sessionInfo.session.handle, "string");
+        assert.strictEqual(typeof sessionInfo.session.jwtPayload, "object");
+        assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof sessionInfo.session.userId, "number");
+        assert.deepStrictEqual(sessionInfo.session.userId, userId);
+        await delay(1500);
+        try {
+            await session.getSession(newSession.accessToken.value, null);
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
+        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newIdRefreshToken.value, newSession.idRefreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newRefreshToken.value, newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.session, "object");
+        assert.strictEqual(typeof newRefreshedSession.session.handle, "string");
+        assert.strictEqual(typeof newRefreshedSession.session.jwtPayload, "object");
+        assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newRefreshedSession.session.userId, "number");
+        assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
     });
 
     it("testing number as string userId", async function() {
-        await reset(config.minConfigTest);
+        await reset(config.configWithShortValidityForAccessToken);
         const userId = "1";
         const jwtPayload = { a: "testing" };
         const sessionData = { s: "session" };
@@ -55,10 +95,50 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.session.userId, "string");
         assert.deepStrictEqual(newSession.session.userId, userId);
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
+        assert.strictEqual(typeof sessionInfo, "object");
+        assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
+        assert.strictEqual(typeof sessionInfo.session, "object");
+        assert.strictEqual(typeof sessionInfo.session.handle, "string");
+        assert.strictEqual(typeof sessionInfo.session.jwtPayload, "object");
+        assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof sessionInfo.session.userId, "string");
+        assert.deepStrictEqual(sessionInfo.session.userId, userId);
+        await delay(1500);
+        try {
+            await session.getSession(newSession.accessToken.value, null);
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
+        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newIdRefreshToken.value, newSession.idRefreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newRefreshToken.value, newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.session, "object");
+        assert.strictEqual(typeof newRefreshedSession.session.handle, "string");
+        assert.strictEqual(typeof newRefreshedSession.session.jwtPayload, "object");
+        assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
+        assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
     });
 
     it("testing stringified JSON userId (single field)", async function() {
-        await reset(config.minConfigTest);
+        await reset(config.configWithShortValidityForAccessToken);
         const userId = JSON.stringify({ a: "testing" });
         const jwtPayload = { a: "testing" };
         const sessionData = { s: "session" };
@@ -80,10 +160,50 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.session.userId, "string");
         assert.deepStrictEqual(newSession.session.userId, userId);
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
+        assert.strictEqual(typeof sessionInfo, "object");
+        assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
+        assert.strictEqual(typeof sessionInfo.session, "object");
+        assert.strictEqual(typeof sessionInfo.session.handle, "string");
+        assert.strictEqual(typeof sessionInfo.session.jwtPayload, "object");
+        assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof sessionInfo.session.userId, "string");
+        assert.deepStrictEqual(sessionInfo.session.userId, userId);
+        await delay(1500);
+        try {
+            await session.getSession(newSession.accessToken.value, null);
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
+        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newIdRefreshToken.value, newSession.idRefreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newRefreshToken.value, newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.session, "object");
+        assert.strictEqual(typeof newRefreshedSession.session.handle, "string");
+        assert.strictEqual(typeof newRefreshedSession.session.jwtPayload, "object");
+        assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
+        assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
     });
 
     it("testing stringified JSON userId (multiple fields)", async function() {
-        await reset(config.minConfigTest);
+        await reset(config.configWithShortValidityForAccessToken);
         const userId = JSON.stringify({ a: "testing", i: "supertokens" });
         const jwtPayload = { a: "testing" };
         const sessionData = { s: "session" };
@@ -105,6 +225,46 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.session.userId, "string");
         assert.deepStrictEqual(newSession.session.userId, userId);
         assert.deepStrictEqual(typeof newSession.antiCsrfToken, "string");
+        const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
+        assert.strictEqual(typeof sessionInfo, "object");
+        assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
+        assert.strictEqual(typeof sessionInfo.session, "object");
+        assert.strictEqual(typeof sessionInfo.session.handle, "string");
+        assert.strictEqual(typeof sessionInfo.session.jwtPayload, "object");
+        assert.deepStrictEqual(sessionInfo.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof sessionInfo.session.userId, "string");
+        assert.deepStrictEqual(sessionInfo.session.userId, userId);
+        await delay(1500);
+        try {
+            await session.getSession(newSession.accessToken.value, null);
+            throw Error("test failed");
+        } catch (err) {
+            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
+                throw err;
+            }
+        }
+        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newAccessToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newIdRefreshToken.value, newSession.idRefreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newIdRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken, "object");
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.value, "string");
+        assert.notDeepStrictEqual(newRefreshedSession.newRefreshToken.value, newSession.refreshToken.value);
+        assert.strictEqual(typeof newRefreshedSession.newRefreshToken.expires, "number");
+        assert.strictEqual(typeof newRefreshedSession.session, "object");
+        assert.strictEqual(typeof newRefreshedSession.session.handle, "string");
+        assert.strictEqual(typeof newRefreshedSession.session.jwtPayload, "object");
+        assert.deepStrictEqual(newRefreshedSession.session.jwtPayload, jwtPayload);
+        assert.strictEqual(typeof newRefreshedSession.session.userId, "string");
+        assert.deepStrictEqual(newRefreshedSession.session.userId, userId);
+        assert.strictEqual(typeof newRefreshedSession.newAntiCsrfToken, "string");
+        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
     });
 
     it("testing invalid stringified JSON userId", async function() {
