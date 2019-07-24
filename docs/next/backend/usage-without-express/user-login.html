@@ -92,7 +92,7 @@
 <li><code>HttpOnly</code>: <code>true</code></li>
 <li><code>secure</code>: <code>true</code> (Unless in dev mode)</li>
 <li>Expiry time: <code>new Date(refreshToken.expires)</code></li>
-<li><code>Path</code>: Your refresh session API path. For example: <code>&quot;/refreshsession&quot;</code></li>
+<li><code>Path</code>: Your refresh session API path. For example: <code>&quot;/api/refresh&quot;</code></li>
 </ul></li>
 <li><code>idRefreshToken</code>
 <ul>
@@ -122,7 +122,7 @@
         
         <span class="hljs-keyword">let</span> refreshToken = session.refreshToken;
         setCookie(<span class="hljs-string">"sRefreshToken"</span>, refreshToken.value, <span class="hljs-string">"example.com"</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, 
-        <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(refreshToken.expires), <span class="hljs-string">"/refreshsession"</span>);
+        <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(refreshToken.expires), <span class="hljs-string">"/api/refresh"</span>);
         
         <span class="hljs-keyword">let</span> idRefreshToken = session.idRefreshToken;
         setCookie(<span class="hljs-string">"sIdRefreshToken"</span>, idRefreshToken.value, <span class="hljs-string">"example.com"</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, 
