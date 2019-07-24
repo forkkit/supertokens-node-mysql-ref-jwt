@@ -1,8 +1,8 @@
 ![SuperTokens banner](https://raw.githubusercontent.com/supertokens/supertokens-logo/master/images/Artboard%20%E2%80%93%2027%402x.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/LICENSE)
-<a href="https://discord.gg/zVcVeev">
-        <img src="https://img.shields.io/discord/587173034553769989.svg?logo=discord"
+<a href="https://supertokens.io/discord">
+        <img src="https://img.shields.io/discord/603466164219281420.svg?logo=discord"
             alt="chat on Discord"></a>
 
 **Master**
@@ -58,7 +58,7 @@ See our [Contributing](https://github.com/supertokens/supertokens-node-mysql-ref
 - IP change detection invalidates access token, so that thefts get caught sooner, or attacker get's logged out, while keeping the actual user logged in (Thanks to [Aervue](https://github.com/Aervue))
 
 ## Support, questions and bugs
-We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://discord.gg/zVcVeev). 
+We are most accessible via team@supertokens.io, via the GitHub issues feature and our [Discord server](https://supertokens.io/discord). 
 
 We realise that our community is small at the moment and therefore we will actively provide support to anyone interested in this library.
 
