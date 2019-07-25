@@ -62,13 +62,16 @@ export async function getKeyValueFromKeyName_Transaction(
     let query = `SELECT key_value, created_at_time FROM ${
         config.mysql.tables.signingKey
     } WHERE key_name = ? FOR UPDATE`;
-    let result = await connection.executeQuery(query, [keyName]);
+    let resultAndInfo = await connection.executeQuery(query, [keyName]);
+    let result = resultAndInfo.results;
     if (result.length === 0) {
         return undefined;
     }
+    const keyValueIndex = 0,
+        createdAtTimeIndex = 1;
     return {
-        keyValue: result[0].key_value.toString(),
-        createdAtTime: Number(result[0].created_at_time)
+        keyValue: result[0][keyValueIndex].toString(),
+        createdAtTime: Number(result[0][createdAtTimeIndex])
     };
 }
 
@@ -89,8 +92,8 @@ export async function insertKeyValueForKeyName_Transaction(
 export async function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any) {
     const config = Config.get();
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandle]);
-    return result.affectedRows;
+    let resultAndInfo = await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandle]);
+    return resultAndInfo.info.getAffectedRowsCount();
 }
 
 export async function getSessionData(
@@ -99,23 +102,25 @@ export async function getSessionData(
 ): Promise<{ found: false } | { found: true; data: any }> {
     const config = Config.get();
     let query = `SELECT session_info FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
+    let resultAndInfo = await connection.executeQuery(query, [sessionHandle]);
+    let result = resultAndInfo.results;
     if (result.length === 0) {
         return {
             found: false
         };
     }
+    const sessionInfoIndex = 0;
     return {
         found: true,
-        data: unserialiseSessionData(result[0].session_info)
+        data: unserialiseSessionData(result[0][sessionInfoIndex])
     };
 }
 
 export async function deleteSession(connection: Connection, sessionHandle: string): Promise<number> {
     const config = Config.get();
     let query = `DELETE FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
-    return result.affectedRows;
+    let resultAndInfo = await connection.executeQuery(query, [sessionHandle]);
+    return resultAndInfo.info.getAffectedRowsCount();
 }
 
 export async function createNewSession(
@@ -145,8 +150,8 @@ export async function createNewSession(
 export async function isSessionBlacklisted(connection: Connection, sessionHandle: string): Promise<boolean> {
     const config = Config.get();
     let query = `SELECT session_handle FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
-    return result.length === 0;
+    let resultAndInfo = await connection.executeQuery(query, [sessionHandle]);
+    return resultAndInfo.results.length === 0;
 }
 
 export async function getSessionInfo_Transaction(
@@ -167,17 +172,23 @@ export async function getSessionInfo_Transaction(
     let query = `SELECT user_id,
     refresh_token_hash_2, session_info,
     expires_at, jwt_user_payload FROM ${config.mysql.tables.refreshTokens} WHERE session_handle = ? FOR UPDATE`;
-    let result = await connection.executeQuery(query, [sessionHandle]);
+    let resultAndInfo = await connection.executeQuery(query, [sessionHandle]);
+    let result = resultAndInfo.results;
     if (result.length === 0) {
         return undefined;
     }
     let row = result[0];
+    const userIdIndex = 0,
+        refreshTokenHash2Index = 1,
+        sessionInfoIndex = 2,
+        expiresAtIndex = 3,
+        jwtUserPayloadIndex = 4;
     return {
-        userId: parseUserIdToCorrectFormat(row.user_id),
-        refreshTokenHash2: row.refresh_token_hash_2,
-        sessionData: unserialiseSessionData(row.session_info),
-        expiresAt: Number(row.expires_at),
-        jwtPayload: unserialiseSessionData(row.jwt_user_payload)
+        userId: parseUserIdToCorrectFormat(row[userIdIndex]),
+        refreshTokenHash2: row[refreshTokenHash2Index],
+        sessionData: unserialiseSessionData(row[sessionInfoIndex]),
+        expiresAt: Number(row[expiresAtIndex]),
+        jwtPayload: unserialiseSessionData(row[jwtUserPayloadIndex])
     };
 }
 
@@ -192,21 +203,23 @@ export async function updateSessionInfo_Transaction(
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when updating session data");
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET refresh_token_hash_2 = ?, 
     session_info = ?, expires_at = ? WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [
+    let resultAndInfo = await connection.executeQuery(query, [
         refreshTokenHash2,
         serialiseSessionData(sessionData),
         expiresAt,
         sessionHandle
     ]);
-    return result.affectedRows;
+    return resultAndInfo.info.getAffectedRowsCount();
 }
 
 export async function getAllSessionHandlesForUser(connection: Connection, userId: string | number): Promise<string[]> {
     userId = stringifyUserId(userId);
     const config = Config.get();
     let query = `SELECT session_handle FROM ${config.mysql.tables.refreshTokens} WHERE user_id = ?`;
-    let result = await connection.executeQuery(query, [userId]);
-    return result.map((i: any) => i.session_handle.toString());
+    let resultAndInfo = await connection.executeQuery(query, [userId]);
+    let result = resultAndInfo.results;
+    const sessionHandleIndex = 0;
+    return result.map((i: any) => i[sessionHandleIndex].toString());
 }
 
 export async function deleteAllExpiredSessions(connection: Connection) {
@@ -252,8 +265,8 @@ export async function getNumberOfRowsInRefreshTokensTable(): Promise<number> {
     try {
         const config = Config.get();
         let query = `SELECT COUNT(*) AS rowsCount FROM ${config.mysql.tables.refreshTokens};`;
-        let result = await connection.executeQuery(query, []);
-        return Number(result[0].rowsCount);
+        let resultAndInfo = await connection.executeQuery(query, []);
+        return Number(resultAndInfo.results[0]);
     } finally {
         connection.closeConnection();
     }

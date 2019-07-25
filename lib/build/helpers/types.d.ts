@@ -84,3 +84,11 @@ export declare type TypeAuthError = {
     errType: number;
     err: any;
 };
+export declare type TypeQueryResultInfo = {
+    getAffectedItemsCount: Function;
+    getAffectedRowsCount: () => number;
+    getAutoIncrementValue: Function;
+    getGeneratedIds: Function;
+    getWarnings: Function;
+    getWarningsCount: Function;
+};

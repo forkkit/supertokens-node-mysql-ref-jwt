@@ -1,25 +1,27 @@
-import * as mysql from "mysql";
+let mysql = require("@mysql/xdevapi");
 
 import Config from "../config";
 import { AuthError, generateError } from "../error";
+import { MySQLParamTypes, TypeConfig, TypeQueryResultInfo } from "./types";
 import { checkIfTableExists, createTablesIfNotExists as createTablesIfNotExistsQueries } from "./dbQueries";
-import { MySQLParamTypes, TypeConfig } from "./types";
 
-/**
- * @description This is a singleton class since we need just one MySQL pool per node process.
- */
 export class Mysql {
     private static instance: undefined | Mysql;
-    private pool: mysql.Pool;
+    private pool: { close: Function; getSession: Function };
 
     private constructor(config: TypeConfig) {
-        this.pool = mysql.createPool({
+        this.pool = mysql.getClient({
             host: config.mysql.host,
             port: config.mysql.port,
             user: config.mysql.user,
             password: config.mysql.password,
-            database: config.mysql.database,
-            connectionLimit: config.mysql.connectionLimit
+            schema: config.mysql.database,
+            pooling: {
+                enabled: true,
+                maxSize: config.mysql.connectionLimit,
+                queueTimeout: 10
+            },
+            connectTimeout: 5000
         });
     }
 
@@ -31,19 +33,16 @@ export class Mysql {
         }
     }
 
-    static getConnection(): Promise<mysql.PoolConnection> {
-        return new Promise<mysql.PoolConnection>((resolve, reject) => {
+    static getConnection(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
             if (Mysql.instance === undefined) {
                 reject(generateError(AuthError.GENERAL_ERROR, new Error("mysql not initiated")));
                 return;
             }
-            Mysql.instance.pool.getConnection((err, connection) => {
-                if (err) {
-                    reject(generateError(AuthError.GENERAL_ERROR, err));
-                    return;
-                }
-                resolve(connection);
-            });
+            Mysql.instance.pool
+                .getSession()
+                .then((connection: any) => resolve(connection))
+                .catch((err: any) => reject(generateError(AuthError.GENERAL_ERROR, err)));
         });
     }
 
@@ -64,29 +63,28 @@ export async function getConnection(): Promise<Connection> {
     }
 }
 
-/**
- * @class Connection
- * @description class for one mysql connection to the DB. can be used for transactions, querying etc.. Please remember to close this connection in try {..} finally { close here. }.
- */
 export class Connection {
     private isClosed = false;
     private destroyConnnection = false;
-    private mysqlConnection: mysql.PoolConnection;
+    private mysqlConnection: any;
     private currTransactionCount = 0; // used to keep track of live transactions. so that in case a connection is closed prematurely, we can destroy it.
 
-    constructor(mysqlConnection: mysql.PoolConnection) {
+    constructor(mysqlConnection: any) {
         this.mysqlConnection = mysqlConnection;
     }
 
-    executeQuery = (query: string, params: MySQLParamTypes[]): Promise<any> => {
-        return new Promise<any>(async (resolve, reject) => {
-            this.mysqlConnection.query(query, params, (err, results, fields) => {
-                if (err) {
-                    reject(generateError(AuthError.GENERAL_ERROR, err));
-                    return;
-                }
-                resolve(results);
-            });
+    executeQuery = (
+        query: string,
+        params: MySQLParamTypes[]
+    ): Promise<{ results: any[]; info: TypeQueryResultInfo }> => {
+        return new Promise<{ results: any[]; info: TypeQueryResultInfo }>(async (resolve, reject) => {
+            let results: any[] = [];
+            this.mysqlConnection
+                .sql(query)
+                .bind(params)
+                .execute((result: any) => results.push(result))
+                .then((info: TypeQueryResultInfo) => resolve({ results, info }))
+                .catch((err: any) => reject(generateError(AuthError.GENERAL_ERROR, err)));
         });
     };
 
@@ -122,9 +120,9 @@ export class Connection {
         }
         try {
             if (this.destroyConnnection) {
-                this.mysqlConnection.destroy();
+                this.mysqlConnection.disconnect();
             } else {
-                this.mysqlConnection.release();
+                this.mysqlConnection.close();
             }
             this.isClosed = true;
         } catch (err) {

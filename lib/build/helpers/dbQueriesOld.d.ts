@@ -1,4 +1,4 @@
-import { Connection } from "./mysql";
+import { Connection } from "./mysqlOld";
 /**
  * @description contains all the mysql queries.
  * @throws AuthError GENERAL_ERROR
@@ -20,7 +20,7 @@ export declare function getKeyValueFromKeyName_Transaction(connection: Connectio
     createdAtTime: number;
 } | undefined>;
 export declare function insertKeyValueForKeyName_Transaction(connection: Connection, keyName: string, keyValue: string, createdAtTime: number): Promise<void>;
-export declare function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any): Promise<number>;
+export declare function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any): Promise<any>;
 export declare function getSessionData(connection: Connection, sessionHandle: string): Promise<{
     found: false;
 } | {

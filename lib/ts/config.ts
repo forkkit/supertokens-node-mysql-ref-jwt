@@ -388,7 +388,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
 const defaultConfig = {
     mysql: {
         host: "localhost",
-        port: 3306,
+        port: 33060,
         connectionLimit: 50,
         tables: {
             signingKey: "signing_key",
