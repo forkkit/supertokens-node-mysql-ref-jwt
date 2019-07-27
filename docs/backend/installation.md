@@ -26,7 +26,7 @@ For a complete solution, you will also need to use our frontend SDK along with o
 </div>
 
 
-### 4. Optionally create tables in the MySQL database
+### 3. Optionally create tables in the MySQL database
 - If you do not create them, our library will create these two tables for you:
   ```SQL
   CREATE TABLE signing_key (
