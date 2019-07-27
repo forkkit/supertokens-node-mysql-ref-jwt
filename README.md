@@ -75,12 +75,7 @@ Dedicated support includes the following:
 - Consultation on your current session management system - help you improve it, identify and fix vulnerabilities, and suggest the best solution for you given your business requirements.
 - Very high availability.
 
-To show some love to our early adopters, we’re offering to give them free dedicated support until the 10th of July, 2019. Also, for every referral, we will give the referee and their referrer an additional free month (up to 6 months) of dedicated support post July, 2019. A referral will be counted when a person/company does any of the following:
-- Raises a reasonable and thoughtful issue on any of the backend repos of SuperTokens.
-- Contributes meaningfully to SuperTokens.
-- Uses any of the backend repos in their project.
-
-**Referrals will be accepted only until this text is in the latest version of the README.md file**
+To show some love to our early adopters, we’re offering to give them a discount on our dedicated support on a case to case basis.
 
 ## Authors
 Created with :heart: by the folks at SuperTokens. We are a startup passionate about security and solving software challenges in a way that's helpful for everyone! Please feel free to give us feedback at team@supertokens.io, until our website is ready :grinning:
