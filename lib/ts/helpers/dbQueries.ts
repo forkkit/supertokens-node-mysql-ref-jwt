@@ -258,3 +258,12 @@ export async function getNumberOfRowsInRefreshTokensTable(): Promise<number> {
         connection.closeConnection();
     }
 }
+
+export async function removeOldSessions() {
+    let connection = await getConnection();
+    try {
+        await deleteAllExpiredSessions(connection);
+    } finally {
+        connection.closeConnection();
+    }
+}

@@ -2,7 +2,7 @@ const session = require("../");
 const assert = require("assert");
 const { reset, delay } = require("../lib/build/helpers/utils");
 const config = require("./config");
-const { getNumberOfRowsInRefreshTokensTable } = require("../lib/build/helpers/dbQueries");
+const { getNumberOfRowsInRefreshTokensTable, removeOldSessions } = require("../lib/build/helpers/dbQueries");
 const { printPath } = require("./utils");
 const errors = require("../lib/build/error");
 
@@ -824,7 +824,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.refreshToken.value, "string");
         const noOfRowsBefore = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsBefore, 2);
-        await session.revokeSessionUsingSessionHandle(newSession.session.handle);
+        assert.strictEqual(await session.revokeSessionUsingSessionHandle(newSession.session.handle), true);
         const noOfRowsAfter = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsAfter, 1);
         try {
@@ -876,7 +876,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.deepStrictEqual(sessionInfo1.session.jwtPayload, jwtPayload);
         assert.strictEqual(typeof sessionInfo1.session.userId, "string");
         assert.deepStrictEqual(sessionInfo1.session.userId, userId);
-        await session.revokeSessionUsingSessionHandle(newSession1.session.handle);
+        assert.strictEqual(await session.revokeSessionUsingSessionHandle(newSession1.session.handle), true);
         const noOfRowsAfter = await getNumberOfRowsInRefreshTokensTable();
         assert.deepStrictEqual(noOfRowsAfter, 1);
         try {
@@ -919,7 +919,7 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         assert.strictEqual(typeof newSession.session.handle, "string");
         assert.strictEqual(typeof newSession.accessToken, "object");
         assert.strictEqual(typeof newSession.accessToken.value, "string");
-        await session.revokeSessionUsingSessionHandle(newSession.session.handle);
+        assert.strictEqual(await session.revokeSessionUsingSessionHandle(newSession.session.handle), true);
         const sessionInfo = await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
         assert.strictEqual(typeof sessionInfo, "object");
         assert.deepStrictEqual(sessionInfo.newAccessToken, undefined);
@@ -1031,5 +1031,26 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
                 throw err;
             }
         }
+    });
+
+    it("remove old sessions", async function() {
+        await reset(config.configWithShortValidityForRefreshToken);
+        const userId = "testing";
+        const jwtPayload = { a: "testing" };
+        const sessionData = { s: "session" };
+
+        await session.createNewSession(userId, jwtPayload, sessionData);
+        await session.createNewSession(userId, jwtPayload, sessionData);
+        await session.createNewSession(userId, jwtPayload, sessionData);
+
+        const noOfRowsBefore = await getNumberOfRowsInRefreshTokensTable();
+        assert.deepStrictEqual(noOfRowsBefore, 3);
+
+        await delay(3000);
+        await session.createNewSession(userId, jwtPayload, sessionData);
+        await removeOldSessions();
+
+        const noOfRowsAfter = await getNumberOfRowsInRefreshTokensTable();
+        assert.deepStrictEqual(noOfRowsAfter, 1);
     });
 });
