@@ -439,7 +439,9 @@ export async function getSessionInfo(sessionHandle: string): Promise<any> {
 /**
  * @deprecated
  */
-export let getSessionData = getSessionInfo;
+export async function getSessionData(sessionHandle: string): Promise<any> {
+    return await getSessionInfo(sessionHandle);
+}
 
 /**
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
@@ -461,4 +463,6 @@ export async function updateSessionInfo(sessionHandle: string, newSessionInfo: a
 /**
  * @deprecated
  */
-export let updateSessionData = updateSessionInfo;
+export async function updateSessionData(sessionHandle: string, newSessionInfo: any) {
+    await updateSessionInfo(sessionHandle, newSessionInfo);
+}

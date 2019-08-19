@@ -176,8 +176,8 @@ export async function getSessionInfo(sessionHandle: string): Promise<any> {
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well. If you have a Session object, please use that instead.
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
-export async function updateSessionInfo(sessionHandle: string, newsessionInfo: any) {
-    return SessionFunctions.updateSessionInfo(sessionHandle, newsessionInfo);
+export async function updateSessionInfo(sessionHandle: string, newSessionInfo: any) {
+    return SessionFunctions.updateSessionInfo(sessionHandle, newSessionInfo);
 }
 
 /**
@@ -236,17 +236,19 @@ export class Session {
     /**
      * @deprecated
      */
-    getSessionData = this.getSessionInfo;
+    getSessionData = async (): Promise<any> => {
+        await this.getSessionInfo();
+    };
 
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
-     * @param newsessionInfo this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
+     * @param newSessionInfo this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    updatSesessionInfo = async (newsessionInfo: any) => {
+    updateSesessionInfo = async (newSessionInfo: any) => {
         try {
-            await SessionFunctions.updateSessionInfo(this.sessionHandle, newsessionInfo);
+            await SessionFunctions.updateSessionInfo(this.sessionHandle, newSessionInfo);
         } catch (err) {
             if (AuthError.isErrorFromAuth(err) && err.errType === AuthError.UNAUTHORISED) {
                 clearSessionFromCookie(this.res);
@@ -258,7 +260,9 @@ export class Session {
     /**
      * @deprecated
      */
-    updateSessionData = this.updatSesessionInfo;
+    updateSessionData = async (newSessionInfo: any) => {
+        await this.updateSesessionInfo(newSessionInfo);
+    };
 
     getUserId = () => {
         return this.userId;

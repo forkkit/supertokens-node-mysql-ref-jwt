@@ -55,7 +55,7 @@ export declare function getSessionInfo(sessionHandle: string): Promise<any>;
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well. If you have a Session object, please use that instead.
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
-export declare function updateSessionInfo(sessionHandle: string, newsessionInfo: any): Promise<void>;
+export declare function updateSessionInfo(sessionHandle: string, newSessionInfo: any): Promise<void>;
 /**
  * @description Sets relevant Access-Control-Allow-Headers and Access-Control-Allow-Credentials headers
  */
@@ -90,15 +90,15 @@ export declare class Session {
     getSessionData: () => Promise<any>;
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
-     * @param newsessionInfo this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
+     * @param newSessionInfo this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    updatSesessionInfo: (newsessionInfo: any) => Promise<void>;
+    updateSesessionInfo: (newSessionInfo: any) => Promise<void>;
     /**
      * @deprecated
      */
-    updateSessionData: (newsessionInfo: any) => Promise<void>;
+    updateSessionData: (newSessionInfo: any) => Promise<void>;
     getUserId: () => string | number;
     getJWTPayload: () => any;
 }
