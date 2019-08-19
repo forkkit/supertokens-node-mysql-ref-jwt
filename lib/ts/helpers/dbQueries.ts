@@ -86,14 +86,14 @@ export async function insertKeyValueForKeyName_Transaction(
     await connection.executeQuery(query, [keyName, keyValue, createdAtTime, keyValue, createdAtTime]);
 }
 
-export async function updateSessionData(connection: Connection, sessionHandle: string, sessionData: any) {
+export async function updateSessionInfo(connection: Connection, sessionHandle: string, sessionInfo: any) {
     const config = Config.get();
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [serialiseSessionData(sessionData), sessionHandle]);
+    let result = await connection.executeQuery(query, [serialiSesessionInfo(sessionInfo), sessionHandle]);
     return result.affectedRows;
 }
 
-export async function getSessionData(
+export async function getSessionInfo(
     connection: Connection,
     sessionHandle: string
 ): Promise<{ found: false } | { found: true; data: any }> {
@@ -107,7 +107,7 @@ export async function getSessionData(
     }
     return {
         found: true,
-        data: unserialiseSessionData(result[0].session_info)
+        data: unserialiSesessionInfo(result[0].session_info)
     };
 }
 
@@ -123,7 +123,7 @@ export async function createNewSession(
     sessionHandle: string,
     userId: string | number,
     refreshTokenHash2: string,
-    sessionData: any,
+    sessionInfo: any,
     expiresAt: number,
     jwtPayload: any
 ) {
@@ -136,9 +136,9 @@ export async function createNewSession(
         sessionHandle,
         userId,
         refreshTokenHash2,
-        serialiseSessionData(sessionData),
+        serialiSesessionInfo(sessionInfo),
         expiresAt,
-        serialiseSessionData(jwtPayload)
+        serialiSesessionInfo(jwtPayload)
     ]);
 }
 
@@ -149,14 +149,14 @@ export async function isSessionBlacklisted(connection: Connection, sessionHandle
     return result.length === 0;
 }
 
-export async function getSessionInfo_Transaction(
+export async function getSessionObject_Transaction(
     connection: Connection,
     sessionHandle: string
 ): Promise<
     | {
           userId: string | number;
           refreshTokenHash2: string;
-          sessionData: any;
+          sessionInfo: any;
           expiresAt: number;
           jwtPayload: any;
       }
@@ -175,17 +175,17 @@ export async function getSessionInfo_Transaction(
     return {
         userId: parseUserIdToCorrectFormat(row.user_id),
         refreshTokenHash2: row.refresh_token_hash_2,
-        sessionData: unserialiseSessionData(row.session_info),
+        sessionInfo: unserialiSesessionInfo(row.session_info),
         expiresAt: Number(row.expires_at),
-        jwtPayload: unserialiseSessionData(row.jwt_user_payload)
+        jwtPayload: unserialiSesessionInfo(row.jwt_user_payload)
     };
 }
 
-export async function updateSessionInfo_Transaction(
+export async function updateSessionObject_Transaction(
     connection: Connection,
     sessionHandle: string,
     refreshTokenHash2: string,
-    sessionData: any,
+    sessionInfo: any,
     expiresAt: number
 ): Promise<number> {
     const config = Config.get();
@@ -194,7 +194,7 @@ export async function updateSessionInfo_Transaction(
     session_info = ?, expires_at = ? WHERE session_handle = ?`;
     let result = await connection.executeQuery(query, [
         refreshTokenHash2,
-        serialiseSessionData(sessionData),
+        serialiSesessionInfo(sessionInfo),
         expiresAt,
         sessionHandle
     ]);
@@ -215,7 +215,7 @@ export async function deleteAllExpiredSessions(connection: Connection) {
     await connection.executeQuery(query, [Date.now()]);
 }
 
-function serialiseSessionData(data: any): string {
+function serialiSesessionInfo(data: any): string {
     if (data === undefined) {
         return "";
     } else {
@@ -223,7 +223,7 @@ function serialiseSessionData(data: any): string {
     }
 }
 
-function unserialiseSessionData(data: string): any {
+function unserialiSesessionInfo(data: string): any {
     if (data === "") {
         return undefined;
     } else {

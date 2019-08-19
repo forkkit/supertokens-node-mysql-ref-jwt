@@ -15,8 +15,8 @@ app.use(jsonParser);
 app.post("/login", async (req, res, next) => {
     const userId = req.body.userId;
     const jwtPaylaod = req.body.jwtPaylaod;
-    const sessionData = req.body.sessionData;
-    await SuperTokens.createNewSession(res, userId, jwtPaylaod, sessionData);
+    const sessionInfo = req.body.sessionInfo;
+    await SuperTokens.createNewSession(res, userId, jwtPaylaod, sessionInfo);
     res.send("success");
 });
 
@@ -24,7 +24,7 @@ app.get("/", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res, true);
+        const sessionObj = await SuperTokens.getSession(req, res, true);
         success = true;
     } catch (err) {
         if (err.errType === undefined) {
@@ -42,8 +42,8 @@ app.post("/logout", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res, true);
-        await sessionInfo.revokeSession();
+        const sessionObj = await SuperTokens.getSession(req, res, true);
+        await sessionObj.revokeSession();
         success = true;
     } catch (err) {
         if (err.errType === undefined) {
@@ -61,8 +61,8 @@ app.post("/revokeAll", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.getSession(req, res, true);
-        const userId = sessionInfo.userId;
+        const sessionObj = await SuperTokens.getSession(req, res, true);
+        const userId = sessionObj.userId;
         await SuperTokens.revokeAllSessionsForUser(userId);
         success = true;
     } catch (err) {
@@ -81,7 +81,7 @@ app.post("/refresh", async (req, res, next) => {
     let errCode = 0;
     let success = false;
     try {
-        const sessionInfo = await SuperTokens.refreshSession(req, res);
+        const sessionObj = await SuperTokens.refreshSession(req, res);
         success = true;
     } catch (err) {
         if (err.errType === undefined) {

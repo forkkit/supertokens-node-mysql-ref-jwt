@@ -16,7 +16,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie = undefined;
         let sRefreshTokenCookie = undefined;
         let sIdRefreshTokenCookie = undefined;
@@ -27,7 +27,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -187,7 +187,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie = undefined;
         let sRefreshTokenCookie = undefined;
         let sIdRefreshTokenCookie = undefined;
@@ -198,7 +198,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -297,7 +297,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie = undefined;
         let sRefreshTokenCookie = undefined;
         let sIdRefreshTokenCookie = undefined;
@@ -308,7 +308,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -387,7 +387,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie = undefined;
         let sRefreshTokenCookie = undefined;
         let sIdRefreshTokenCookie = undefined;
@@ -398,7 +398,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -476,7 +476,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie = undefined;
         let sRefreshTokenCookie = undefined;
         let sIdRefreshTokenCookie = undefined;
@@ -487,7 +487,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -557,7 +557,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie1 = undefined;
         let sRefreshTokenCookie1 = undefined;
         let sIdRefreshTokenCookie1 = undefined;
@@ -571,7 +571,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -601,7 +601,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         cookies = response.headers["set-cookie"];
@@ -728,7 +728,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
         assert.strictEqual(typeof SuperTokens.createNewSession, "function");
         const userId = "testing";
         const jwtPayload = { a: "testing" };
-        const sessionData = { s: "session" };
+        const sessionInfo = { s: "session" };
         let sAccessTokenCookie1 = undefined;
         let sRefreshTokenCookie1 = undefined;
         let sIdRefreshTokenCookie1 = undefined;
@@ -742,7 +742,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         let cookies = response.headers["set-cookie"];
@@ -772,7 +772,7 @@ describe(`SuperToken: ${printPath("[test/supertoken/supertoken.test.js]")}`, fun
             .send({
                 userId,
                 jwtPayload,
-                sessionData
+                sessionInfo
             })
             .expect(200);
         cookies = response.headers["set-cookie"];
