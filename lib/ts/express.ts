@@ -237,7 +237,7 @@ export class Session {
      * @deprecated
      */
     getSessionData = async (): Promise<any> => {
-        await this.getSessionInfo();
+        return await this.getSessionInfo();
     };
 
     /**
