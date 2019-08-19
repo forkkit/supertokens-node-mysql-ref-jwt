@@ -50,12 +50,12 @@ export declare function revokeSessionUsingSessionHandle(sessionHandle: string): 
  * @returns session data as provided by the user earlier
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
-export declare function getsessionInfo(sessionHandle: string): Promise<any>;
+export declare function getSessionInfo(sessionHandle: string): Promise<any>;
 /**
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well. If you have a Session object, please use that instead.
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
-export declare function updatesessionInfo(sessionHandle: string, newsessionInfo: any): Promise<void>;
+export declare function updateSessionInfo(sessionHandle: string, newsessionInfo: any): Promise<void>;
 /**
  * @description Sets relevant Access-Control-Allow-Headers and Access-Control-Allow-Credentials headers
  */
@@ -83,14 +83,22 @@ export declare class Session {
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    getsessionInfo: () => Promise<any>;
+    getSessionInfo: () => Promise<any>;
+    /**
+     * @deprecated
+     */
+    getSessionData: () => Promise<any>;
     /**
      * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
      * @param newsessionInfo this can be anything: an array, a promitive type, object etc etc. This will overwrite the current value stored in the database.
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    updatesessionInfo: (newsessionInfo: any) => Promise<void>;
+    updatSesessionInfo: (newsessionInfo: any) => Promise<void>;
+    /**
+     * @deprecated
+     */
+    updateSessionData: (newsessionInfo: any) => Promise<void>;
     getUserId: () => string | number;
     getJWTPayload: () => any;
 }

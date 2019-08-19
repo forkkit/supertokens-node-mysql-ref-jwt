@@ -93,7 +93,15 @@ export declare function revokeSessionUsingSessionHandle(sessionHandle: string): 
  */
 export declare function getSessionInfo(sessionHandle: string): Promise<any>;
 /**
+ * @deprecated
+ */
+export declare let getSessionData: typeof getSessionInfo;
+/**
  * @description: It provides no locking mechanism in case other processes are updating session data for this session as well.
  * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
  */
 export declare function updateSessionInfo(sessionHandle: string, newSessionInfo: any): Promise<void>;
+/**
+ * @deprecated
+ */
+export declare let updateSessionData: typeof updateSessionInfo;
