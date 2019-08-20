@@ -246,7 +246,7 @@ export class Session {
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    updateSesessionInfo = async (newSessionInfo: any) => {
+    updateSessionInfo = async (newSessionInfo: any) => {
         try {
             await SessionFunctions.updateSessionInfo(this.sessionHandle, newSessionInfo);
         } catch (err) {
@@ -261,7 +261,7 @@ export class Session {
      * @deprecated
      */
     updateSessionData = async (newSessionInfo: any) => {
-        await this.updateSesessionInfo(newSessionInfo);
+        await this.updateSessionInfo(newSessionInfo);
     };
 
     getUserId = () => {

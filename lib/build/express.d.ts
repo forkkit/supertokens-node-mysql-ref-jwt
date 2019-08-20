@@ -94,7 +94,7 @@ export declare class Session {
      * @sideEffect may clear cookies from response.
      * @throws AuthError GENERAL_ERROR, UNAUTHORISED.
      */
-    updateSesessionInfo: (newSessionInfo: any) => Promise<void>;
+    updateSessionInfo: (newSessionInfo: any) => Promise<void>;
     /**
      * @deprecated
      */
