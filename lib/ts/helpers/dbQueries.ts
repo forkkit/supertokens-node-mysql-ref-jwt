@@ -89,7 +89,7 @@ export async function insertKeyValueForKeyName_Transaction(
 export async function updateSessionInfo(connection: Connection, sessionHandle: string, sessionInfo: any) {
     const config = Config.get();
     let query = `UPDATE ${config.mysql.tables.refreshTokens} SET session_info = ? WHERE session_handle = ?`;
-    let result = await connection.executeQuery(query, [serialiSessionInfo(sessionInfo), sessionHandle]);
+    let result = await connection.executeQuery(query, [serializeSessionInfo(sessionInfo), sessionHandle]);
     return result.affectedRows;
 }
 
@@ -107,7 +107,7 @@ export async function getSessionInfo(
     }
     return {
         found: true,
-        data: unserialiSessionInfo(result[0].session_info)
+        data: unserializeSessionInfo(result[0].session_info)
     };
 }
 
@@ -136,9 +136,9 @@ export async function createNewSession(
         sessionHandle,
         userId,
         refreshTokenHash2,
-        serialiSessionInfo(sessionInfo),
+        serializeSessionInfo(sessionInfo),
         expiresAt,
-        serialiSessionInfo(jwtPayload)
+        serializeSessionInfo(jwtPayload)
     ]);
 }
 
@@ -175,9 +175,9 @@ export async function getSessionObject_Transaction(
     return {
         userId: parseUserIdToCorrectFormat(row.user_id),
         refreshTokenHash2: row.refresh_token_hash_2,
-        sessionInfo: unserialiSessionInfo(row.session_info),
+        sessionInfo: unserializeSessionInfo(row.session_info),
         expiresAt: Number(row.expires_at),
-        jwtPayload: unserialiSessionInfo(row.jwt_user_payload)
+        jwtPayload: unserializeSessionInfo(row.jwt_user_payload)
     };
 }
 
@@ -194,7 +194,7 @@ export async function updateSessionObject_Transaction(
     session_info = ?, expires_at = ? WHERE session_handle = ?`;
     let result = await connection.executeQuery(query, [
         refreshTokenHash2,
-        serialiSessionInfo(sessionInfo),
+        serializeSessionInfo(sessionInfo),
         expiresAt,
         sessionHandle
     ]);
@@ -215,7 +215,7 @@ export async function deleteAllExpiredSessions(connection: Connection) {
     await connection.executeQuery(query, [Date.now()]);
 }
 
-function serialiSessionInfo(data: any): string {
+function serializeSessionInfo(data: any): string {
     if (data === undefined) {
         return "";
     } else {
@@ -223,7 +223,7 @@ function serialiSessionInfo(data: any): string {
     }
 }
 
-function unserialiSessionInfo(data: string): any {
+function unserializeSessionInfo(data: string): any {
     if (data === "") {
         return undefined;
     } else {

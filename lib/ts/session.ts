@@ -10,8 +10,7 @@ import {
     getSessionObject_Transaction,
     isSessionBlacklisted,
     updateSessionInfo as updateSessionInfoInDB,
-    updateSessionObject_Transaction,
-    deleteAllExpiredSessions
+    updateSessionObject_Transaction
 } from "./helpers/dbQueries";
 import { getConnection, Mysql } from "./helpers/mysql";
 import { TypeInputConfig } from "./helpers/types";
