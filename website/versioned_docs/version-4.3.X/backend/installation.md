@@ -1,7 +1,8 @@
 ---
-id: installation
+id: version-4.3.X-installation
 title: Backend Installation
 sidebar_label: Installation
+original_id: installation
 ---
 
 ### 1. Create a database in MySQL that will store session related information
