@@ -59,7 +59,7 @@ async function testSessionAPI(req: express.Request, res: express.Response) {
     let userId = session.getUserId();
     let getJWTPayload = session.getJWTPayload();
 
-    // update session data example
+    // update session info example
     try {
         let sessionInfo = await session.getSessionInfo();
         let newSessionInfo = {...sessionInfo, joke: "Knock, knock"};
