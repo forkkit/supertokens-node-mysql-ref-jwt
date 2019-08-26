@@ -111,7 +111,7 @@ Please only use this session object if you have not sent a reply to the client y
     <span class="hljs-keyword">let</span> userId = session.getUserId();
     <span class="hljs-keyword">let</span> getJWTPayload = session.getJWTPayload();
 
-    <span class="hljs-comment">// update session data example</span>
+    <span class="hljs-comment">// update session info example</span>
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">let</span> sessionInfo = <span class="hljs-keyword">await</span> session.getSessionInfo();
         <span class="hljs-keyword">let</span> newSessionInfo = {...sessionInfo, <span class="hljs-attr">joke</span>: <span class="hljs-string">"Knock, knock"</span>};
