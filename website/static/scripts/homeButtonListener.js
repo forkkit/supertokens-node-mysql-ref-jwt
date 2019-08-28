@@ -1,5 +1,13 @@
 let userId = undefined;
 let sessionId = undefined;
+let iframeOrigin = "https://supertokens.io";
+let buttonClickEventType = "Button Clicked";
+let analyticsMessageType = "analytics";
+let webSource = "supertokens-web-source";
+let iframeId = "st-timer-frame";
+let blockedIp = [
+    "49.36.0.143",
+]
 
 async function sendFeedback(uuid, url, happy) {
     try {
@@ -18,6 +26,105 @@ async function sendFeedback(uuid, url, happy) {
     } catch {
         // IGNORING
     }
+}
+
+function isMobileDevice() {
+    let width = window.innerWidth;
+    if ( width < 480 ) {
+        return true;
+    }
+    return false;
+}
+
+function showScheduleCallModal() {
+    let modal = document.getElementById("schedule-call-modal");
+    if ( modal !== null ) {
+        modal.style.display = "block";
+    }
+}
+
+function dismissScheduleCallModal() {
+    let modal = document.getElementById("schedule-call-modal");
+    if ( modal !== null ) {
+        modal.style.display = "none";
+    }
+}
+
+function onScheduleCallClicked() {
+    window.open("https://calendly.com/supertokens-rishabh", "_blank");
+    dismissScheduleCallModal();
+    let iframe = document.getElementById(iframeId);
+    if ( iframe !== null && iframe.contentWindow !== null ) {
+        iframe.contentWindow.postMessage({
+            source: webSource,
+            messageType: analyticsMessageType,
+            userId: userId,
+            sessionId: sessionId,
+            timestamp: new Date().getTime(),
+            eventName: buttonClickEventType,
+            pageUrl: window.location.href,
+            target: "schedule-call",
+        }, iframeOrigin)
+    }
+}
+
+function onCloseScheduleCallClicked() {
+    dismissScheduleCallModal();
+    let iframe = document.getElementById(iframeId);
+    if ( iframe !== null && iframe.contentWindow !== null ) {
+        iframe.contentWindow.postMessage({
+            source: webSource,
+            messageType: analyticsMessageType,
+            userId: userId,
+            sessionId: sessionId,
+            timestamp: new Date().getTime(),
+            eventName: buttonClickEventType,
+            pageUrl: window.location.href,
+            target: "schedule-call-close",
+            shouldResetTimer: true,
+        }, iframeOrigin)
+    }
+}
+
+function addScheduleCallModal() {
+    let splittedCurrPath = window.location.pathname.split("/");
+    let imgPath = ["", splittedCurrPath[1], "img", "scheduleCallPopupEmoji.png"].join("/");
+    let modal = `
+        <div
+            id="schedule-call-modal"
+            style="display: none"
+            class="modal">
+            <div
+                style="display: flex; height: 100%; width: 100%; align-items: center; justify-content: center">
+                <div
+                    style="box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; padding-top: 40px; padding-bottom: 40px; padding-right: 40px; padding-left: 40px; background-color: #222222; border-radius: 6px; width: ${isMobileDevice() ? "calc(100vw - 40px)" : "45vw"}; display: flex; flex-direction: column;">
+                        <div
+                            style="display: flex; flex-direction: row; justify-content: space-between; -webkit-justify-content: space-between; align-items: center">
+                            <div
+                                style="color: #ffffff; font-weight: bold; font-size: 20px">
+                                Need help with implementation?
+                            </div>
+                            <div
+                                onClick="onCloseScheduleCallClicked()"
+                                style="color: #ffffff; text-decoration: underline; font-size: 18px; cursor: pointer">
+                            Close
+                            </div>
+                        </div>
+                        <div
+                            style="font-size: 16px; color: #dddddd; margin-top: 30px; width: 100%">
+                            Schedule a chat or a free 20 minutes call with us to get your questions answered and learn more about SuperTokens <span><img src="${imgPath}" style="height: 18px; width: 18px"></img></span>
+                        </div>
+                        <div
+                            onclick="onScheduleCallClicked()"
+                            style="display: flex; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; padding-right: 20px; padding-left: 20px; padding-top: 9px; padding-bottom: 9px; border-radius: 6px; background-color: #dddddd; align-self: flex-start; cursor: pointer; margin-top: 30px; font-weight: bold; color: #222222;">
+                            Schedule a Call
+                        </div>
+                </div>
+            </div>
+        </div>
+    `;
+    let body = document.getElementsByTagName("body")[0];
+    body.innerHTML = body.innerHTML + modal;
 }
 
 function feedbackSelected(happy) {
@@ -133,31 +240,44 @@ function addFeedbackButtons() {
 }
 
 function addChat() {
-    let code = `
-    var $zoho = $zoho || {};
-    $zoho.salesiq = $zoho.salesiq || {
-        widgetcode: "efafccf9d6d7d27460a05d4a76361143d076be81031a0c995358044f0cc8b3841a2010ab7b6727677d37b27582c0e9c4",
-        values: {},
-        ready: function() {}
-    };
-    var d = document;
-    s = d.createElement("script");
-    s.type = "text/javascript";
-    s.id = "zsiqscript";
-    s.defer = true;
-    s.src = "https://salesiq.zoho.com/widget";
-    t = d.getElementsByTagName("script")[0];
-    t.parentNode.insertBefore(s, t);
-    `
+    fetch("https://api-jdhry57disoejch.qually.com/0/supertokens/ip", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            "api-version": "0",
+        },
+    })
+        .then(response => response.json())
+        .then(response => {
+            let ip = response.ip;
+            if ( blockedIp.indexOf(ip) === -1 ) {
+                let code = `
+                var $zoho = $zoho || {};
+                $zoho.salesiq = $zoho.salesiq || {
+                    widgetcode: "efafccf9d6d7d27460a05d4a76361143d076be81031a0c995358044f0cc8b3841a2010ab7b6727677d37b27582c0e9c4",
+                    values: {},
+                    ready: function() {}
+                };
+                var d = document;
+                s = d.createElement("script");
+                s.type = "text/javascript";
+                s.id = "zsiqscript";
+                s.defer = true;
+                s.src = "https://salesiq.zoho.com/widget";
+                t = d.getElementsByTagName("script")[0];
+                t.parentNode.insertBefore(s, t);
+                `
 
-    let zohodiv = document.createElement("div");
-    zohodiv.id = "zsiqwidget";
-    document.body.appendChild(zohodiv);
+                let zohodiv = document.createElement("div");
+                zohodiv.id = "zsiqwidget";
+                document.body.appendChild(zohodiv);
 
-    let script = document.createElement("script");
-    script.type = "text/javascript";
-    script.text = code;
-    document.body.appendChild(script);
+                let script = document.createElement("script");
+                script.type = "text/javascript";
+                script.text = code;
+                document.body.appendChild(script);
+            }
+        });
 }
 
 function sendWindowOriginToFrame(){
@@ -168,22 +288,23 @@ function sendWindowOriginToFrame(){
             origin: window.location.origin,
             pageUrl: window.location.href,
             messageType: "handshake",
-        }, "https://supertokens.io");
+        }, iframeOrigin);
     }
 }
 
 function addIframe() {
     let iframe = document.createElement("iframe");
-    iframe.id = "st-timer-frame";
+    iframe.id = iframeId;
     iframe.width = "0px";
     iframe.height = "0px";
-    iframe.src = "https://supertokens.io/utils/iframe.html";
+    iframe.src = `${iframeOrigin}/utils/iframe.html`;
     iframe.style.borderWidth = "0px";
     iframe.onload = sendWindowOriginToFrame
     document.body.appendChild(iframe);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    addScheduleCallModal();
     function uncollapseInitial(node, title, currNav) {
         node.classList.remove("hide");
         currNav.children[0].innerHTML = title + '<span class="arrow rotate"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>';
@@ -226,7 +347,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = currNav.children[0].innerText;
         const content = navGroupElements[i].childNodes[1];
         currNav.children[0].classList.add("collapsible");
-
         currNav.childNodes[0].addEventListener("click", function () {
             if (!content.classList.contains("hide")) {
                 collapse(content, title, currNav);
@@ -349,7 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gtag('js', new Date());
 
     gtag('config', 'UA-143540696-1');
-
     let body = document.getElementsByTagName("body")[0];
     addIframe();
     addChat();
@@ -364,6 +483,12 @@ window.addEventListener("message", (e) => {
 
         if ( e.data.sessionId !== undefined ) {
             sessionId = e.data.sessionId;
+        }
+
+        if ( e.data.showMessage !== undefined ) {
+            if ( e.data.showMessage ) {
+                showScheduleCallModal();
+            }
         }
 
         // if ( e.data.frameOrigin !== undefined ) {
