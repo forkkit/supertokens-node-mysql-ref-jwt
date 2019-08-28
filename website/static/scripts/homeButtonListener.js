@@ -123,8 +123,11 @@ function addScheduleCallModal() {
             </div>
         </div>
     `;
-    let body = document.getElementsByTagName("body")[0];
-    body.innerHTML = body.innerHTML + modal;
+    let modalParsed = new DOMParser().parseFromString(modal, "text/xml");
+    let container = document.getElementsByClassName("container mainContainer")[0];
+    if ( container !== null ) {
+        container.innerHTML = container.innerHTML + modal;
+    }
 }
 
 function feedbackSelected(happy) {
@@ -303,41 +306,40 @@ function addIframe() {
     document.body.appendChild(iframe);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    addScheduleCallModal();
-    function uncollapseInitial(node, title, currNav) {
-        node.classList.remove("hide");
-        currNav.children[0].innerHTML = title + '<span class="arrow rotate"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>';
-    }
+function uncollapseInitial(node, title, currNav) {
+    node.classList.remove("hide");
+    currNav.children[0].innerHTML = title + '<span class="arrow rotate"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>';
+}
 
-    function collapseInitial(node, title, currNav) {
-        node.classList.add("hide");
-        currNav.children[0].innerHTML = title + '<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>'
-    }
+function collapseInitial(node, title, currNav) {
+    node.classList.add("hide");
+    currNav.children[0].innerHTML = title + '<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span>'
+}
 
-    function uncollapse(node, title, currNav) {
-        node.classList.remove("hide");
-        let arrow = currNav.children[0].children[0];
-        arrow.classList.toggle("rotate");
-    }
+function uncollapse(node, title, currNav) {
+    node.classList.remove("hide");
+    let arrow = currNav.children[0].children[0];
+    arrow.classList.toggle("rotate");
+}
 
-    function collapse(node, title, currNav) {
-        node.classList.add("hide");
-        let arrow = currNav.children[0].children[0];
-        arrow.classList.toggle("rotate");
-    }
+function collapse(node, title, currNav) {
+    node.classList.add("hide");
+    let arrow = currNav.children[0].children[0];
+    arrow.classList.toggle("rotate");
+}
 
-    function isDescendant(parent, child) {
-        var node = child.parentNode;
-        while (node != null) {
-            if (node == parent) {
-                return true;
-            }
-            node = node.parentNode;
+function isDescendant(parent, child) {
+    var node = child.parentNode;
+    while (node != null) {
+        if (node == parent) {
+            return true;
         }
-        return false;
+        node = node.parentNode;
     }
+    return false;
+}
 
+function bindClickEvents() {
     let navGroupElements = document.getElementsByClassName("navGroup subNavGroup");
 
     let activeItem = document.getElementsByClassName("navListItemActive")[0];
@@ -362,6 +364,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    addScheduleCallModal();
+    bindClickEvents();
 
     let superTokensPrevButtons = document.getElementsByClassName("docs-prev");
     let superTokensNextButtons = document.getElementsByClassName("docs-next");
