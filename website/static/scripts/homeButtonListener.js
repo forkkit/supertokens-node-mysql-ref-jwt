@@ -2,6 +2,7 @@ let userId = undefined;
 let sessionId = undefined;
 let iframeOrigin = "https://supertokens.io";
 let buttonClickEventType = "Button Clicked";
+let viewAppearedEventType = "View Appeared"
 let analyticsMessageType = "analytics";
 let webSource = "supertokens-web-source";
 let iframeId = "st-timer-frame";
@@ -40,6 +41,19 @@ function showScheduleCallModal() {
     let modal = document.getElementById("schedule-call-modal");
     if ( modal !== null ) {
         modal.style.display = "block";
+    }
+    let iframe = document.getElementById(iframeId);
+    if ( iframe !== null && iframe.contentWindow !== null ) {
+        iframe.contentWindow.postMessage({
+            source: webSource,
+            messageType: analyticsMessageType,
+            userId: userId,
+            sessionId: sessionId,
+            timestamp: new Date().getTime(),
+            eventName: viewAppearedEventType,
+            pageUrl: window.location.href,
+            target: "schedule-call-modal",
+        }, iframeOrigin)
     }
 }
 
