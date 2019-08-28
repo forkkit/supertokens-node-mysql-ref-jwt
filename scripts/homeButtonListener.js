@@ -1,4 +1,4 @@
-let userId = undefined;
+let userIdFromFrame = undefined;
 let sessionId = undefined;
 let iframeOrigin = "https://supertokens.io";
 let buttonClickEventType = "Button Clicked";
@@ -47,7 +47,7 @@ function showScheduleCallModal() {
         iframe.contentWindow.postMessage({
             source: webSource,
             messageType: analyticsMessageType,
-            userId: userId,
+            userId: userIdFromFrame,
             sessionId: sessionId,
             timestamp: new Date().getTime(),
             eventName: viewAppearedEventType,
@@ -72,7 +72,7 @@ function onScheduleCallClicked() {
         iframe.contentWindow.postMessage({
             source: webSource,
             messageType: analyticsMessageType,
-            userId: userId,
+            userId: userIdFromFrame,
             sessionId: sessionId,
             timestamp: new Date().getTime(),
             eventName: buttonClickEventType,
@@ -89,7 +89,7 @@ function onCloseScheduleCallClicked() {
         iframe.contentWindow.postMessage({
             source: webSource,
             messageType: analyticsMessageType,
-            userId: userId,
+            userId: userIdFromFrame,
             sessionId: sessionId,
             timestamp: new Date().getTime(),
             eventName: buttonClickEventType,
@@ -499,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("message", (e) => {
     if ( typeof e.data === "object" && e.data.source === "st-timer" ) {
         if ( e.data.userId !== undefined ) {
-            userId = e.data.userId;
+            userIdFromFrame = e.data.userId;
         }
 
         if ( e.data.sessionId !== undefined ) {
@@ -511,23 +511,6 @@ window.addEventListener("message", (e) => {
                 showScheduleCallModal();
             }
         }
-
-        // if ( e.data.frameOrigin !== undefined ) {
-        //     this.frameOrigin = e.data.frameOrigin;
-        //     if ( this.shouldSendFrameMessageWhenOriginRecieved ) {
-        //         this.sendWindowOriginToFrame();
-        //     }
-        // }
-        // TODO: show popup here, if the user dismisses the popup fire the event below
-
-
-        // let iframe = document.getElementById("st-timer-frame");
-        // if ( iframe !== null ) {
-        //     iframe.contentWindow.postMessage({
-        //         updateTimer: true,
-        //         source: "stokens",
-        //     }, "http://0.0.0.0:8090");
-        // }
     }
 }, false);
 
