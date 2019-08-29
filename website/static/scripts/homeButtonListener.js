@@ -15,6 +15,7 @@ const blockedUserIds = [
     "ST1566395222245ZLWomU", // n localhost
 ]
 
+
 async function sendFeedback(uuid, url, happy) {
     try {
         fetch("https://api-jdhry57disoejch.qually.com/0/supertokens/documentation/feedback", {
