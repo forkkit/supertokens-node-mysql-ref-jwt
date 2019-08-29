@@ -137,7 +137,6 @@ function addScheduleCallModal() {
             </div>
         </div>
     `;
-    let modalParsed = new DOMParser().parseFromString(modal, "text/xml");
     let container = document.getElementsByClassName("container mainContainer")[0];
     if ( container !== null ) {
         container.innerHTML = container.innerHTML + modal;
@@ -490,6 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
     gtag('js', new Date());
 
     gtag('config', 'UA-143540696-1');
+    
     let body = document.getElementsByTagName("body")[0];
     addIframe();
     addChat();
@@ -501,7 +501,6 @@ window.addEventListener("message", (e) => {
         if ( e.data.userId !== undefined ) {
             userIdFromFrame = e.data.userId;
         }
-
         if ( e.data.sessionId !== undefined ) {
             sessionId = e.data.sessionId;
         }
