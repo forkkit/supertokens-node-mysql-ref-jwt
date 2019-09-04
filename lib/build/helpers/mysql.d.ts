@@ -31,3 +31,4 @@ export declare class Connection {
 }
 export declare function checkIfSigningKeyTableExists(): Promise<boolean>;
 export declare function checkIfRefreshTokensTableExists(): Promise<boolean>;
+export declare function checkIfAllTokensTableExists(): Promise<boolean>;

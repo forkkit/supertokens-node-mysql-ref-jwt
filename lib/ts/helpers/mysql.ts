@@ -136,15 +136,25 @@ export class Connection {
 
 async function createTablesIfNotExists() {
     // first we check if the tables exist so that if the given mysql user does not have the privilege of creating them, then it won't throw an error.
-    if ((await checkIfSigningKeyTableExists()) && (await checkIfRefreshTokensTableExists())) {
+    if (
+        (await checkIfSigningKeyTableExists()) &&
+        (await checkIfRefreshTokensTableExists()) &&
+        (await checkIfAllTokensTableExists())
+    ) {
         return;
     }
     const config = Config.get();
     let signingKeyTableName = config.mysql.tables.signingKey;
     let refreshTokensTableName = config.mysql.tables.refreshTokens;
+    let allTokensTableName = config.mysql.tables.allTokens;
     let connection = await getConnection();
     try {
-        await createTablesIfNotExistsQueries(connection, signingKeyTableName, refreshTokensTableName);
+        await createTablesIfNotExistsQueries(
+            connection,
+            signingKeyTableName,
+            refreshTokensTableName,
+            allTokensTableName
+        );
     } finally {
         connection.closeConnection();
     }
@@ -171,6 +181,21 @@ export async function checkIfRefreshTokensTableExists(): Promise<boolean> {
     let connection = await getConnection();
     try {
         await checkIfTableExists(connection, refreshTokensTableName);
+        return true;
+    } catch (err) {
+        // i.e. tables don't exist
+        return false;
+    } finally {
+        connection.closeConnection();
+    }
+}
+
+export async function checkIfAllTokensTableExists(): Promise<boolean> {
+    const config = Config.get();
+    let allTokensTableName = config.mysql.tables.allTokens;
+    let connection = await getConnection();
+    try {
+        await checkIfTableExists(connection, allTokensTableName);
         return true;
     } catch (err) {
         // i.e. tables don't exist

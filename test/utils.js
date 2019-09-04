@@ -1,3 +1,5 @@
+let ajv = require("ajv");
+
 module.exports.printPath = function(path) {
     return `${createFormat([consoleOptions.yellow, consoleOptions.italic, consoleOptions.dim])}${path}${createFormat([
         consoleOptions.default
@@ -34,4 +36,13 @@ const consoleOptions = {
     blue: 34,
     purple: 35,
     cyan: 36
+};
+
+module.exports.validateSchema = function(schema, input) {
+    let validator = new ajv();
+    let result = validator.validate(schema, input);
+    if (validator.errors) {
+        console.log(validator.errors);
+    }
+    return result;
 };

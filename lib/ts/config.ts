@@ -85,13 +85,16 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         | {
               signingKey: string | undefined;
               refreshTokens: string | undefined;
+              allTokens: string | undefined;
           }
         | undefined;
     const tablesMysqlInputConfig = mysqlInputConfig.tables;
     if (tablesMysqlInputConfig !== undefined) {
         const signingKey = sanitizeStringInput(tablesMysqlInputConfig.signingKey);
         const refreshTokens = sanitizeStringInput(tablesMysqlInputConfig.refreshTokens);
+        const allTokens = sanitizeStringInput(tablesMysqlInputConfig.allTokens);
         tables = {
+            allTokens,
             signingKey,
             refreshTokens
         };
@@ -302,6 +305,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                 config.mysql.tables === undefined
                     ? defaultConfig.mysql.tables
                     : {
+                          allTokens: config.mysql.tables.allTokens || defaultConfig.mysql.tables.allTokens,
                           refreshTokens: config.mysql.tables.refreshTokens || defaultConfig.mysql.tables.refreshTokens,
                           signingKey: config.mysql.tables.signingKey || defaultConfig.mysql.tables.signingKey
                       }
@@ -392,7 +396,8 @@ const defaultConfig = {
         connectionLimit: 50,
         tables: {
             signingKey: "signing_key",
-            refreshTokens: "refresh_token"
+            refreshTokens: "refresh_token",
+            allTokens: "all_tokens"
         }
     },
     tokens: {

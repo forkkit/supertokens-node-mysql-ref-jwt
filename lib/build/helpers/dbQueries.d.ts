@@ -14,7 +14,7 @@ export declare function checkIfTableExists(connection: Connection, tableName: st
  * @param signingKeyTableName
  * @param refreshTokensTableName
  */
-export declare function createTablesIfNotExists(connection: Connection, signingKeyTableName: string, refreshTokensTableName: string): Promise<void>;
+export declare function createTablesIfNotExists(connection: Connection, signingKeyTableName: string, refreshTokensTableName: string, allTokensTableName: string): Promise<void>;
 export declare function getKeyValueFromKeyName_Transaction(connection: Connection, keyName: string): Promise<{
     keyValue: string;
     createdAtTime: number;
@@ -29,6 +29,11 @@ export declare function getSessionInfo(connection: Connection, sessionHandle: st
 }>;
 export declare function deleteSession(connection: Connection, sessionHandle: string): Promise<number>;
 export declare function createNewSession(connection: Connection, sessionHandle: string, userId: string | number, refreshTokenHash2: string, sessionInfo: any, expiresAt: number, jwtPayload: any): Promise<void>;
+export declare function insertIntoAllTokens(connection: Connection, sessionHandle: string, parentRefreshTokenHash2: string, refreshTokenHash2: string): Promise<void>;
+export declare function getInfoFromAllTokens(connection: Connection, refreshTokenHash2: string): Promise<{
+    sessionHandle: string;
+    parentRefreshTokenHash2: string;
+} | undefined>;
 export declare function isSessionBlacklisted(connection: Connection, sessionHandle: string): Promise<boolean>;
 export declare function getSessionObject_Transaction(connection: Connection, sessionHandle: string): Promise<{
     userId: string | number;
@@ -40,6 +45,9 @@ export declare function getSessionObject_Transaction(connection: Connection, ses
 export declare function updateSessionObject_Transaction(connection: Connection, sessionHandle: string, refreshTokenHash2: string, sessionInfo: any, expiresAt: number): Promise<number>;
 export declare function getAllSessionHandlesForUser(connection: Connection, userId: string | number): Promise<string[]>;
 export declare function deleteAllExpiredSessions(connection: Connection): Promise<void>;
+export declare function deleteAllOldOrphanTokens(connection: Connection, createdBefore: number): Promise<void>;
 export declare function resetTables(connection: Connection): Promise<void>;
 export declare function getNumberOfRowsInRefreshTokensTable(): Promise<number>;
+export declare function getNumberOfRowsInAllTokensTable(): Promise<number>;
 export declare function removeOldSessions(): Promise<void>;
+export declare function removeOldOrphanTokens(createdBefore: number): Promise<void>;

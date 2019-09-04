@@ -4,6 +4,7 @@ import Config from "../config";
 import { errorLogging, infoLogging } from "../helpers/logging";
 import { TypeConfig } from "../helpers/types";
 import oldRefreshTokenRemoval from "./oldRefreshTokenRemoval";
+import oldOrphanTokensRemoval from "./oldOrphanTokensRemoval";
 
 /**
  * @class
@@ -17,6 +18,11 @@ export default class Cronjob {
                 jobFunction: oldRefreshTokenRemoval,
                 interval: config.tokens.refreshToken.removalCronjobInterval,
                 description: "remove old expired refresh tokens"
+            },
+            {
+                jobFunction: oldOrphanTokensRemoval,
+                interval: "8 8 8 * * *", // once every day
+                description: "remove orphan tokens from all tokens older than 7 days"
             }
         ];
         jobs.forEach(job => {
