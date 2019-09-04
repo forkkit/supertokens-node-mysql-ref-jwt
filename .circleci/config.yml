@@ -11,9 +11,6 @@ jobs:
     docker:
       - image: rishabhpoddar/node-mysql-git
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "ff:59:06:74:d5:a8:fe:b3:4a:cd:48:51:17:81:69:43"
       - run: (cd / && ./runMySQL.sh)
       - run: mysql -u root --password=root -e "CREATE DATABASE auth_session;"
       - checkout
