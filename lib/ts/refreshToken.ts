@@ -42,8 +42,8 @@ export async function createNewRefreshToken(
     let connection = await getConnection();
     let config = Config.get();
     let refreshToken = generateUUID();
-    parentRefreshTokenHash2 = parentRefreshTokenHash2 || refreshToken;
     let refreshTokenHash2 = hash(hash(refreshToken));
+    parentRefreshTokenHash2 = parentRefreshTokenHash2 || refreshTokenHash2;
     try {
         await insertIntoAllTokens(connection, sessionHandle, parentRefreshTokenHash2, refreshTokenHash2);
     } finally {
