@@ -28,7 +28,8 @@ let config = {
         database: "auth_session", // change this to your database name
     //  tables: {
     //      signingKey: "signing_key", // name of the table to store secrets.
-    //      refreshTokens: "refresh_token" // name of the table to store session information.
+    //      refreshTokens: "refresh_token", // name of the table to store session information 
+    //      allTokens: "all_tokens" // name of the table to store children tokens
     //  }
     },
     tokens: {
@@ -112,7 +113,8 @@ let config = {
         database: string,
         tables?: {
             signingKey?: string,
-            refreshTokens?: string
+            refreshTokens?: string,
+            allTokens?: string
         }
     },
     tokens: {
