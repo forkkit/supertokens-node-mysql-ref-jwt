@@ -15,8 +15,6 @@ export type TypeInputConfig = {
     tokens: {
         accessToken?: {
             signingKey?: {
-                dynamic?: boolean;
-                updateInterval?: number;
                 get?: TypeGetSigningKeyUserFunction;
             };
             validity?: number;
@@ -57,8 +55,6 @@ export type TypeConfig = {
     tokens: {
         accessToken: {
             signingKey: {
-                dynamic: boolean;
-                updateInterval: number;
                 get: TypeGetSigningKeyUserFunction | undefined;
             };
             validity: number;

@@ -231,46 +231,6 @@ describe(`Session: ${printPath("[test/session.test.js]")}`, function() {
         }
     });
 
-    it("create and get session: [jwt signinkey changes after <2s]", async function() {
-        assert.strictEqual(typeof session.createNewSession, "function");
-        assert.strictEqual(typeof session.getSession, "function");
-        await reset(config.configWithShortSigningKeyUpdateInterval);
-
-        const userId = "testing";
-        const jwtPayload = { a: "testing" };
-        const sessionInfo = { s: "session" };
-
-        const newSession = await session.createNewSession(userId, jwtPayload, sessionInfo);
-        assert.strictEqual(validateSchema(schemas.schemaCreateNewSessionACTEnabled, newSession), true);
-
-        await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
-        await delay(2000);
-
-        try {
-            await session.getSession(newSession.accessToken.value, newSession.antiCsrfToken);
-            throw Error("test failed");
-        } catch (err) {
-            if (err.errType !== errors.AuthError.TRY_REFRESH_TOKEN) {
-                throw err;
-            }
-        }
-        const newRefreshedSession = await session.refreshSession(newSession.refreshToken.value);
-        assert.strictEqual(validateSchema(schemas.schemaRefreshSessionACTEnabled, newRefreshedSession), true);
-        assert.notDeepStrictEqual(newRefreshedSession.newAccessToken.value, newSession.accessToken.value);
-        assert.notStrictEqual(newRefreshedSession.newAntiCsrfToken, newSession.antiCsrfToken);
-
-        assert.deepStrictEqual(await getNumberOfRowsInRefreshTokensTable(), 1);
-        assert.deepStrictEqual(await getNumberOfRowsInAllTokensTable(), 2);
-
-        const sessionObj = await session.getSession(
-            newRefreshedSession.newAccessToken.value,
-            newRefreshedSession.newAntiCsrfToken
-        );
-        assert.strictEqual(validateSchema(schemas.schemaUpdatedAccessTokenSessionGet, sessionObj), true);
-        assert.deepStrictEqual(sessionObj.session.jwtPayload, jwtPayload);
-        assert.deepStrictEqual(sessionObj.session.userId, userId);
-    });
-
     it("alter access token payload", async function() {
         assert.strictEqual(typeof session.createNewSession, "function");
         assert.strictEqual(typeof session.getSession, "function");

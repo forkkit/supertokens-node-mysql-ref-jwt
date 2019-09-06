@@ -18,11 +18,6 @@ module.exports.minConfigTest = {
     mysql: mysqlCommonConfig,
     tokens: {
         enableAntiCsrf: true,
-        accessToken: {
-            signingKey: {
-                dynamic: false
-            }
-        },
         refreshToken: {
             renewTokenPath: "/refresh"
         }
@@ -36,11 +31,6 @@ module.exports.minConfigTestWithAntiCsrfDisabled = {
     mysql: mysqlCommonConfig,
     tokens: {
         enableAntiCsrf: false,
-        accessToken: {
-            signingKey: {
-                dynamic: false
-            }
-        },
         refreshToken: {
             renewTokenPath: "/refresh"
         }
@@ -55,9 +45,6 @@ module.exports.minConfigTestWithBlacklisting = {
     tokens: {
         enableAntiCsrf: true,
         accessToken: {
-            signingKey: {
-                dynamic: false
-            },
             blacklisting: true
         },
         refreshToken: {
@@ -78,24 +65,6 @@ module.exports.configWithSigningKeyFunction = {
                 get: () => {
                     return "testing";
                 }
-            }
-        },
-        refreshToken: {
-            renewTokenPath: "/refresh"
-        }
-    },
-    cookie: {
-        domain: "supertokens.io"
-    }
-};
-
-module.exports.configWithShortSigningKeyUpdateInterval = {
-    mysql: mysqlCommonConfig,
-    tokens: {
-        enableAntiCsrf: true,
-        accessToken: {
-            signingKey: {
-                updateInterval: 0.0005
             }
         },
         refreshToken: {
@@ -144,11 +113,6 @@ module.exports.configWithShortValidityForRefreshToken = {
     mysql: mysqlCommonConfig,
     tokens: {
         enableAntiCsrf: true,
-        accessToken: {
-            signingKey: {
-                dynamic: false
-            }
-        },
         refreshToken: {
             renewTokenPath: "/refresh",
             validity: 0.0008

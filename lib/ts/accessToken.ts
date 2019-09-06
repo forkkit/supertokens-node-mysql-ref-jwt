@@ -138,8 +138,6 @@ const ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB = "access_token_signing_key";
  */
 class SigningKey {
     static instance: SigningKey | undefined;
-    private dynamic: boolean;
-    private updateInterval: number;
     private getKeyFromUser: TypeGetSigningKeyUserFunction | undefined;
     private key:
         | {
@@ -149,8 +147,6 @@ class SigningKey {
         | undefined;
 
     private constructor(config: TypeConfig) {
-        this.dynamic = config.tokens.accessToken.signingKey.dynamic;
-        this.updateInterval = config.tokens.accessToken.signingKey.updateInterval;
         this.getKeyFromUser = config.tokens.accessToken.signingKey.get;
     }
 
@@ -201,10 +197,6 @@ class SigningKey {
         if (this.key === undefined) {
             this.key = await this.maybeGenerateNewKeyAndUpdateInDb();
         }
-        if (this.dynamic && Date.now() > this.key.createdAtTime + this.updateInterval) {
-            // key has expired, we need to change it.
-            this.key = await this.maybeGenerateNewKeyAndUpdateInDb();
-        }
         return this.key.keyValue;
     };
 
@@ -219,14 +211,7 @@ class SigningKey {
         try {
             await connection.startTransaction();
             let key = await getKeyValueFromKeyName_Transaction(connection, ACCESS_TOKEN_SIGNING_KEY_NAME_IN_DB);
-            let generateNewKey = false;
-            if (key !== undefined) {
-                // read key may have expired. Or if we called this function to change an expired key, then some other process may have already done so.
-                if (this.dynamic && Date.now() > key.createdAtTime + this.updateInterval) {
-                    generateNewKey = true;
-                }
-            }
-            if (key === undefined || generateNewKey) {
+            if (key === undefined) {
                 let keyValue = await generateNewSigningKey();
                 key = {
                     keyValue,

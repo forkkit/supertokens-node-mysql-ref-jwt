@@ -114,8 +114,6 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         | {
               signingKey:
                   | {
-                        dynamic: boolean | undefined;
-                        updateInterval: number | undefined;
                         get: TypeGetSigningKeyUserFunction | undefined;
                     }
                   | undefined;
@@ -128,33 +126,10 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         const signingKeyInputConfig = accessTokenInputConfig.signingKey;
         let signingKey:
             | {
-                  dynamic: boolean | undefined;
-                  updateInterval: number | undefined;
                   get: TypeGetSigningKeyUserFunction | undefined;
               }
             | undefined;
         if (signingKeyInputConfig !== undefined) {
-            const dynamic = sanitizeBooleanInput(signingKeyInputConfig.dynamic);
-            let updateInterval = sanitizeNumberInput(signingKeyInputConfig.updateInterval);
-            if (updateInterval !== undefined && process.env.TEST_MODE !== "testing") {
-                if (updateInterval > defaultConfig.tokens.accessToken.signingKey.updateInterval.max) {
-                    throw generateError(
-                        AuthError.GENERAL_ERROR,
-                        new Error(
-                            "update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"
-                        ),
-                        false
-                    );
-                } else if (updateInterval < defaultConfig.tokens.accessToken.signingKey.updateInterval.min) {
-                    throw generateError(
-                        AuthError.GENERAL_ERROR,
-                        new Error(
-                            "update interval passed for updating singingKey for access token is not within allowed interval. (Note: value passed will be in units of hours)"
-                        ),
-                        false
-                    );
-                }
-            }
             const get = signingKeyInputConfig.get;
             if (get !== undefined && typeof get !== "function") {
                 throw generateError(
@@ -164,8 +139,6 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
                 );
             }
             signingKey = {
-                dynamic,
-                updateInterval,
                 get
             };
         }
@@ -315,9 +288,6 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                 config.tokens.accessToken === undefined
                     ? {
                           signingKey: {
-                              dynamic: defaultConfig.tokens.accessToken.signingKey.dynamic,
-                              updateInterval:
-                                  defaultConfig.tokens.accessToken.signingKey.updateInterval.default * 60 * 60 * 1000,
                               get: undefined
                           },
                           validity: defaultConfig.tokens.accessToken.validity.default * 1000,
@@ -328,25 +298,9 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
                           signingKey:
                               config.tokens.accessToken.signingKey === undefined
                                   ? {
-                                        dynamic: defaultConfig.tokens.accessToken.signingKey.dynamic,
-                                        updateInterval:
-                                            defaultConfig.tokens.accessToken.signingKey.updateInterval.default *
-                                            60 *
-                                            60 *
-                                            1000,
                                         get: undefined
                                     }
                                   : {
-                                        dynamic:
-                                            config.tokens.accessToken.signingKey.dynamic === undefined
-                                                ? defaultConfig.tokens.accessToken.signingKey.dynamic
-                                                : config.tokens.accessToken.signingKey.dynamic,
-                                        updateInterval:
-                                            (config.tokens.accessToken.signingKey.updateInterval ||
-                                                defaultConfig.tokens.accessToken.signingKey.updateInterval.default) *
-                                            60 *
-                                            60 *
-                                            1000,
                                         get: config.tokens.accessToken.signingKey.get
                                     },
                           validity:
@@ -402,15 +356,6 @@ const defaultConfig = {
     },
     tokens: {
         accessToken: {
-            signingKey: {
-                dynamic: true,
-                updateInterval: {
-                    // in hours.
-                    min: 1,
-                    max: 720,
-                    default: 24
-                }
-            },
             validity: {
                 // in seconds
                 min: 10,
