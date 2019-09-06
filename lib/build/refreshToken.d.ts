@@ -1,23 +1,10 @@
 /**
- * @description: called during library init. Should be called after initing Config and MySQL.
- */
-export declare function init(): Promise<void>;
-/**
- * @description used during testing only.
- */
-export declare function reset(): Promise<void>;
-/**
- * @description used during testing only.
- */
-export declare function getKeyForTesting(): Promise<string>;
-/**
  * @description given a token, it verifies it with the stored signature and returns the payload contained in it
  * @throws AuthError GENERAL_ERROR UNAUTHORISED
  */
 export declare function getInfoFromRefreshToken(token: string): Promise<{
     sessionHandle: string;
-    userId: string | number;
-    parentRefreshTokenHash1: string | undefined;
+    parentRefreshTokenHash2: string;
 }>;
 /**
  * @description given token payload, it creates a new token that is signed by a key stored in the DB.
@@ -25,7 +12,7 @@ export declare function getInfoFromRefreshToken(token: string): Promise<{
  * than what is desired. We can easily fix this by adding the expiry time in the token
  * @throws AuthError GENERAL_ERROR
  */
-export declare function createNewRefreshToken(sessionHandle: string, userId: string | number, parentRefreshTokenHash1: string | undefined): Promise<{
+export declare function createNewRefreshToken(sessionHandle: string, parentRefreshTokenHash2: string | undefined): Promise<{
     token: string;
     expiry: number;
 }>;

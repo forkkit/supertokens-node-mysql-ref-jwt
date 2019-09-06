@@ -58,6 +58,7 @@
     "mysql": "*"
   },
   "devDependencies": {
+    "ajv": "6.10.2",
     "cookie-parser": "1.4.4",
     "express": "4.17.1",
     "mocha": "6.1.4",

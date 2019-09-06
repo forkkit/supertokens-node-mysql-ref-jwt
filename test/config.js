@@ -9,7 +9,8 @@ const mysqlCommonConfig = {
     database: process.env.MYSQL_DB || "auth_session",
     tables: {
         refreshTokens: "refresh_token_test",
-        signingKey: "signing_key_test"
+        signingKey: "signing_key_test",
+        allTokens: "all_tokens"
     }
 };
 

@@ -5,7 +5,6 @@ import * as validator from "validator";
 import { reset as accessTokenReset } from "../accessToken";
 import Config from "../config";
 import { AuthError, generateError } from "../error";
-import { reset as refreshTokenReset } from "../refreshToken";
 import { init } from "../session";
 import { resetTables } from "./dbQueries";
 import { getConnection, Mysql } from "./mysql";
@@ -183,7 +182,6 @@ export async function reset(newConfig?: TypeInputConfig) {
     } finally {
         Config.reset();
         Mysql.reset();
-        refreshTokenReset();
         accessTokenReset();
         if (newConfig !== undefined) {
             await init(newConfig);

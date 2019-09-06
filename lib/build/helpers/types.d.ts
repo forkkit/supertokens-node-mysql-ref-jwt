@@ -9,6 +9,7 @@ export declare type TypeInputConfig = {
         tables?: {
             signingKey?: string;
             refreshTokens?: string;
+            allTokens?: string;
         };
     };
     tokens: {
@@ -49,6 +50,7 @@ export declare type TypeConfig = {
         tables: {
             signingKey: string;
             refreshTokens: string;
+            allTokens: string;
         };
     };
     tokens: {

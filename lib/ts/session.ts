@@ -15,7 +15,7 @@ import {
 import { getConnection, Mysql } from "./helpers/mysql";
 import { TypeInputConfig } from "./helpers/types";
 import { assertUserIdHasCorrectType, generateSessionHandle, generateUUID, hash } from "./helpers/utils";
-import { createNewRefreshToken, getInfoFromRefreshToken, init as refreshTokenInit } from "./refreshToken";
+import { createNewRefreshToken, getInfoFromRefreshToken } from "./refreshToken";
 
 /**
  * @description: to be called by user of the library. This initiates all the modules necessary for this library to work.
@@ -26,7 +26,6 @@ export async function init(config: TypeInputConfig) {
     Config.init(config);
     await Mysql.init();
     await accessTokenInit();
-    await refreshTokenInit();
     CronJob.init();
 }
 
@@ -56,7 +55,7 @@ export async function createNewSession(
     let sessionHandle = generateSessionHandle();
 
     // generate tokens:
-    let refreshToken = await createNewRefreshToken(sessionHandle, userId, undefined);
+    let refreshToken = await createNewRefreshToken(sessionHandle, undefined);
     let config = Config.get();
     let antiCsrfToken = config.tokens.enableAntiCsrf ? generateUUID() : undefined;
     let accessToken = await createNewAccessToken(
@@ -251,8 +250,7 @@ async function refreshSessionHelper(
     refreshToken: string,
     refreshTokenInfo: {
         sessionHandle: string;
-        userId: string | number;
-        parentRefreshTokenHash1: string | undefined;
+        parentRefreshTokenHash2: string;
     }
 ): Promise<{
     session: {
@@ -279,31 +277,17 @@ async function refreshSessionHelper(
             throw generateError(AuthError.UNAUTHORISED, new Error("session does not exist or has expired"));
         }
 
-        if (sessionObject.userId !== refreshTokenInfo.userId) {
-            // TODO: maybe refresh token key has been compromised since the validation part checked out. And the row is in the table.
-            // The only way this is possible is if there is a bug somewhere, or the client somehow generated a valid refresh token and changed the userId in it.
-            await connection.commit();
-            throw generateError(
-                AuthError.UNAUTHORISED,
-                new Error("userId for session does not match the userId in the refresh token")
-            );
-        }
-
         if (sessionObject.refreshTokenHash2 === hash(hash(refreshToken))) {
             // at this point, the input refresh token is the parent one.
             await connection.commit();
             // we create children token for this refresh token. The child tokens have a refrence to the current refresh token which will enable them to become parents when they are used.
             // notice that we do not need to store them in the database since their parent (current refresh token) is already stored.
-            let newRefreshToken = await createNewRefreshToken(
-                sessionHandle,
-                refreshTokenInfo.userId,
-                hash(refreshToken)
-            );
+            let newRefreshToken = await createNewRefreshToken(sessionHandle, hash(hash(refreshToken)));
             let config = Config.get();
             let newAntiCsrfToken = config.tokens.enableAntiCsrf ? generateUUID() : undefined;
             let newAccessToken = await createNewAccessToken(
                 sessionHandle,
-                refreshTokenInfo.userId,
+                sessionObject.userId,
                 hash(newRefreshToken.token),
                 newAntiCsrfToken,
                 hash(refreshToken),
@@ -312,7 +296,7 @@ async function refreshSessionHelper(
             return {
                 session: {
                     handle: sessionHandle,
-                    userId: refreshTokenInfo.userId,
+                    userId: sessionObject.userId,
                     jwtPayload: sessionObject.jwtPayload
                 },
                 newAccessToken: {
@@ -331,10 +315,7 @@ async function refreshSessionHelper(
             };
         }
 
-        if (
-            refreshTokenInfo.parentRefreshTokenHash1 !== undefined &&
-            hash(refreshTokenInfo.parentRefreshTokenHash1) === sessionObject.refreshTokenHash2
-        ) {
+        if (refreshTokenInfo.parentRefreshTokenHash2 === sessionObject.refreshTokenHash2) {
             // At this point, the input refresh token is a child and its parent is in the database. Normally, this part of the code
             // will be reached only when the client uses a refresh token to request a new refresh token before
             // using its access token. This would happen in case client recieves a new set of tokens and right before the next
@@ -364,7 +345,7 @@ async function refreshSessionHelper(
         await connection.commit();
         throw generateError(AuthError.UNAUTHORISED_AND_TOKEN_THEFT_DETECTED, {
             sessionHandle: refreshTokenInfo.sessionHandle,
-            userId: refreshTokenInfo.userId
+            userId: sessionObject.userId
         });
     } finally {
         connection.closeConnection();
