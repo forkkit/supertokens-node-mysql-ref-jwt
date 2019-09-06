@@ -1,7 +1,7 @@
-import Config from '../config';
-import { AuthError, generateError } from '../error';
-import { Connection, getConnection } from './mysql';
-import { parseUserIdToCorrectFormat, stringifyUserId } from './utils';
+import Config from "../config";
+import { AuthError, generateError } from "../error";
+import { Connection, getConnection } from "./mysql";
+import { parseUserIdToCorrectFormat, stringifyUserId } from "./utils";
 
 /**
  * @description contains all the mysql queries.
@@ -193,8 +193,8 @@ export async function insertIntoAllTokens(
     let query = `
         INSERT INTO
             ${
-        config.mysql.tables.allTokens
-        }(refresh_token_hash_2, parent_refresh_token_hash_2, session_handle, created_time)
+                config.mysql.tables.allTokens
+            }(refresh_token_hash_2, parent_refresh_token_hash_2, session_handle, created_time)
         VALUES
             (?, ?, ?, ?)
     `;
@@ -205,11 +205,11 @@ export async function getInfoFromAllTokens(
     connection: Connection,
     refreshTokenHash2: string
 ): Promise<
-| {
-    sessionHandle: string;
-    parentRefreshTokenHash2: string;
-}
-| undefined
+    | {
+          sessionHandle: string;
+          parentRefreshTokenHash2: string;
+      }
+    | undefined
 > {
     const config = Config.get();
     let query = `
@@ -250,14 +250,14 @@ export async function getSessionObject_Transaction(
     connection: Connection,
     sessionHandle: string
 ): Promise<
-| {
-    userId: string | number;
-    refreshTokenHash2: string;
-    sessionInfo: any;
-    expiresAt: number;
-    jwtPayload: any;
-}
-| undefined
+    | {
+          userId: string | number;
+          refreshTokenHash2: string;
+          sessionInfo: any;
+          expiresAt: number;
+          jwtPayload: any;
+      }
+    | undefined
 > {
     const config = Config.get();
     connection.throwIfTransactionIsNotStarted("expected to be in transaction when reading session data");
