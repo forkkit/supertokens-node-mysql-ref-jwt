@@ -20,9 +20,7 @@ The library has the following features:
 - **Protects against**: XSS, Brute force, Session fixation, JWT signing key compromise, Data theft from database, CSRF and session hijacking.
 - **Token theft detection**: SuperTokens is able to detect token theft in a robust manner. Please see the article mentioned above for details on how this works.
 - **Complete auth token management** - It only stores the hashed version of refresh tokens in the database, so even if someone (an attacker or an employee) gets access to the table containing them, they would not be able to hijack any session.
-- **Automatic JWT signing key generation** (if you don't provide one), management and **rotation** - Periodic changing of this key enables maximum security as you don't have to worry much in the event that this key is compromised. Also note that doing this change will not log any user out :grinning:
 - **Complete cookie management** - Takes care of making them secure and HttpOnly. Also removes, adds and edits them whenever needed. You do not have to worry about cookies and its security anymore!
-- **Efficient** in terms of **space complexity** - Needs to store just one row in a SQL table per logged in user per device.
 - **Efficient** in terms of **time complexity** - Minimises the number of DB lookups (most requests do not need a database call to authenticate at all if blacklisting is false - which is the default)
 - Built-in support for **handling multiple devices per user**.
 - **Built-in synchronisation** in case you are running multiple node processes.
