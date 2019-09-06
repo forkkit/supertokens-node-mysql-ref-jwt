@@ -81,7 +81,8 @@
         database: <span class="hljs-string">"auth_session"</span>, <span class="hljs-comment">// change this to your database name</span>
     <span class="hljs-comment">//  tables: {</span>
     <span class="hljs-comment">//      signingKey: "signing_key", // name of the table to store secrets.</span>
-    <span class="hljs-comment">//      refreshTokens: "refresh_token" // name of the table to store session information.</span>
+    <span class="hljs-comment">//      refreshTokens: "refresh_token", // name of the table to store session information </span>
+    <span class="hljs-comment">//      allTokens: "all_tokens" // name of the table to store children tokens</span>
     <span class="hljs-comment">//  }</span>
     },
     tokens: {
@@ -159,7 +160,8 @@ Below is the type of the <code>config</code> object for your reference:
         database: <span class="hljs-built_in">string</span>,
         tables?: {
             signingKey?: <span class="hljs-built_in">string</span>,
-            refreshTokens?: <span class="hljs-built_in">string</span>
+            refreshTokens?: <span class="hljs-built_in">string</span>,
+            allTokens?: <span class="hljs-built_in">string</span>
         }
     },
     tokens: {
