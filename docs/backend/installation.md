@@ -14,7 +14,7 @@ Note: We recommend that you create a new database as it would become easier for 
 
 ### 2. Install SuperTokens package
 ```js
-npm i --save supertokens-node-mysql-ref-jwt@^4.3.0
+npm i --save supertokens-node-mysql-ref-jwt@^5.0.0
 ```
 
 <div class="divider"></div>
@@ -44,7 +44,15 @@ For a complete solution, you will also need to use our frontend SDK along with o
       expires_at BIGINT UNSIGNED NOT NULL,
       jwt_user_payload TEXT,
       PRIMARY KEY(session_handle)
-  );    
+  );
+
+  CREATE TABLE all_tokens (
+      refresh_token_hash_2 VARCHAR(128) NOT NULL,
+      parent_refresh_token_hash_2 VARCHAR(128) NOT NULL,
+      session_handle VARCHAR(255) NOT NULL,
+      created_time BIGINT UNSIGNED NOT NULL,
+      PRIMARY KEY(refresh_token_hash_2)
+  );
   ```
 - Alternatively, you can create these two tables with different names (<span class="highlighted-text">keeping the column names and types the same</span>), and provide these names in the ```config``` object.
 

@@ -32,15 +32,14 @@ let config = {
         database: "auth_session", // change this to your database name
     //  tables: {
     //      signingKey: "signing_key", // name of the table to store secrets.
-    //      refreshTokens: "refresh_token" // name of the table to store session information.
+    //      refreshTokens: "refresh_token", // name of the table to store session information.
+    //      allTokens: "all_tokens"
     //  }
     },
     tokens: {
     //  accessToken: {
         //  signingKey: {
-            //  dynamic: true, // if this is true, then the JWT signing key will change automatically every updateInterval hours.
-            //  updateInterval: 24, // in hours - should be >= 1 && <= 720. Determines how often to change the signing key. If dynamic is false, then this does not matter. 
-            //  get: undefined, // is a function of type: () => Promise<string> - If you want to give your own JWT signing key, please give a function here. If this is given, then the dynamic boolean will be ignored as key management will be up to you. This function will be called every time we generate or verify any JWT, so please make sure it is efficient.
+            //  get: undefined, // is a function of type: () => Promise<string> - If you want to give your own JWT signing key, please give a function here. This function will be called every time we generate or verify any JWT, so please make sure it is efficient.
         //  },
         //  validity: 3600, // in seconds. Should be >= 10 && <= 86400000 seconds. This determines the lifetime of an access token.
         //  blacklisting: false, // If you set this to true, revoking a session will cause immediate logout of the user using that session, regardless of access token's lifetime.
@@ -111,14 +110,13 @@ let config = {
         database: string,
         tables?: {
             signingKey?: string,
-            refreshTokens?: string
+            refreshTokens?: string,
+            allTokens?: string
         }
     },
     tokens: {
         accessToken?: {
             signingKey?: {
-                dynamic?: boolean,
-                updateInterval?: number,
                 get?: () => Promise<string>,
             },
             accessTokenPath?: string,
