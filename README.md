@@ -27,6 +27,10 @@ The library has the following features:
 - **Easy to use** (see [auth-demo](https://github.com/supertokens/auth-demo)), with well documented, modularised code and helpful error messages!
 - Using this library, you can keep a user logged in for however long you want - without worrying about any security consequences. 
 
+## Free one-to-one implementation support
+- Schedule a short call with us on https://calendly.com/supertokens-rishabh.
+- Whatsapp us on +91-7021000012 saying “SuperTokens”.
+
 ## Index
 - [Documentation](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#documentation)
 - [Making changes](https://github.com/supertokens/supertokens-node-mysql-ref-jwt#making-changes)
