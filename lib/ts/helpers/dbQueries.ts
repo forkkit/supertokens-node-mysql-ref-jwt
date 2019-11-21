@@ -348,6 +348,11 @@ export async function deleteAllOldOrphanTokens(connection: Connection, createdBe
                     refresh_token_hash_2
                 FROM
                     ${config.mysql.tables.refreshTokens}
+            ) AND refresh_token_hash_2 NOT IN (
+                SELECT
+                    refresh_token_hash_2
+                FROM
+                    ${config.mysql.tables.refreshTokens}
             )
     `;
     await connection.executeQuery(query, [createdBefore]);
