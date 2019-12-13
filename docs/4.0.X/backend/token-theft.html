@@ -60,7 +60,7 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Token Theft Detection</h1></header><article><div><span><ul>
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Token Theft Detection</h1></header><article><div><span><ul>
 <li><p>SuperTokens uses the concept of Rotating Refresh tokens to detect refresh token theft. Please see the <a href="../how-it-works/details">How it works</a> section for more details.</p></li>
 <li><p>The <code>refreshSession</code> function will throw an error if it detects token theft (See &quot;Refreshing Session&quot; section). For quicker detection, keep the access token's lifetime small.</p></li>
 <li><p>Once detected, you get a reference to the <code>userId</code> whose session is hijacked and you get a reference to that session's <code>sessionHandle</code> (See <a href="error-handling#unauthorised_and_token_theft_detected">this</a>). Using these two, you can either only revoke that session, or all sessions that belong to this user. Furthermore, you can go about doing anything else that you like - like notifying the user about this event.</p></li>

@@ -60,7 +60,7 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Blacklisting</h1></header><article><div><span><ul>
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Blacklisting</h1></header><article><div><span><ul>
 <li><p>One fundamental property of <code>JWT</code> access tokens is that they are self contained. That means, they also contain information about when they will expire. This results in a limitation that you cannot revoke them on demand by simply changing the content in it (Since someone could simply use the older version of the JWT to bypass your change). As such, you need to maintain some state in your application to keep track of which <code>JWTs</code> have been revoked. This is known as blacklisting.</p></li>
 <li><p>By default blacklisting is disabled in the library since we expect you to use short lived access tokens anyway. This has the added advantage of not having to do a database query for almost all authentication calls.</p></li>
 <li><p>Due to the way we have implemented our system, enabling blacklisting does not take up any extra database space.</p></li>
