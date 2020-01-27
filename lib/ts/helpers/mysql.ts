@@ -19,7 +19,8 @@ export class Mysql {
             user: config.mysql.user,
             password: config.mysql.password,
             database: config.mysql.database,
-            connectionLimit: config.mysql.connectionLimit
+            connectionLimit: config.mysql.connectionLimit,
+            ssl: config.mysql.ssl
         });
     }
 

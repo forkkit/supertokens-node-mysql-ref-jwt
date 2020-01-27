@@ -96,6 +96,7 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
             refreshTokens
         };
     }
+    const ssl = mysqlInputConfig.ssl;
     const mysql = {
         host,
         port,
@@ -103,7 +104,8 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
         password,
         connectionLimit,
         database,
-        tables
+        tables,
+        ssl
     };
     let tokensInputConfig = config.tokens;
     const accessTokenInputConfig = tokensInputConfig.accessToken;
@@ -298,6 +300,7 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
             password: config.mysql.password,
             connectionLimit: config.mysql.connectionLimit || defaultConfig.mysql.connectionLimit,
             database: config.mysql.database,
+            ssl: config.mysql.ssl,
             tables:
                 config.mysql.tables === undefined
                     ? defaultConfig.mysql.tables

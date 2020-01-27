@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.0] - 2020-02-27
+### Added
+- allowing ssl config for mysql connection
+
 ## [4.3.0] - 2019-08-20
 ### Added
 - For with express implementation: Session.getSessionInfo, Session.updateSessionInfo
