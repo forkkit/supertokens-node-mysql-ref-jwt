@@ -1,3 +1,5 @@
+import * as tls from "tls";
+
 export type TypeInputConfig = {
     mysql: {
         host?: string;
@@ -6,6 +8,7 @@ export type TypeInputConfig = {
         password: string;
         connectionLimit?: number;
         database: string;
+        ssl?: string | (tls.SecureContextOptions & { rejectUnauthorized?: boolean });
         tables?: {
             signingKey?: string;
             refreshTokens?: string;
@@ -47,6 +50,7 @@ export type TypeConfig = {
         password: string;
         connectionLimit: number;
         database: string;
+        ssl?: string | (tls.SecureContextOptions & { rejectUnauthorized?: boolean });
         tables: {
             signingKey: string;
             refreshTokens: string;

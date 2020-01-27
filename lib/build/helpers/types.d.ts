@@ -1,3 +1,5 @@
+/// <reference types="node" />
+import * as tls from "tls";
 export declare type TypeInputConfig = {
     mysql: {
         host?: string;
@@ -6,6 +8,9 @@ export declare type TypeInputConfig = {
         password: string;
         connectionLimit?: number;
         database: string;
+        ssl?: string | (tls.SecureContextOptions & {
+            rejectUnauthorized?: boolean;
+        });
         tables?: {
             signingKey?: string;
             refreshTokens?: string;
@@ -46,6 +51,9 @@ export declare type TypeConfig = {
         password: string;
         connectionLimit: number;
         database: string;
+        ssl?: string | (tls.SecureContextOptions & {
+            rejectUnauthorized?: boolean;
+        });
         tables: {
             signingKey: string;
             refreshTokens: string;
