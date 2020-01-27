@@ -86,7 +86,8 @@ We highly recommend that you create a wrapper around the provided APIs. This wil
     <span class="hljs-comment">//      signingKey: "signing_key", // name of the table to store secrets.</span>
     <span class="hljs-comment">//      refreshTokens: "refresh_token", // name of the table to store session information.</span>
     <span class="hljs-comment">//      allTokens: "all_tokens"</span>
-    <span class="hljs-comment">//  }</span>
+    <span class="hljs-comment">//  },</span>
+    <span class="hljs-comment">//  ssl: undefined // values can be: string | (tls.SecureContextOptions &amp; { rejectUnauthorized?: boolean }) | undefined. For more info, go to: https://github.com/mysqljs/mysql#ssl-options</span>
     },
     tokens: {
     <span class="hljs-comment">//  accessToken: {</span>
@@ -158,7 +159,8 @@ Below is the type of the <code>config</code> object for your reference:
             signingKey?: <span class="hljs-built_in">string</span>,
             refreshTokens?: <span class="hljs-built_in">string</span>,
             allTokens?: <span class="hljs-built_in">string</span>
-        }
+        },
+        ssl?: <span class="hljs-built_in">string</span> | (tls.SecureContextOptions &amp; { rejectUnauthorized?: <span class="hljs-built_in">boolean</span> })
     },
     tokens: {
         accessToken?: {
