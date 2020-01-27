@@ -34,7 +34,8 @@ let config = {
     //      signingKey: "signing_key", // name of the table to store secrets.
     //      refreshTokens: "refresh_token", // name of the table to store session information.
     //      allTokens: "all_tokens"
-    //  }
+    //  },
+    //  ssl: undefined // values can be: string | (tls.SecureContextOptions & { rejectUnauthorized?: boolean }) | undefined. For more info, go to: https://github.com/mysqljs/mysql#ssl-options
     },
     tokens: {
     //  accessToken: {
@@ -112,7 +113,8 @@ let config = {
             signingKey?: string,
             refreshTokens?: string,
             allTokens?: string
-        }
+        },
+        ssl?: string | (tls.SecureContextOptions & { rejectUnauthorized?: boolean })
     },
     tokens: {
         accessToken?: {
