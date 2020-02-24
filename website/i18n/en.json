@@ -404,6 +404,22 @@
       "version-4.3.X/backend/usage-without-express/version-4.3.X-user-login": {
         "title": "User login",
         "sidebar_label": "User login"
+      },
+      "version-4.4.X/backend/version-4.4.X-installation": {
+        "title": "Backend Installation",
+        "sidebar_label": "Installation"
+      },
+      "version-4.4.X/backend/usage-with-express/version-4.4.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
+      },
+      "version-4.4.X/backend/usage-with-express/version-4.4.X-session-object": {
+        "title": "Session Object",
+        "sidebar_label": "Session Object"
+      },
+      "version-4.4.X/backend/usage-without-express/version-4.4.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
       }
     },
     "links": {
