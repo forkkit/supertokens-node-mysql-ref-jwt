@@ -1,9 +1,9 @@
+import { parse, serialize } from "cookie";
 import * as express from "express";
+import { IncomingMessage, ServerResponse } from "http";
 
 import Config from "./config";
 import { AuthError, generateError } from "./error";
-import { ServerResponse, IncomingMessage } from "http";
-import { serialize, parse } from "cookie";
 
 const accessTokenCookieKey = "sAccessToken";
 const refreshTokenCookieKey = "sRefreshToken";
@@ -188,14 +188,16 @@ export function setCookie(
     secure: boolean,
     httpOnly: boolean,
     expires: number,
-    path: string
+    path: string,
+    sameSite: "strict" | "lax" | "none" = "none"
 ) {
     let opts = {
         domain,
         secure,
         httpOnly,
         expires: new Date(expires),
-        path
+        path,
+        sameSite
     };
 
     return append(res, "Set-Cookie", serialize(name, value, opts));

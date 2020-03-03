@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.2] - 2020-03-03
+- Added SameSite attribute to cookies
+
 ## [5.0.1] - 2020-02-22
 - Added id refresh token to header. It is checked by the frontend to see if the user is logged in.
 

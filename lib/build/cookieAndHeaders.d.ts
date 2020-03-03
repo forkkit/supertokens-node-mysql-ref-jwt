@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import * as express from "express";
-import { ServerResponse, IncomingMessage } from "http";
+import * as express from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 /**
  * @description clears all the auth cookies from the response
  */
@@ -35,5 +35,5 @@ export declare function setOptionsAPIHeader(res: express.Response): void;
  * @param expires
  * @param path
  */
-export declare function setCookie(res: ServerResponse, name: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string): ServerResponse;
+export declare function setCookie(res: ServerResponse, name: string, value: string, domain: string, secure: boolean, httpOnly: boolean, expires: number, path: string, sameSite?: "strict" | "lax" | "none"): ServerResponse;
 export declare function getCookieValue(req: IncomingMessage, key: string): string | undefined;
