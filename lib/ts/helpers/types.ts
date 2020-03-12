@@ -39,6 +39,7 @@ export type TypeInputConfig = {
     cookie: {
         domain: string;
         secure?: boolean;
+        sameSite?: "strict" | "lax" | "none";
     };
 };
 
@@ -81,6 +82,7 @@ export type TypeConfig = {
     cookie: {
         domain: string;
         secure: boolean;
+        sameSite: "strict" | "lax" | "none";
     };
 };
 

@@ -41,6 +41,7 @@ export declare type TypeInputConfig = {
     cookie: {
         domain: string;
         secure?: boolean;
+        sameSite?: "strict" | "lax" | "none";
     };
 };
 export declare type TypeConfig = {
@@ -84,6 +85,7 @@ export declare type TypeConfig = {
     cookie: {
         domain: string;
         secure: boolean;
+        sameSite: "strict" | "lax" | "none";
     };
 };
 export declare type TypeGetSigningKeyUserFunction = () => Promise<string>;

@@ -27,7 +27,8 @@ export function clearSessionFromCookie(res: express.Response) {
         config.cookie.secure,
         true,
         0,
-        config.tokens.accessToken.accessTokenPath
+        config.tokens.accessToken.accessTokenPath,
+        config.cookie.sameSite
     );
     setCookie(
         res,
@@ -37,7 +38,8 @@ export function clearSessionFromCookie(res: express.Response) {
         false,
         false,
         0,
-        config.tokens.accessToken.accessTokenPath
+        config.tokens.accessToken.accessTokenPath,
+        config.cookie.sameSite
     );
     setCookie(
         res,
@@ -47,7 +49,8 @@ export function clearSessionFromCookie(res: express.Response) {
         config.cookie.secure,
         true,
         0,
-        config.tokens.refreshToken.renewTokenPath
+        config.tokens.refreshToken.renewTokenPath,
+        config.cookie.sameSite
     );
     setHeader(res, idRefreshTokenHeaderKey, "remove");
     setHeader(res, "Access-Control-Expose-Headers", idRefreshTokenHeaderKey);
@@ -66,7 +69,8 @@ export function attachAccessTokenToCookie(res: express.Response, token: string, 
         config.cookie.secure,
         true,
         expiry,
-        config.tokens.accessToken.accessTokenPath
+        config.tokens.accessToken.accessTokenPath,
+        config.cookie.sameSite
     );
 }
 
@@ -83,7 +87,8 @@ export function attachRefreshTokenToCookie(res: express.Response, token: string,
         config.cookie.secure,
         true,
         expiry,
-        config.tokens.refreshToken.renewTokenPath
+        config.tokens.refreshToken.renewTokenPath,
+        config.cookie.sameSite
     );
 }
 
@@ -103,7 +108,8 @@ export function setIdRefreshTokenInHeaderAndCookie(res: express.Response, token:
         false,
         false,
         expiry,
-        config.tokens.accessToken.accessTokenPath
+        config.tokens.accessToken.accessTokenPath,
+        config.cookie.sameSite
     );
 }
 
@@ -189,7 +195,7 @@ export function setCookie(
     httpOnly: boolean,
     expires: number,
     path: string,
-    sameSite: "strict" | "lax" | "none" = "none"
+    sameSite: "strict" | "lax" | "none"
 ) {
     let opts = {
         domain,

@@ -275,12 +275,17 @@ const validateAndNormalise = (config: any): TypeInputConfig => {
     const cookieInputConfig = config.cookie;
     const domain = sanitizeStringInput(cookieInputConfig.domain);
     const secure = sanitizeBooleanInput(cookieInputConfig.secure);
+    const sameSite = sanitizeStringInput(cookieInputConfig.sameSite);
     if (domain === undefined) {
         throw generateError(AuthError.GENERAL_ERROR, new Error("domain parameter for cookie not passed"), false);
     }
+    if (sameSite !== undefined && sameSite !== "none" && sameSite !== "lax" && sameSite !== "strict") {
+        throw generateError(AuthError.GENERAL_ERROR, new Error("invalid sameSite param passed."), false);
+    }
     const cookie = {
         domain,
-        secure
+        secure,
+        sameSite: sameSite as "strict" | "lax" | "none" | undefined
     };
     return {
         mysql,
@@ -379,7 +384,8 @@ const setDefaults = (config: TypeInputConfig): TypeConfig => {
         },
         cookie: {
             secure: config.cookie.secure === undefined ? defaultConfig.cookie.secure : config.cookie.secure,
-            domain: config.cookie.domain
+            domain: config.cookie.domain,
+            sameSite: config.cookie.sameSite === undefined ? defaultConfig.cookie.sameSite : config.cookie.sameSite
         },
         logging: {
             info: config.logging !== undefined ? config.logging.info : undefined,
@@ -430,6 +436,7 @@ const defaultConfig = {
         }
     },
     cookie: {
-        secure: true
+        secure: true,
+        sameSite: "none" as "none"
     }
 };
