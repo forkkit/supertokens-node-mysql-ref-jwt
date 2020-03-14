@@ -59,7 +59,8 @@ let config = {
 //  },
     cookie: {
         domain: "your-domain-here.com", // this is the domain to set for all the cookies. If using a website, please make sure this domain is the common part of your website domain and your API domain. Do not set any port here and do not put http:// or https://
-    //  secure: true // Sets if the cookies are secure or not. If you do not have https, make this false.
+    //  secure: true, // Sets if the cookies are secure or not. If you do not have https, make this false.
+    //  sameSite: "strict" | "lax" | "none"
     }
 }
 ```
@@ -138,7 +139,8 @@ let config = {
     },
     cookie: {
         domain: string,
-        secure?: boolean
+        secure?: boolean,
+        sameSite?: "strict" | "lax" | "none"
     }
 }
 ```

@@ -420,6 +420,30 @@
       "version-4.4.X/backend/usage-without-express/version-4.4.X-initialisation": {
         "title": "Initialisation & Imports",
         "sidebar_label": "Init & Imports"
+      },
+      "version-5.0.0/backend/usage-with-express/version-5.0.0-options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
+      },
+      "version-5.0.0/backend/usage-without-express/version-5.0.0-options-api": {
+        "title": "Handling Options API",
+        "sidebar_label": "Handling Options API"
+      },
+      "version-5.0.0/backend/usage-without-express/version-5.0.0-user-login": {
+        "title": "User login",
+        "sidebar_label": "User login"
+      },
+      "version-5.0.0/frontend/version-5.0.0-frontend": {
+        "title": "Choose your frontend",
+        "sidebar_label": "Choose your frontend"
+      },
+      "version-5.0.X/backend/usage-with-express/version-5.0.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
+      },
+      "version-5.0.X/backend/usage-without-express/version-5.0.X-initialisation": {
+        "title": "Initialisation & Imports",
+        "sidebar_label": "Init & Imports"
       }
     },
     "links": {

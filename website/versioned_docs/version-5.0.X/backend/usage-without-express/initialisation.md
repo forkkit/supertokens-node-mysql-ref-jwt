@@ -1,19 +1,24 @@
 ---
-id: initialisation
+id: version-5.0.X-initialisation
 title: Initialisation & Imports
 sidebar_label: Init & Imports
+original_id: initialisation
 ---
 
 ## Importing
 ```js
-import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
+import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 ```
 
 ## Call the ```init``` function: [API Reference](../api-reference#initconfig)
 ```js
 SuperTokens.init(config);
 ```
-- Call this function in the same place where you initialize your express server.
+- Call this function somewhere at the start of your node process.
+
+<div class="specialNote">
+We highly recommend that you create a wrapper around the provided APIs. This will make it much easier for you to do error handling in your API logic. An example express wrapper can be found here: <a href="https://github.com/supertokens/supertokens-node-mysql-ref-jwt/blob/master/lib/ts/express.ts">Express wrapper</a>
+</div>
 
 ## Configurations
 The config object has the following parameters (<span class="highlighted-text">The commented out parameters are optional</span>):
@@ -28,8 +33,8 @@ let config = {
         database: "auth_session", // change this to your database name
     //  tables: {
     //      signingKey: "signing_key", // name of the table to store secrets.
-    //      refreshTokens: "refresh_token", // name of the table to store session information 
-    //      allTokens: "all_tokens" // name of the table to store children tokens
+    //      refreshTokens: "refresh_token", // name of the table to store session information.
+    //      allTokens: "all_tokens"
     //  },
     //  ssl: undefined // values can be: string | (tls.SecureContextOptions & { rejectUnauthorized?: boolean }) | undefined. For more info, go to: https://github.com/mysqljs/mysql#ssl-options
     },
@@ -64,10 +69,8 @@ let config = {
 <div class="divider"></div>
 
 ## Example code
-```ts
-import * as SuperTokens from 'supertokens-node-mysql-ref-jwt/express';
-
-let app = express();
+```js
+import * as SuperTokens from 'supertokens-node-mysql-ref-jwt';
 
 // minimum config
 let config = {
@@ -87,10 +90,7 @@ let config = {
 };
 
 SuperTokens.init(config).then(() => {
-    app.get(...); // Setup your API routes here.
-    app.post(...); // Setup your API routes here.
-    let server = http.createServer(app);
-    server.listen(8080, "0.0.0.0");
+    // setup your API routes and start your server.
 }).catch((err: any) => {
     console.log("Oops!! Something went wrong :(", err);
 });
