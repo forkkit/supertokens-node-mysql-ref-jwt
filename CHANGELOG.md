@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.4] - 2020-03-12
+### Changed
+- Makes idRefreshToken secure based on passed config
+
 ## [5.0.3] - 2020-03-12
 ### Added
 - Added option to set SameSite cookie in config
