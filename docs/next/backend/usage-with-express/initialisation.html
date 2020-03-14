@@ -108,7 +108,8 @@
 <span class="hljs-comment">//  },</span>
     cookie: {
         domain: <span class="hljs-string">"your-domain-here.com"</span>, <span class="hljs-comment">// this is the domain to set for all the cookies. If using a website, please make sure this domain is the common part of your website domain and your API domain. Do not set any port here and do not put http:// or https://</span>
-    <span class="hljs-comment">//  secure: true // Sets if the cookies are secure or not. If you do not have https, make this false.</span>
+    <span class="hljs-comment">//  secure: true, // Sets if the cookies are secure or not. If you do not have https, make this false.</span>
+    <span class="hljs-comment">//  sameSite: "strict" | "lax" | "none"</span>
     }
 }
 </code></pre>
@@ -186,7 +187,8 @@ Below is the type of the <code>config</code> object for your reference:
     },
     cookie: {
         domain: <span class="hljs-built_in">string</span>,
-        secure?: <span class="hljs-built_in">boolean</span>
+        secure?: <span class="hljs-built_in">boolean</span>,
+        sameSite?: <span class="hljs-string">"strict"</span> | <span class="hljs-string">"lax"</span> | <span class="hljs-string">"none"</span>
     }
 }
 </code></pre>
